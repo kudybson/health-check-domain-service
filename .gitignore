@@ -1,3 +1,5 @@
 # Project exclude paths
 /domain-service-api/target/
 /domain-service-svc/target/
+/domain-service-client/target/
+/.idea
