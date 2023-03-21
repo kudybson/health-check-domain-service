@@ -1,0 +1,9 @@
+username:
+  - doctor
+  - user
+  - receptionist
+  - admin
+  - superadmin
+
+env: 'localhost:8080'
+env_actuator: 'localhost:8050'
