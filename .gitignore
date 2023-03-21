@@ -1,0 +1,3 @@
+# Project exclude paths
+/domain-service-api/target/
+/domain-service-svc/target/
