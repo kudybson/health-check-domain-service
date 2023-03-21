@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Uninstall chart" type="PowerShellRunType" factoryName="PowerShell" scriptUrl="D:\Projekty studia\isi\health-check\health-check-domain-service\tools\scripts\helm-uninstall.bat" workingDirectory="$ContentRoot$" executablePath="D:\Projekty studia\isi\health-check\health-check-domain-service\tools\scripts\helm-uninstall.bat">
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>

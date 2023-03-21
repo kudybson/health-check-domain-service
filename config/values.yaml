@@ -3,9 +3,9 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
-namespace: development
+namespace: default
 app:
-  name: domain-service
+  name: health-check-domain-service
 
 spec:
   containers:
@@ -13,8 +13,8 @@ spec:
         port: 8080
       management:
         port: 8050
-      image: domain-service
-      imagePullPolicy: Never
+      image: health-check-domain-service
+      imagePullPolicy: IfNotPresent
       command: [ "java" ]
       args: [ "-Dspring.profiles.active=dev","-jar", "health-check-domain-service-0.0.1.jar" ]
   restartPolicy: OnFailure

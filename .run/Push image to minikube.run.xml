@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Push image to minikube" type="PowerShellRunType" factoryName="PowerShell" scriptUrl="D:\Projekty studia\isi\health-check\health-check-domain-service\tools\scripts\push-image-to-minikube.bat" workingDirectory="$ContentRoot$" executablePath="D:\Projekty studia\isi\health-check\health-check-domain-service\tools\scripts\push-image-to-minikube.bat">
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>

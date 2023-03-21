@@ -1,0 +1,33 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Scaffold run" type="google-container-tools-skaffold-run-config" factoryName="google-container-tools-skaffold-run-config-dev" show_console_on_std_err="false" show_console_on_std_out="false">
+    <option name="allowRunningInParallel" value="false" />
+    <option name="buildEnvironment" value="Local" />
+    <option name="cleanupDeployments" value="true" />
+    <option name="deployToCurrentContext" value="false" />
+    <option name="deployToMinikube" value="true" />
+    <option name="envVariables" />
+    <option name="imageRepositoryOverride" />
+    <option name="kubernetesContext" />
+    <option name="mappings">
+      <list />
+    </option>
+    <option name="moduleDeploymentType" value="DEPLOY_EVERYTHING" />
+    <option name="projectPathOnTarget" />
+    <option name="resourceDeletionTimeoutMins" value="0" />
+    <option name="selectedOptions">
+      <list />
+    </option>
+    <option name="skaffoldConfigurationFilePath" value="$PROJECT_DIR$/skaffold.yaml" />
+    <option name="skaffoldModules">
+      <list>
+        <option value="health-check-domain-service" />
+      </list>
+    </option>
+    <option name="skaffoldNamespace" />
+    <option name="skaffoldProfile" />
+    <option name="skaffoldWatchMode" value="ON_DEMAND" />
+    <option name="statusCheck" value="false" />
+    <option name="verbosity" value="DEBUG" />
+    <method v="2" />
+  </configuration>
+</component>
