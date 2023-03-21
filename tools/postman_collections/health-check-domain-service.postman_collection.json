@@ -1,0 +1,100 @@
+{
+	"info": {
+		"_postman_id": "5d9db38a-4d00-453f-b98d-9e2d86620c3f",
+		"name": "health-check-domain-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20070489"
+	},
+	"item": [
+		{
+			"name": "liveness probe",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{env_actuator}}/actuator/health",
+					"protocol": "http",
+					"host": [
+						"{{env_actuator}}"
+					],
+					"path": [
+						"actuator",
+						"health"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"var server       = \"http://localhost:8443\"; // add your Keycloak-URL here (without /auth)",
+					"var realm        = \"health-check\"; // the name of the realm",
+					"var grantType    = \"password\"; // the granttype, with password you can login as a normal user",
+					"var clientId     = \"health-check-domain-service\"; // the name of the client you created in Keycloak",
+					"var clientSecret = \"MDgABGrdh2dqtgfDMfu9IgRNfZQ1XSF7\"; // the secret you copied earlier",
+					"var username     = pm.environment.get('username'); // the username of the user you want to test with",
+					"var password     = \"password\"; // the password of the user you want to test with",
+					"",
+					"// creating the request URL",
+					"var url  = `${server}/auth/realms/${realm}/protocol/openid-connect/token`;",
+					"// creating the body of the request",
+					"var data = `grant_type=${grantType}&client_id=${clientId}&username=${username}&password=${password}&client_secret=${clientSecret}`;",
+					"",
+					"// request to Keycloak",
+					"// read more about this here: https://www.keycloak.org/docs/latest/authorization_services/#_service_overview",
+					"pm.sendRequest({",
+					"    url: url,",
+					"    method: 'POST',",
+					"    header: { 'Content-Type': 'application/x-www-form-urlencoded'},",
+					"    body: {",
+					"        mode: 'raw',",
+					"        raw: data",
+					"    }",
+					"},  function(err, response) {",
+					"    // Set the environment variable for token",
+					"    var response_json = response.json();",
+					"    var token = response_json.access_token;",
+					"    pm.environment.set('token', token);",
+					"    // You can open up the console in Postman with Alt + Ctrl + C",
+					"    console.log(token);",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
