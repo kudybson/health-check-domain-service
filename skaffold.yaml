@@ -1,0 +1,17 @@
+apiVersion: skaffold/v4beta2
+kind: Config
+metadata:
+  name: health-check-domain-service
+build:
+  artifacts:
+  - image: domain-service
+    context: .
+    docker: {}
+deploy:
+  helm:
+    releases:
+    - name: config
+      chartPath: config
+      valuesFiles:
+      - config/values.yaml
+      version: 0.1.0
