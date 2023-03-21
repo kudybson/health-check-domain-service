@@ -1,0 +1,21 @@
+server:
+  port: 8080 # select available port on your pc, or left 8080 which is used in docker images
+  servlet:
+    context-path: /api/domain-service
+
+spring:
+  application:
+    name: domain-service
+
+management:
+  security:
+    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health, readinessState
+  endpoint:
+    health:
+      enabled: true
+  server:
+    port: 8050

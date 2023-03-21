@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{.Values.namespace}}
+  name: {{ .Values.app.name }}
+  labels:
+    app: {{ .Values.app.name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+    spec:
+      containers:
+        - name: {{ .Values.app.name }}
+          image: {{.Values.spec.containers.image}}
+          imagePullPolicy: {{ .Values.spec.containers.imagePullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{.Values.spec.containers.app.port}}
+              protocol: TCP
+            - name: management
+              containerPort: {{.Values.spec.containers.management.port}}
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              port: {{.Values.spec.containers.management.port}}
+              path: /actuator/health
+          livenessProbe:
+            httpGet:
+              port: {{.Values.spec.containers.management.port}}
+              path: /actuator/health
