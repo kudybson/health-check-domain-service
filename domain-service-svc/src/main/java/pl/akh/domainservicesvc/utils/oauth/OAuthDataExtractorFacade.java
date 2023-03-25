@@ -7,50 +7,41 @@ import pl.akh.domainservicesvc.utils.oauth.exceptions.AuthenticationTypeNotSuppo
 import pl.akh.domainservicesvc.utils.oauth.exceptions.UserNotAuthenticatedException;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-import javax.naming.AuthenticationNotSupportedException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class OAuthDataFacade {
+public class OAuthDataExtractorFacade {
 
     public boolean isAuthenticated() {
         try {
-            Jwt auth = getAuth();
+            getAuth();
             return true;
         } catch (AuthException e) {
             return false;
         }
     }
 
-    public String getId() throws AuthException {
-        Jwt authentication = getAuth();
-        return authentication.getClaimAsString("sub");
+    public UUID getId() throws AuthException {
+        return UUID.fromString(getAuth().getClaimAsString("sub"));
     }
 
-    public String getUsername() throws AuthException {
-        Jwt authentication = getAuth();
-        return authentication.getClaimAsString("preferred_username");
+    public Optional<String> getUsername() throws AuthException {
+        return Optional.ofNullable(getAuth().getClaimAsString("preferred_username"));
     }
 
-    public String getEmail() throws AuthException {
-        Jwt authentication = getAuth();
-        return authentication.getClaimAsString("email");
+    public Optional<String> getEmail() throws AuthException {
+        return Optional.ofNullable(getAuth().getClaimAsString("email"));
     }
 
-    public String getFirstName() throws AuthException {
-        Jwt authentication = getAuth();
-        return authentication.getClaimAsString("given_name");
+    public Optional<String> getFirstName() throws AuthException {
+        return Optional.ofNullable(getAuth().getClaimAsString("given_name"));
     }
 
-    public String getLastname() throws AuthException {
-        Jwt authentication = getAuth();
-        return authentication.getClaimAsString("family_name");
+    public Optional<String> getLastname() throws AuthException {
+        return Optional.ofNullable(getAuth().getClaimAsString("family_name"));
     }
 
-    public String getFullName() throws AuthException {
-        Jwt authentication = getAuth();
-        return authentication.getClaimAsString("name");
+    public Optional<String> getFullName() throws AuthException {
+        return Optional.ofNullable(getAuth().getClaimAsString("name"));
     }
 
     public Collection<String> getRoles() throws AuthException {
@@ -60,6 +51,9 @@ public class OAuthDataFacade {
 
     }
 
+    public Optional<Boolean> isEmailVerified() throws AuthException {
+        return Optional.ofNullable(getAuth().getClaimAsBoolean("email_verified"));
+    }
 
     private Jwt getAuth() throws AuthException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
