@@ -7,6 +7,65 @@
 	},
 	"item": [
 		{
+			"name": "doctor",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "common-not-auth",
+			"item": []
+		},
+		{
+			"name": "common-auth",
+			"item": [
+				{
+					"name": "ping",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/domain-service/ping",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"domain-service",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "receptionist",
+			"item": []
+		},
+		{
+			"name": "admin",
+			"item": []
+		},
+		{
+			"name": "superadmin",
+			"item": []
+		},
+		{
+			"name": "patient",
+			"item": []
+		},
+		{
 			"name": "liveness probe",
 			"event": [
 				{
@@ -56,13 +115,13 @@
 					"var server       = \"http://localhost:8443\"; // add your Keycloak-URL here (without /auth)",
 					"var realm        = \"health-check\"; // the name of the realm",
 					"var grantType    = \"password\"; // the granttype, with password you can login as a normal user",
-					"var clientId     = \"health-check-domain-service\"; // the name of the client you created in Keycloak",
-					"var clientSecret = \"MDgABGrdh2dqtgfDMfu9IgRNfZQ1XSF7\"; // the secret you copied earlier",
+					"var clientId     = \"health-check-client\"; // the name of the client you created in Keycloak",
+					"var clientSecret = \"si9ILx5FcNObB5oDQWfAW6xj3XOI2bz5\"; // the secret you copied earlier",
 					"var username     = pm.environment.get('username'); // the username of the user you want to test with",
 					"var password     = \"password\"; // the password of the user you want to test with",
 					"",
 					"// creating the request URL",
-					"var url  = `${server}/auth/realms/${realm}/protocol/openid-connect/token`;",
+					"var url  = `${server}/realms/${realm}/protocol/openid-connect/token`;",
 					"// creating the body of the request",
 					"var data = `grant_type=${grantType}&client_id=${clientId}&username=${username}&password=${password}&client_secret=${clientSecret}`;",
 					"",

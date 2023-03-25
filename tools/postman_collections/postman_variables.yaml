@@ -7,3 +7,4 @@ username:
 
 env: 'localhost:8080'
 env_actuator: 'localhost:8050'
+env_keycloak: 'localhost:8443'
