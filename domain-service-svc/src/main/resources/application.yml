@@ -1,11 +1,11 @@
 server:
   port: 8080 # select available port on your pc, or left 8080 which is used in docker images
   servlet:
-    context-path: /api/health-check-domain-service
+    context-path: /api/domain-service
 
 spring:
   application:
-    name: health-check-domain-service
+    name: domain-service
 
 management:
   security:

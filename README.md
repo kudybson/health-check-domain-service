@@ -18,3 +18,6 @@ Above scripts are responsible for:
 * Push image to minikube - pushes image from local container registry to minicube cluster registry (use first Docker build)
 * Install chart - install chart of service in minikube (push image first)
 * Uninstall chart - removes previously installed chart
+
+
+<h1> DEVELOPMENT </h1>
