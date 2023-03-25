@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.akh.domainservicesvc.utils.oauth.OAuthDataFacade;
+import pl.akh.domainservicesvc.utils.roles.HasAnyRole;
 import pl.akh.domainservicesvc.utils.roles.HasRolePatient;
 
 import java.security.Principal;
@@ -26,7 +27,7 @@ public class Ping {
     }
 
     @GetMapping("ping")
-    @HasRolePatient
+    @HasAnyRole
     public String pong(Principal principal) throws AuthException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(oAuthDataFacade.getId());
