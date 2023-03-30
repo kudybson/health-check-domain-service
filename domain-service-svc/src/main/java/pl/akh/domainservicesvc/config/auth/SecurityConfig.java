@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.config;
+package pl.akh.domainservicesvc.config.auth;
 
 import com.nimbusds.jose.shaded.gson.internal.LinkedTreeMap;
 import org.springframework.context.annotation.Bean;

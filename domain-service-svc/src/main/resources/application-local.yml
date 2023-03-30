@@ -9,3 +9,5 @@ spring:
     url: jdbc:oracle:thin:@149.156.138.232:1521:orcl
     username: akh
     password: akh2023
+
+notificationservice: mock # [mock, sync, async]
