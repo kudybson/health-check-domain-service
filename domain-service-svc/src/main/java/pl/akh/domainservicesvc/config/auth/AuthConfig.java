@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.config;
+package pl.akh.domainservicesvc.config.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
