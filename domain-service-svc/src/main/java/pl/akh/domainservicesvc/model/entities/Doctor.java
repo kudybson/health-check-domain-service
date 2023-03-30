@@ -20,7 +20,8 @@ public class Doctor extends Person {
     private Department department;
 
     @Column(name = "SPECIALIZATION")
-    private String specialization;
+    @Enumerated(EnumType.STRING)
+    private Specialization specialization;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "doctor")
     @LazyGroup("schedule")
