@@ -26,7 +26,8 @@ public class Test {
     private Patient patient;
 
     @Column(name = "TYPE")
-    private String type;
+    @Enumerated(value = EnumType.STRING)
+    private TestType type;
 
     @Column(name = "DESCRIPTION")
     private String description;

@@ -17,6 +17,9 @@ public class TestResult {
     @Column(name = "TEST_RESULT_ID")
     private Long id;
 
+    @Column(name = "DESCRIPTION")
+    private String description;
+
     @OneToOne(mappedBy = "testResult", cascade = CascadeType.DETACH)
     @LazyGroup("test")
     private Test test;
