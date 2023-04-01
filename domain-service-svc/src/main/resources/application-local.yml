@@ -1,4 +1,6 @@
 spring:
+  kafka:
+    bootstrap-servers: localhost:9092
   security:
     oauth2:
       resourceserver:
@@ -10,4 +12,5 @@ spring:
     username: akh
     password: akh2023
 
-notificationservice: mock # [mock, sync, async]
+notification:
+  service: async # [mock, sync, async]

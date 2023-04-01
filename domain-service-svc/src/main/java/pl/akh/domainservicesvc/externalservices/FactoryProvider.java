@@ -4,9 +4,9 @@ import pl.akh.domainservicesvc.externalservices.notificationservice.Notification
 
 public class FactoryProvider {
     public static AbstractFactory getFactory(Class factoryType) {
-        if (factoryType == NotificationServiceFactory.class) {
-            return new NotificationServiceFactory();
-        }
+//        if (factoryType == NotificationServiceFactory.class) {
+//            return new NotificationServiceFactory();
+//        }
 
         throw new UnsupportedOperationException();
     }
