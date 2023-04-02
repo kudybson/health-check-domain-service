@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.infrastructure.externalservices.notificationservice.clients;
+package pl.akh.domainservicesvc.infrastructure.externalservices.notificationservice;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
