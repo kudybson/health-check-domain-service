@@ -13,7 +13,7 @@ spring:
     password: akh2023
 
 notification:
-  service: async # [mock, sync, async]
+  service: mock # [mock, sync, async]
 
 storage:
   type: inMemory #[inMemory, cloud, local]
