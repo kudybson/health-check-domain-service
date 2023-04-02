@@ -16,4 +16,4 @@ notification:
   service: mock # [mock, sync, async]
 
 storage:
-  type: local #[inMemory, cloud, local]
+  type: inMemory #[inMemory, cloud, local]
