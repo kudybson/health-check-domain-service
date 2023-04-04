@@ -1,3 +1,10 @@
+keycloak:
+  url: http://localhost:8443
+  admin:
+    username: admin
+    password: admin
+  realm: master
+  client-id: admin-cli
 spring:
   kafka:
     bootstrap-servers: localhost:9092
@@ -5,7 +12,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8443/realms/health-check
+          issuer-uri: ${keycloak.url}/realms/health-check
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@149.156.138.232:1521:orcl
