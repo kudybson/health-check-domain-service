@@ -1,17 +1,22 @@
 package pl.akh.domainservicesvc.controllers;
 
 import jakarta.security.auth.message.AuthException;
+import jakarta.servlet.UnavailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.keycloak.KeycloakClient;
 import pl.akh.domainservicesvc.utils.oauth.OAuthDataExtractorFacade;
 import pl.akh.domainservicesvc.utils.roles.HasAnyRole;
+import pl.akh.model.rq.CreateUserRQ;
 import pl.akh.notificationserviceapi.model.Notification;
 import pl.akh.notificationserviceapi.services.NotificationService;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Random;
 
 @RestController
 @Slf4j
@@ -21,10 +26,13 @@ public class Ping {
     private final OAuthDataExtractorFacade oAuthDataExtractorFacade;
     private final NotificationService notificationService;
 
+    private final KeycloakClient keycloakClient;
+
     @Autowired
-    public Ping(OAuthDataExtractorFacade oAuthDataExtractorFacade, NotificationService notificationService) {
+    public Ping(OAuthDataExtractorFacade oAuthDataExtractorFacade, NotificationService notificationService, KeycloakClient keycloakClient) {
         this.oAuthDataExtractorFacade = oAuthDataExtractorFacade;
         this.notificationService = notificationService;
+        this.keycloakClient = keycloakClient;
     }
 
     @GetMapping("ping")
@@ -45,6 +53,22 @@ public class Ping {
         stringBuilder.append("\n");
         stringBuilder.append(oAuthDataExtractorFacade.getRoles());
         stringBuilder.append("\n");
+
+        Random random = new Random();
+        int i = random.nextInt();
+        CreateUserRQ build = CreateUserRQ.builder()
+                .username("testUser" + i)
+                .firstName("FirstName")
+                .lastName("LastName")
+                .email("testUser" + i + "@test.com")
+                .groups(new ArrayList<>())
+                .enabled(true)
+                .build();
+        try {
+            keycloakClient.createUser(build);
+        } catch (UnavailableException e) {
+            log.error("e", e);
+        }
 
         Notification wizytaOdwolana = Notification.builder()
                 .userId(oAuthDataExtractorFacade.getId())
