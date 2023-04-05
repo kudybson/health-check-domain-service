@@ -1,19 +1,21 @@
 package pl.akh.domainservicesvc.infrastructure.externalservices.oauth.keycloak;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(prefix = "keycloak-client", name = "type", havingValue = "keycloak")
 public class KeycloakConfigProvider {
-    @Value("${keycloak.url}")
+    @Value("${keycloak-client.url}")
     private String keycloakUrl;
-    @Value("${keycloak.admin.username}")
+    @Value("${keycloak-client.admin.username}")
     private String username;
-    @Value("${keycloak.admin.password}")
+    @Value("${keycloak-client.admin.password}")
     private String password;
-    @Value("${keycloak.realm}")
+    @Value("${keycloak-client.realm}")
     private String realm;
-    @Value("${keycloak.client-id}")
+    @Value("${keycloak-client.client-id}")
     private String clientId;
 
     public String getKeycloakUrl() {

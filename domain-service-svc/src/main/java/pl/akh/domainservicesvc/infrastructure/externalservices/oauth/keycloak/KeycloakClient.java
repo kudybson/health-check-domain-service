@@ -6,6 +6,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.AccessTokenResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,14 +18,13 @@ import pl.akh.model.rq.CreateUserRQ;
 
 @Service
 @Slf4j
+@ConditionalOnProperty(prefix = "keycloak-client", name = "type", havingValue = "keycloak")
 public class KeycloakClient implements OAuth2Service {
 
     private final String createUserPath = "/admin/realms/health-check/users";
     private KeycloakConfigProvider keycloakConfigProvider;
     private final Keycloak keycloak;
-
     private AccessTokenResponse accessToken;
-
     private Status lastCallStatus;
 
     @Autowired
