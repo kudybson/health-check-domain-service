@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Service;
 import pl.akh.model.rq.CreateUserRQ;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @ConditionalOnProperty(prefix = "keycloak-client", name = "type", havingValue = "keycloak")
@@ -42,20 +44,40 @@ public class KeycloakClient implements OAuth2Service {
     }
 
     @Override
-    public void createUser(CreateUserRQ createUserRQ) throws UnavailableException {
+    public boolean createUser(CreateUserRQ createUserRQ) throws UnavailableException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + getAccessToken());
-        HttpEntity<CreateUserRQ> request = new HttpEntity<>(createUserRQ, headers);
-        String keycloakURL = keycloakConfigProvider.getKeycloakUrl() + createUserPath;
+        HttpEntity<CreateKeycloakUser> request = new HttpEntity<>(mapToKeycloakRequest(createUserRQ), headers);
+        final String keycloakURL = keycloakConfigProvider.getKeycloakUrl() + createUserPath;
         ResponseEntity<Object> exchange = restTemplate.exchange(keycloakURL, HttpMethod.POST, request, Object.class);
-        log.info(exchange.toString());
+        if (exchange.getStatusCode().is2xxSuccessful()) {
+            log.info(exchange.toString());
+            return true;
+        }
+        log.error("Error during creating user");
+        return false;
+    }
 
+    private CreateKeycloakUser mapToKeycloakRequest(CreateUserRQ createUserRQ) {
+        KeycloakCredentials credentials = KeycloakCredentials.builder()
+                .temporary(true)
+                .value(createUserRQ.getPassword())
+                .type("password")
+                .build();
+        return CreateKeycloakUser.builder()
+                .enabled(createUserRQ.getEnabled())
+                .groups(createUserRQ.getGroups())
+                .firstName(createUserRQ.getFirstName())
+                .lastName(createUserRQ.getLastName())
+                .email(createUserRQ.getEmail())
+                .username(createUserRQ.getUsername())
+                .credentials(List.of(credentials))
+                .build();
     }
 
     private String getAccessToken() throws UnavailableException {
         if (accessToken == null || Status.ERROR.equals(lastCallStatus)) {
-
             this.accessToken = keycloak.tokenManager().getAccessToken();
         }
         if (accessToken.getError() != null) {
