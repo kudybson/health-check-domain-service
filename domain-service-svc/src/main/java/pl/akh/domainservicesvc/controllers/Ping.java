@@ -12,12 +12,14 @@ import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Servi
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.keycloak.KeycloakClient;
 import pl.akh.domainservicesvc.utils.oauth.OAuthDataExtractorFacade;
 import pl.akh.domainservicesvc.utils.roles.HasAnyRole;
+import pl.akh.model.common.Groups;
 import pl.akh.model.rq.CreateUserRQ;
 import pl.akh.notificationserviceapi.model.Notification;
 import pl.akh.notificationserviceapi.services.NotificationService;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @RestController
@@ -62,8 +64,9 @@ public class Ping {
                 .username("testUser" + i)
                 .firstName("FirstName")
                 .lastName("LastName")
+                .password("password")
                 .email("testUser" + i + "@test.com")
-                .groups(new ArrayList<>())
+                .groups(List.of(Groups.ADMIN_GROUP))
                 .enabled(true)
                 .build();
         try {
