@@ -2,11 +2,13 @@ package pl.akh.domainservicesvc.controllers;
 
 import jakarta.security.auth.message.AuthException;
 import jakarta.servlet.UnavailableException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Service;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.keycloak.KeycloakClient;
 import pl.akh.domainservicesvc.utils.oauth.OAuthDataExtractorFacade;
 import pl.akh.domainservicesvc.utils.roles.HasAnyRole;
@@ -26,10 +28,10 @@ public class Ping {
     private final OAuthDataExtractorFacade oAuthDataExtractorFacade;
     private final NotificationService notificationService;
 
-    private final KeycloakClient keycloakClient;
+    private final OAuth2Service keycloakClient;
 
     @Autowired
-    public Ping(OAuthDataExtractorFacade oAuthDataExtractorFacade, NotificationService notificationService, KeycloakClient keycloakClient) {
+    public Ping(OAuthDataExtractorFacade oAuthDataExtractorFacade, NotificationService notificationService, OAuth2Service keycloakClient) {
         this.oAuthDataExtractorFacade = oAuthDataExtractorFacade;
         this.notificationService = notificationService;
         this.keycloakClient = keycloakClient;
@@ -37,7 +39,7 @@ public class Ping {
 
     @GetMapping("ping")
     @HasAnyRole
-    public String pong(Principal principal) throws AuthException {
+    public String pong() throws AuthException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(oAuthDataExtractorFacade.getId());
         stringBuilder.append("\n");

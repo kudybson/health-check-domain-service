@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.aspectj.lang.annotation.DeclareAnnotation;
 
 @Entity(name = "ADDRESS")
 @NoArgsConstructor
@@ -39,4 +40,7 @@ public class Address {
 
     @Column(name = "PROVINCE")
     private String province;
+
+    //TODO
+    private String country;
 }
