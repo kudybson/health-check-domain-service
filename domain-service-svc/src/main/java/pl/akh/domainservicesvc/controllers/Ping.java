@@ -29,7 +29,6 @@ public class Ping {
 
     private final OAuthDataExtractorFacade oAuthDataExtractorFacade;
     private final NotificationService notificationService;
-
     private final OAuth2Service keycloakClient;
 
     @Autowired

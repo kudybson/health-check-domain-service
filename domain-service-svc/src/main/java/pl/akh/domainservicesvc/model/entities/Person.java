@@ -12,7 +12,7 @@ import java.util.UUID;
 public abstract class Person {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @org.hibernate.validator.constraints.UUID
     @Column(name = "PERSON_ID")
     private UUID id;
 

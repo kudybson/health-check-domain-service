@@ -2,9 +2,10 @@ package pl.akh.domainservicesvc;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(properties = "spring.profiles.active=test")
-class DomainServiceSvcApplicationTests {
+@SpringBootTest
+public class DomainServiceSvcApplicationTests {
 
     @Test
     void contextLoads() {

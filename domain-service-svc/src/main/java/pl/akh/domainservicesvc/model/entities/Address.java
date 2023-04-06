@@ -4,15 +4,21 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.aspectj.lang.annotation.DeclareAnnotation;
 
-@Entity(name = "ADDRESS")
+import java.io.Serial;
+import java.io.Serializable;
+
+@Entity
+@Table(name = "ADDRESS")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-public class Address {
+public class Address implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "address_seq_generator")
+    @SequenceGenerator(name = "address_seq_generator", sequenceName = "address_seq", allocationSize = 1)
     @Column(name = "ADDRESS_ID")
     private Long id;
 
