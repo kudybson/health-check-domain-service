@@ -1,13 +1,12 @@
 package pl.akh.domainservicesvc.model.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.aspectj.lang.annotation.DeclareAnnotation;
 
 @Entity(name = "ADDRESS")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class Address {
@@ -41,6 +40,6 @@ public class Address {
     @Column(name = "PROVINCE")
     private String province;
 
-    //TODO
+    @Column(name = "COUNTRY")
     private String country;
 }

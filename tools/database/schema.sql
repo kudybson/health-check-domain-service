@@ -159,4 +159,7 @@ CREATE TABLE REFERRAL
 );
 
 alter table ADDRESS
-    add street VARCHAR2(50)
+    add street VARCHAR2(50);
+
+alter table ADDRESS
+    add COUNTRY varchar(50);
