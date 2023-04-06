@@ -6,16 +6,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Entity(name = "SCHEDULE")
+@Entity
+@Table(name = "SCHEDULE")
 @NoArgsConstructor
 @Getter
 @Setter
-public class Schedule {
+public class Schedule implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_seq_generator")
+    @SequenceGenerator(name = "schedule_seq_generator", sequenceName = "schedule_seq", allocationSize = 1)
     @Column(name = "SCHEDULE_ID")
     private Long id;
 

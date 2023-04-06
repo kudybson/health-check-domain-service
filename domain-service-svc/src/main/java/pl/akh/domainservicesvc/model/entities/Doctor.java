@@ -6,14 +6,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 
+import java.io.Serializable;
 import java.util.Collection;
 
-@Entity(name = "DOCTOR")
+@Entity
+@Table(name = "DOCTOR")
 @NoArgsConstructor
 @Getter
 @Setter
 @PrimaryKeyJoinColumn(name = "DOCTOR_ID")
-public class Doctor extends Person {
+public class Doctor extends Person implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @ManyToOne(cascade = CascadeType.DETACH)
     @LazyGroup("department")

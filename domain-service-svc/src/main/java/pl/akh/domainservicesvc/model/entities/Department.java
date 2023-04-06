@@ -6,16 +6,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 
+import java.io.Serializable;
 import java.util.Collection;
 
-@Entity(name = "DEPARTMENT")
+@Entity
+@Table(name = "DEPARTMENT")
 @NoArgsConstructor
 @Getter
 @Setter
-public class Department {
+public class Department implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_seq_generator")
+    @SequenceGenerator(name = "department_seq_generator", sequenceName = "department_seq", allocationSize = 1)
     @Column(name = "DEPARTMENT_ID")
     private Long id;
 
