@@ -8,12 +8,10 @@ import org.hibernate.annotations.LazyGroup;
 
 import java.io.Serializable;
 
-@Entity
-@Table(name = "ADMINISTRATOR")
+@Entity(name = "ADMINISTRATOR")
 @NoArgsConstructor
 @Getter
 @Setter
-@PrimaryKeyJoinColumn(name = "ADMINISTRATOR_ID")
 public class Administrator extends Person implements Serializable {
 
     private static final long serialVersionUID = 1L;

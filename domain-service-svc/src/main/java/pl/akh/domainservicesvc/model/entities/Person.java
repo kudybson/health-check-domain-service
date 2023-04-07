@@ -2,23 +2,22 @@ package pl.akh.domainservicesvc.model.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import java.util.UUID;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
+@NoArgsConstructor
 public abstract class Person {
 
     @Id
-    //todo dodawanie osoby do bazy nie działa przez uuid
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "PERSON_ID", columnDefinition = "BINARY(16)")
-    @org.hibernate.validator.constraints.UUID
+    @Column(name = "PERSON_ID", columnDefinition = "RAW(16)", nullable = false, unique = true)
     private UUID id;
 
     @Column(name = "FIRST_NAME")

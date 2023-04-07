@@ -44,17 +44,16 @@ public class AdministratorRepositoryTest extends DomainServiceIntegrationTest {
         department.setName("Opieka medyczna");
         department.setAddress(address);
 
-        UUID uuid = UUID.randomUUID();
+        Department save = departmentRepository.save(department);
 
+        UUID uuid = UUID.randomUUID();
         Administrator administrator = new Administrator();
-        administrator.setDepartment(department);
         administrator.setFirstName("Piotr");
         administrator.setSecondName("Kowalski");
-        //administrator.setId(uuid);
-
+        administrator.setId(uuid);
+        administrator.setDepartment(save);
         //when
-        addressRepository.save(address);
-        departmentRepository.save(department);
+        administratorRepository.findAll();
         administratorRepository.save(administrator);
 
         //then
