@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Setter
 public class Prescription implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 7L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prescription_seq_generator")

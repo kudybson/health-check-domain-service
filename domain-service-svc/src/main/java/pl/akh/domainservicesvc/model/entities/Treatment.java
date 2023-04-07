@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Setter
 public class Treatment implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 14L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "treatment_seq_generator")

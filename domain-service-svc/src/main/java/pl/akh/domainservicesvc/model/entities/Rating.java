@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Setter
 public class Rating implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rating_seq_generator")
@@ -23,11 +23,13 @@ public class Rating implements Serializable {
     @Column(name = "RATING_ID")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "DOCTOR_ID")
     @LazyGroup("doctor")
     private Doctor doctor;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "PATIENT_ID")
     @LazyGroup("patient")
     private Patient patient;
 

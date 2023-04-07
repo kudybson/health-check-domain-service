@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Setter
 public class Referral implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 10L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "referral_seq_generator")

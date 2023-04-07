@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Setter
 public class TestResult implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 13L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "test_result_seq_generator")

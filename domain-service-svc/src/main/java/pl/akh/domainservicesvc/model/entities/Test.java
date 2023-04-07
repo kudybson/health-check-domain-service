@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Setter
 public class Test implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 12L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "test_seq_generator")
@@ -24,10 +24,12 @@ public class Test implements Serializable {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "DEPARTMENT_ID")
     @LazyGroup("department")
     private Department department;
 
     @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "PATIENT_ID")
     @LazyGroup("patient")
     private Patient patient;
 

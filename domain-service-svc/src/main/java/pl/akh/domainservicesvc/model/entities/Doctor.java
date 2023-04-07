@@ -5,21 +5,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import java.io.Serializable;
 import java.util.Collection;
 
-@Entity
-@Table(name = "DOCTOR")
+@Entity(name = "DOCTOR")
 @NoArgsConstructor
 @Getter
 @Setter
+@SelectBeforeUpdate(value=false)
 @PrimaryKeyJoinColumn(name = "DOCTOR_ID")
 public class Doctor extends Person implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5L;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "DEPARTMENT_ID")
     @LazyGroup("department")
     private Department department;
 
@@ -31,7 +33,7 @@ public class Doctor extends Person implements Serializable {
     @LazyGroup("schedule")
     private Collection<Schedule> schedules;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "doctor")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "doctor", fetch = FetchType.LAZY)
     @LazyGroup("appointment")
     private Collection<Appointment> appointments;
 

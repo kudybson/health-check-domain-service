@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 public class Appointment implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 3L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appointment_seq_generator")
@@ -25,14 +25,17 @@ public class Appointment implements Serializable {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "DOCTOR_ID")
     @LazyGroup("doctor")
     private Doctor doctor;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "PATIENT_ID")
     @LazyGroup("patient")
     private Patient patient;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "DEPARTMENT_ID")
     @LazyGroup("department")
     private Department department;
 

@@ -5,19 +5,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import java.io.Serializable;
 import java.util.Collection;
 
-@Entity
-@Table(name = "PATIENT")
+@Entity(name = "PATIENT")
 @NoArgsConstructor
 @Getter
 @Setter
+@SelectBeforeUpdate(value=false)
 @PrimaryKeyJoinColumn(name = "PATIENT_ID")
 public class Patient extends Person implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 6L;
 
     @Column(name = "PESEL")
     private String pesel;

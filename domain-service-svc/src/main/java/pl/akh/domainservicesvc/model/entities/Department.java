@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -14,9 +15,10 @@ import java.util.Collection;
 @NoArgsConstructor
 @Getter
 @Setter
+@SelectBeforeUpdate(value=false)
 public class Department implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 4L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_seq_generator")
@@ -32,27 +34,26 @@ public class Department implements Serializable {
     @LazyGroup("address")
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
-    @LazyGroup("doctor")
-    private Collection<Doctor> doctors;
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
+//    @LazyGroup("doctor")
+//    private Collection<Doctor> doctors;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
+//    @LazyGroup("receptionist")
+//    private Collection<Receptionist> receptionists;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
-    @LazyGroup("receptionist")
-    private Collection<Receptionist> receptionists;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
+    @OneToOne(mappedBy = "department",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @LazyGroup("administrator")
     private Administrator administrator;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "department")
-    @LazyGroup("appointment")
-    private Collection<Appointment> appointments;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
-    @LazyGroup("test")
-    private Collection<Test> tests;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "department")
+//    @LazyGroup("appointment")
+//    private Collection<Appointment> appointments;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
+//    @LazyGroup("test")
+//    private Collection<Test> tests;
 }
