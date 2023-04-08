@@ -8,6 +8,7 @@ import org.hibernate.annotations.LazyGroup;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "SCHEDULE")
@@ -34,4 +35,17 @@ public class Schedule implements Serializable {
 
     @Column(name = "END_DATE_TIME")
     private LocalDateTime endDateTime;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Schedule schedule = (Schedule) o;
+        return id.equals(schedule.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

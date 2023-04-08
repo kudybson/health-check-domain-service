@@ -1,5 +1,6 @@
 package pl.akh.domainservicesvc.repository;
 
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,22 +8,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
 import pl.akh.domainservicesvc.model.entities.Address;
-import pl.akh.domainservicesvc.model.entities.Department;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
-public class AddressRepositoryTest extends DomainServiceIntegrationTest {
+public class AddressRepositoryIT extends DomainServiceIntegrationTest {
     @Autowired
     AddressRepository addressRepository;
 
-    @Autowired
-    DepartmentRepository departmentRepository;
-
     @Test
-    public void addressShouldBeSave() {
+    public void addressShouldBeSaved() {
 
         //given
         Address address = new Address();
@@ -45,7 +43,7 @@ public class AddressRepositoryTest extends DomainServiceIntegrationTest {
     }
 
     @Test
-    public void addressShouldBeDelete() {
+    public void addressShouldBeDeleted() {
 
         //given
         Address address = new Address();
@@ -68,7 +66,7 @@ public class AddressRepositoryTest extends DomainServiceIntegrationTest {
     }
 
     @Test
-    public void addressShouldBeUpdate() {
+    public void addressShouldBeUpdated() {
 
         //given
         Address address = new Address();
@@ -93,11 +91,10 @@ public class AddressRepositoryTest extends DomainServiceIntegrationTest {
     }
 
     @Test
-    public void addressShouldNotBeDeleteAnd() {
+    public void addressShouldNotBeSavedBecauseCityIsNull() {
 
         //given
         Address address = new Address();
-        address.setCity("Krakow");
         address.setCountry("PL");
         address.setPostalCode("12-123");
         address.setPost("Krakow Lobzow");
@@ -107,17 +104,33 @@ public class AddressRepositoryTest extends DomainServiceIntegrationTest {
         address.setApartmentNumber("106");
         address.setHouseNumber("56");
 
-        Department department = new Department();
-        department.setName("Opieka medyczna");
-        department.setAddress(address);
 
-        //when
-        Address save = addressRepository.save(address);
-        departmentRepository.save(department);
-        addressRepository.delete(save);
-
-        //then
-        Assertions.assertEquals(1L, addressRepository.count());
-        Assertions.assertEquals(1L, departmentRepository.count());
+        assertThrows(ConstraintViolationException.class, () -> {
+            addressRepository.save(address);
+            addressRepository.flush();
+        });
     }
+
+    @Test
+    public void addressShouldNotBeSavedBecauseCityIsEmpty() {
+
+        //given
+        Address address = new Address();
+        address.setCity("");
+        address.setCountry("PL");
+        address.setPostalCode("12-123");
+        address.setPost("Krakow Lobzow");
+        address.setProvince("Malopolskie");
+        address.setCounty("krakowski");
+        address.setStreet("Wybickiego");
+        address.setApartmentNumber("106");
+        address.setHouseNumber("56");
+
+
+        assertThrows(ConstraintViolationException.class, () -> {
+            addressRepository.save(address);
+            addressRepository.flush();
+        });
+    }
+
 }

@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "RATING")
@@ -38,4 +39,17 @@ public class Rating implements Serializable {
 
     @Column(name = "DESCRIPTION")
     private String description;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rating rating = (Rating) o;
+        return id.equals(rating.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

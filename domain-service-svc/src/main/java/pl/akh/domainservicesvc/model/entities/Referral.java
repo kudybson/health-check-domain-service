@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "REFERRAL")
@@ -26,4 +27,17 @@ public class Referral implements Serializable {
     @OneToOne(mappedBy = "referral", cascade = CascadeType.DETACH)
     @LazyGroup("treatment")
     private Treatment treatment;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Referral referral = (Referral) o;
+        return id.equals(referral.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

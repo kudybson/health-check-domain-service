@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "TEST")
@@ -44,4 +45,17 @@ public class Test implements Serializable {
     @JoinColumn(name = "TEST_ID", referencedColumnName = "TEST_ID")
     @LazyGroup("testResult")
     private TestResult testResult;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Test test = (Test) o;
+        return id.equals(test.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

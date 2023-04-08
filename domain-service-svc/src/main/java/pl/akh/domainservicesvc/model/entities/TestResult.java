@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "TEST_RESULT")
@@ -29,4 +30,17 @@ public class TestResult implements Serializable {
     @OneToOne(mappedBy = "testResult", cascade = CascadeType.DETACH)
     @LazyGroup("test")
     private Test test;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TestResult that = (TestResult) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

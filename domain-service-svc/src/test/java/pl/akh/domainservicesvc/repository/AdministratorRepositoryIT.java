@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 @ExtendWith(MockitoExtension.class)
-public class AdministratorRepositoryTest extends DomainServiceIntegrationTest {
+public class AdministratorRepositoryIT extends DomainServiceIntegrationTest {
 
     @Autowired
     AdministratorRepository administratorRepository;
@@ -29,25 +29,8 @@ public class AdministratorRepositoryTest extends DomainServiceIntegrationTest {
 
     @Test
     public void administratorShouldBeSave() {
-
+        Department save = prepareDepartment();
         //given
-
-        Address address = new Address();
-        address.setCity("Krakow");
-        address.setCountry("PL");
-        address.setPostalCode("12-123");
-        address.setPost("Krakow Lobzow");
-        address.setProvince("Malopolskie");
-        address.setCounty("krakowski");
-        address.setStreet("Wybickiego");
-        address.setApartmentNumber("106");
-        address.setHouseNumber("56");
-
-        Department department = new Department();
-        department.setName("Opieka medyczna");
-        department.setAddress(address);
-
-        Department save = departmentRepository.save(department);
 
         UUID uuid = UUID.randomUUID();
         Administrator administrator = new Administrator();
@@ -66,22 +49,7 @@ public class AdministratorRepositoryTest extends DomainServiceIntegrationTest {
 
     @Test
     public void adminShouldBeDetachedFromDepartment() {
-        Address address = new Address();
-        address.setCity("Krakow");
-        address.setCountry("PL");
-        address.setPostalCode("12-123");
-        address.setPost("Krakow Lobzow");
-        address.setProvince("Malopolskie");
-        address.setCounty("krakowski");
-        address.setStreet("Wybickiego");
-        address.setApartmentNumber("106");
-        address.setHouseNumber("56");
-
-        Department department = new Department();
-        department.setName("Opieka medyczna");
-        department.setAddress(address);
-
-        Department save = departmentRepository.save(department);
+        Department save = prepareDepartment();
 
         UUID uuid = UUID.randomUUID();
         Administrator administrator = new Administrator();
@@ -104,6 +72,27 @@ public class AdministratorRepositoryTest extends DomainServiceIntegrationTest {
         assertEquals(1L, departmentRepository.count());
         assertEquals(1L, addressRepository.count());
 
+    }
+
+    private Department prepareDepartment() {
+        Address address = new Address();
+        address.setCity("Krakow");
+        address.setCountry("PL");
+        address.setPostalCode("12-123");
+        address.setPost("Krakow Lobzow");
+        address.setProvince("Malopolskie");
+        address.setCounty("krakowski");
+        address.setStreet("Wybickiego");
+        address.setApartmentNumber("106");
+        address.setHouseNumber("56");
+
+        Department department = new Department();
+        department.setName("Opieka medyczna");
+        department.setAddress(address);
+
+        department = departmentRepository.save(department);
+        assertNotNull(department);
+        return department;
     }
 
 }
