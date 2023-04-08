@@ -28,18 +28,18 @@ public class Rating implements Serializable {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "DOCTOR_ID")
+    @JoinColumn(name = "DOCTOR_ID", nullable = false)
     @LazyGroup("doctor")
     @NotNull
     private Doctor doctor;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "PATIENT_ID")
+    @JoinColumn(name = "PATIENT_ID", nullable = false)
     @LazyGroup("patient")
     @NotNull
     private Patient patient;
 
-    @Column(name = "GRADE")
+    @Column(name = "GRADE", nullable = false)
     @NotNull
     @Min(value = 0)
     @Max(value = 10)

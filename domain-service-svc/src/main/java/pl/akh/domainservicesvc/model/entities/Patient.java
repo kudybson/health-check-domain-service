@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 import org.hibernate.annotations.SelectBeforeUpdate;
-import org.hibernate.validator.constraints.pl.PESEL;
 
 import java.io.Serializable;
 import java.util.HashSet;
