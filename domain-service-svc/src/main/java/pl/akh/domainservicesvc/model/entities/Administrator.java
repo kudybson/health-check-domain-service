@@ -1,7 +1,6 @@
 package pl.akh.domainservicesvc.model.entities;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,9 +8,8 @@ import org.hibernate.annotations.LazyGroup;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
 import java.io.Serializable;
-import java.util.Objects;
 
-@Entity(name = "ADMINISTRATOR")
+@Entity
 @NoArgsConstructor
 @Getter
 @Setter

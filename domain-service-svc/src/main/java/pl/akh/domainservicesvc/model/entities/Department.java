@@ -10,7 +10,7 @@ import org.hibernate.annotations.LazyGroup;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -40,15 +40,16 @@ public class Department implements Serializable {
     @NotNull
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
-    @LazyGroup("doctor")
-    private Set<Doctor> doctors;
+    @OneToMany(mappedBy = "department",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            targetEntity = Doctor.class)
+    private Set<Doctor> doctors = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
     @LazyGroup("receptionist")
-    private Collection<Receptionist> receptionists;
+    private Set<Receptionist> receptionists = new HashSet<>();
 
     @OneToOne(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @LazyGroup("administrator")
@@ -56,12 +57,12 @@ public class Department implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "department")
     @LazyGroup("appointment")
-    private Collection<Appointment> appointments;
+    private Set<Appointment> appointments = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
     @LazyGroup("test")
-    private Collection<Test> tests;
+    private Set<Test> tests = new HashSet<>();
 
 
     @Override

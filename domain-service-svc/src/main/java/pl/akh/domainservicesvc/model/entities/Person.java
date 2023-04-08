@@ -1,13 +1,11 @@
 package pl.akh.domainservicesvc.model.entities;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SelectBeforeUpdate;
-import org.hibernate.annotations.Type;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -24,10 +22,12 @@ public abstract class Person {
     @Column(name = "PERSON_ID", columnDefinition = "RAW(16)", nullable = false, unique = true)
     private UUID id;
 
-    @Column(name = "FIRST_NAME")
+    @Column(name = "FIRST_NAME", nullable = false)
+    @NotEmpty
     private String firstName;
 
-    @Column(name = "SECOND_NAME")
+    @Column(name = "SECOND_NAME", nullable = false)
+    @NotEmpty
     private String secondName;
 
     @Override

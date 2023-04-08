@@ -8,7 +8,8 @@ import org.hibernate.annotations.LazyGroup;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "PATIENT")
 @NoArgsConstructor
@@ -37,13 +38,13 @@ public class Patient extends Person implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
     @LazyGroup("appointment")
-    private Collection<Appointment> appointments;
+    private Set<Appointment> appointments = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "patient")
     @LazyGroup("rating")
-    private Collection<Rating> ratings;
+    private Set<Rating> ratings;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "patient")
     @LazyGroup("test")
-    private Collection<Test> tests;
+    private Set<Test> tests;
 }
