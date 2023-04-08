@@ -1,6 +1,9 @@
 package pl.akh.domainservicesvc.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,14 +30,19 @@ public class Rating implements Serializable {
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "DOCTOR_ID")
     @LazyGroup("doctor")
+    @NotNull
     private Doctor doctor;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "PATIENT_ID")
     @LazyGroup("patient")
+    @NotNull
     private Patient patient;
 
     @Column(name = "GRADE")
+    @NotNull
+    @Min(value = 0)
+    @Max(value = 10)
     private Long grade;
 
     @Column(name = "DESCRIPTION")

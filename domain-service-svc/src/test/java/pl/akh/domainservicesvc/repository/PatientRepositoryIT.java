@@ -55,7 +55,6 @@ public class PatientRepositoryIT extends DomainServiceIntegrationTest {
         //then
         assertThrows(JpaSystemException.class, () -> {
             patientRepository.saveAndFlush(patient);
-            patientRepository.flush();
         });
     }
     @Test
@@ -66,7 +65,6 @@ public class PatientRepositoryIT extends DomainServiceIntegrationTest {
         //then
         assertThrows(ConstraintViolationException.class, () -> {
             patientRepository.saveAndFlush(patient);
-            patientRepository.flush();
         });
     }
 
@@ -78,7 +76,6 @@ public class PatientRepositoryIT extends DomainServiceIntegrationTest {
         //then
         assertThrows(ConstraintViolationException.class, () -> {
             patientRepository.saveAndFlush(patient);
-            patientRepository.flush();
         });
     }
 
@@ -90,7 +87,6 @@ public class PatientRepositoryIT extends DomainServiceIntegrationTest {
         //then
         assertThrows(ConstraintViolationException.class, () -> {
             patientRepository.saveAndFlush(patient);
-            patientRepository.flush();
         });
     }
 
@@ -102,7 +98,6 @@ public class PatientRepositoryIT extends DomainServiceIntegrationTest {
         //then
         assertThrows(ConstraintViolationException.class, () -> {
             patientRepository.saveAndFlush(patient);
-            patientRepository.flush();
         });
     }
 
@@ -114,7 +109,6 @@ public class PatientRepositoryIT extends DomainServiceIntegrationTest {
         //then
         assertThrows(ConstraintViolationException.class, () -> {
             patientRepository.saveAndFlush(patient);
-            patientRepository.flush();
         });
     }
 
@@ -126,7 +120,6 @@ public class PatientRepositoryIT extends DomainServiceIntegrationTest {
         //then
         assertThrows(ConstraintViolationException.class, () -> {
             patientRepository.saveAndFlush(patient);
-            patientRepository.flush();
         });
     }
 
