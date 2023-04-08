@@ -2,13 +2,13 @@ package pl.akh.domainservicesvc.model.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SelectBeforeUpdate;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "ADDRESS")
@@ -59,4 +59,17 @@ public class Address implements Serializable {
     @Column(name = "COUNTRY")
     @NotEmpty
     private String country;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return id.equals(address.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

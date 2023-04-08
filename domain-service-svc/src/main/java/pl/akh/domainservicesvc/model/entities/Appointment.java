@@ -25,18 +25,18 @@ public class Appointment implements Serializable {
     @Column(name = "APPOINTMENT_ID")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "DOCTOR_ID")
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Doctor.class)
+    @JoinColumn(name = "DOCTOR_ID", referencedColumnName = "DOCTOR_ID")
     @LazyGroup("doctor")
     private Doctor doctor;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "PATIENT_ID")
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Patient.class)
+    @JoinColumn(name = "PATIENT_ID", referencedColumnName = "PATIENT_ID")
     @LazyGroup("patient")
     private Patient patient;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "DEPARTMENT_ID")
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Department.class)
+    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
     @LazyGroup("department")
     private Department department;
 
@@ -46,7 +46,7 @@ public class Appointment implements Serializable {
     @Column(name = "COMMENTS")
     private String comments;
 
-    @Column(name = "CABINET_NUMBER")
+    @Column(name = "CABINET_NUMBER", nullable = false)
     private Long cabinetNumber;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
