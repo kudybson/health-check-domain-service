@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.JpaSystemException;
 import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
 import pl.akh.domainservicesvc.model.entities.Address;
@@ -17,7 +18,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static pl.akh.domainservicesvc.model.entities.Specialization.ANESTHESIA;
 
@@ -34,9 +36,8 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
     public void shouldCrateDoctor() {
         //given
         UUID id = UUID.randomUUID();
-        Doctor doctor = createDoctor(id, "First", "Last", ANESTHESIA, getAttatchedDepartment());
         Department attatchedDepartment = getAttatchedDepartment();
-        doctor.setDepartment(attatchedDepartment);
+        Doctor doctor = createDoctor(id, "First", "Last", ANESTHESIA, attatchedDepartment);
 
         //when
         doctorRepository.saveAndFlush(doctor);
@@ -45,6 +46,7 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
         Doctor savedDoctor = byId.orElseThrow();
         assertNotNull(savedDoctor.getFirstName());
         assertNotNull(savedDoctor.getSecondName());
+
         assertNotNull(savedDoctor.getDepartment());
         Assertions.assertEquals(savedDoctor.getDepartment(), attatchedDepartment);
     }
@@ -52,14 +54,13 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
     @Test
     public void shouldNotCrateDoctorIfIdIsNull() {
         //given
-        Doctor doctor = createDoctor(null, "First", "Last", ANESTHESIA, getAttatchedDepartment());
         Department attatchedDepartment = getAttatchedDepartment();
-        doctor.setDepartment(attatchedDepartment);
+        Doctor doctor = createDoctor(null, "First", "Last", ANESTHESIA, attatchedDepartment);
 
         //when
         assertThrows(JpaSystemException.class, () -> {
             doctorRepository.save(doctor);
-            departmentRepository.flush();
+            doctorRepository.flush();
         });
     }
 
@@ -72,7 +73,7 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
         //then
         assertThrows(ConstraintViolationException.class, () -> {
             doctorRepository.save(doctor);
-            departmentRepository.flush();
+            doctorRepository.flush();
         });
     }
 
@@ -80,15 +81,14 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
     public void shouldNotCrateDoctorIfFirstNameIsEmpty() {
         //given
         UUID id = UUID.randomUUID();
-        Doctor doctor = createDoctor(id, "", "Last", ANESTHESIA, getAttatchedDepartment());
         Department attatchedDepartment = getAttatchedDepartment();
-        doctor.setDepartment(attatchedDepartment);
+        Doctor doctor = createDoctor(id, "", "Last", ANESTHESIA, attatchedDepartment);
 
         //when
         //then
         assertThrows(ConstraintViolationException.class, () -> {
             doctorRepository.save(doctor);
-            departmentRepository.flush();
+            doctorRepository.flush();
         });
     }
 
@@ -97,14 +97,14 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
         //when
         //then
         UUID id = UUID.randomUUID();
-        Doctor doctor = createDoctor(id, "First", "Last", null, getAttatchedDepartment());
         Department attatchedDepartment = getAttatchedDepartment();
-        doctor.setDepartment(attatchedDepartment);
+        Doctor doctor = createDoctor(id, "First", "Last", null, attatchedDepartment);
+
 
         //when
         assertThrows(ConstraintViolationException.class, () -> {
             doctorRepository.save(doctor);
-            departmentRepository.flush();
+            doctorRepository.flush();
         });
     }
 
@@ -113,9 +113,8 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
         //when
         //then
         UUID id = UUID.randomUUID();
-        Doctor doctor = createDoctor(id, "First", "Last", ANESTHESIA, getAttatchedDepartment());
         Department attatchedDepartment = getAttatchedDepartment();
-        doctor.setDepartment(attatchedDepartment);
+        Doctor doctor = createDoctor(id, "First", "Last", ANESTHESIA, attatchedDepartment);
 
         //when
         Doctor save = doctorRepository.save(doctor);
@@ -128,6 +127,19 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
         assertTrue(departmentOptional.isPresent());
         Department departmentAfterDelete = departmentOptional.get();
         assertFalse(departmentAfterDelete.getDoctors().contains(save));
+    }
+
+    @Test
+    public void shouldNotCascadeCreateDepartment() {
+        //given
+        UUID id = UUID.randomUUID();
+        Doctor doctor = createDoctor(id, "First", "Last", ANESTHESIA, prepareDepartment());
+
+        //when
+        assertThrows(InvalidDataAccessApiUsageException.class, () -> {
+            doctorRepository.save(doctor);
+            doctorRepository.flush();
+        });
     }
 
     private Doctor createDoctor(UUID id, String firstName, String lastName, Specialization specialization, Department department) {
