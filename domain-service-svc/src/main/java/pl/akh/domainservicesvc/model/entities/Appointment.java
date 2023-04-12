@@ -1,13 +1,14 @@
 package pl.akh.domainservicesvc.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -28,26 +29,27 @@ public class Appointment implements Serializable {
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Doctor.class)
     @JoinColumn(name = "DOCTOR_ID", referencedColumnName = "DOCTOR_ID")
     @LazyGroup("doctor")
+    @NotNull
     private Doctor doctor;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Patient.class)
     @JoinColumn(name = "PATIENT_ID", referencedColumnName = "PATIENT_ID")
     @LazyGroup("patient")
+    @NotNull
     private Patient patient;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Department.class)
     @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
     @LazyGroup("department")
+    @NotNull
     private Department department;
 
     @Column(name = "APPOINTMENT_DATE")
-    private LocalDateTime appointmentDate;
+    @NotNull
+    private Timestamp appointmentDate;
 
     @Column(name = "COMMENTS")
     private String comments;
-
-    @Column(name = "CABINET_NUMBER", nullable = false)
-    private Long cabinetNumber;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "APPOINTMENT_ID", referencedColumnName = "APPOINTMENT_ID")

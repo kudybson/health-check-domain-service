@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -31,10 +31,10 @@ public class Schedule implements Serializable {
     private Doctor doctor;
 
     @Column(name = "START_DATE_TIME")
-    private LocalDateTime startDateTime;
+    private Timestamp startDateTime;
 
     @Column(name = "END_DATE_TIME")
-    private LocalDateTime endDateTime;
+    private Timestamp endDateTime;
 
     @Override
     public boolean equals(Object o) {

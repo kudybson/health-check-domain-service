@@ -33,7 +33,7 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
     private DoctorRepository doctorRepository;
 
     @Test
-    public void shouldCrateDoctor() {
+    public void shouldCreateDoctor() {
         //given
         UUID id = UUID.randomUUID();
         Department attatchedDepartment = getAttatchedDepartment();
@@ -52,7 +52,7 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
     }
 
     @Test
-    public void shouldNotCrateDoctorIfIdIsNull() {
+    public void shouldNotCreateDoctorIfIdIsNull() {
         //given
         Department attatchedDepartment = getAttatchedDepartment();
         Doctor doctor = createDoctor(null, "First", "Last", ANESTHESIA, attatchedDepartment);
@@ -65,7 +65,7 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
     }
 
     @Test
-    public void shouldNotCrateDoctorIfDepartmentIsNull() {
+    public void shouldNotCreateDoctorIfDepartmentIsNull() {
         //given
         UUID id = UUID.randomUUID();
         Doctor doctor = createDoctor(id, "First", "Last", ANESTHESIA, null);
@@ -78,7 +78,7 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
     }
 
     @Test
-    public void shouldNotCrateDoctorIfFirstNameIsEmpty() {
+    public void shouldNotCreateDoctorIfFirstNameIsEmpty() {
         //given
         UUID id = UUID.randomUUID();
         Department attatchedDepartment = getAttatchedDepartment();
@@ -93,7 +93,7 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
     }
 
     @Test
-    public void shouldNotCrateDoctorIfSpecializationIsNull() {
+    public void shouldNotCreateDoctorIfSpecializationIsNull() {
         //when
         //then
         UUID id = UUID.randomUUID();

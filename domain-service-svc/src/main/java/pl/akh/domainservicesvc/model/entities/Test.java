@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -40,6 +41,9 @@ public class Test implements Serializable {
 
     @Column(name = "DESCRIPTION")
     private String description;
+
+    @Column(name = "TEST_DATE")
+    private Timestamp testDate;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "TEST_ID", referencedColumnName = "TEST_ID")
