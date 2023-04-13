@@ -104,7 +104,6 @@ public class AppointmentRepositoryIT extends DomainServiceIntegrationTest {
 
     private Appointment createAppointment(String comments, Department department, Timestamp appointmentDate, Doctor doctor, Patient patient) {
         Appointment appointment = new Appointment();
-        appointment.setCabinetNumber(3L);
         appointment.setComments(comments);
         appointment.setAppointmentDate(appointmentDate);
         appointment.setDepartment(department);

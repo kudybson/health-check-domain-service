@@ -1,6 +1,7 @@
 package pl.akh.domainservicesvc.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,14 +27,17 @@ public class Schedule implements Serializable {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "DOCTOR_ID")
+    @JoinColumn(name = "DOCTOR_ID", nullable = false)
     @LazyGroup("doctor")
+    @NotNull
     private Doctor doctor;
 
-    @Column(name = "START_DATE_TIME")
+    @Column(name = "START_DATE_TIME", nullable = false)
+    @NotNull
     private Timestamp startDateTime;
 
-    @Column(name = "END_DATE_TIME")
+    @Column(name = "END_DATE_TIME", nullable = false)
+    @NotNull
     private Timestamp endDateTime;
 
     @Override

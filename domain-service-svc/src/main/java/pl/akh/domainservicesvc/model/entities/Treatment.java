@@ -1,6 +1,8 @@
 package pl.akh.domainservicesvc.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,14 +26,18 @@ public class Treatment implements Serializable {
     @Column(name = "TREATMENT_ID")
     private Long id;
 
-    @OneToOne(mappedBy = "treatment", cascade = CascadeType.DETACH)
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE}, targetEntity = Appointment.class)
+    @JoinColumn(name = "APPOINTMENT_ID", referencedColumnName = "APPOINTMENT_ID")
     @LazyGroup("appointment")
+    @NotNull
     private Appointment appointment;
 
-    @Column(name = "DIAGNOSIS")
+    @Column(name = "DIAGNOSIS", nullable = false)
+    @NotEmpty
     private String diagnosis;
 
-    @Column(name = "RECOMMENDATION")
+    @Column(name = "RECOMMENDATION", nullable = false)
+    @NotEmpty
     private String recommendation;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

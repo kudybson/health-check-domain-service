@@ -51,7 +51,7 @@ public class Appointment implements Serializable {
     @Column(name = "COMMENTS")
     private String comments;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "APPOINTMENT_ID", referencedColumnName = "APPOINTMENT_ID")
     @LazyGroup("treatment")
     private Treatment treatment;
