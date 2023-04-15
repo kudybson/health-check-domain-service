@@ -26,37 +26,37 @@ public class Address implements Serializable {
     @Column(name = "ADDRESS_ID", unique = true)
     private Long id;
 
-    @Column(name = "CITY")
+    @Column(name = "CITY", nullable = false)
     @NotEmpty
     private String city;
 
     @Column(name = "STREET")
     private String street;
 
-    @Column(name = "HOUSE_NUMBER")
+    @Column(name = "HOUSE_NUMBER", nullable = false)
     @NotEmpty
     private String houseNumber;
 
     @Column(name = "APARTMENT_NUMBER")
     private String apartmentNumber;
 
-    @Column(name = "POSTAL_CODE")
+    @Column(name = "POSTAL_CODE", nullable = false)
     @NotEmpty
     private String postalCode;
 
-    @Column(name = "POST")
+    @Column(name = "POST", nullable = false)
     @NotEmpty
     private String post;
 
-    @Column(name = "COUNTY")
+    @Column(name = "COUNTY", nullable = false)
     @NotEmpty
     private String county;
 
-    @Column(name = "PROVINCE")
+    @Column(name = "PROVINCE", nullable = false)
     @NotEmpty
     private String province;
 
-    @Column(name = "COUNTRY")
+    @Column(name = "COUNTRY", nullable = false)
     @NotEmpty
     private String country;
 

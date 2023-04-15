@@ -1,13 +1,12 @@
 package pl.akh.model.rq;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class Address {
+public class AddressRQ {
     @NotBlank
     private String country;
     @NotBlank
