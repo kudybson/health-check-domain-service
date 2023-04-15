@@ -1,11 +1,30 @@
+keycloak-client:
+  type: keycloak # [mock, keycloak]
+  url: http://keycloak:80
+  admin:
+    username: admin
+    password: admin
+  realm: master
+  client-id: admin-cli
+
 spring:
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak:8080/realms/health-check
+          issuer-uri: ${keycloak-client.url}/realms/health-check
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@149.156.138.232:1521:orcl
     username: akh
     password: akh2023
+  kafka:
+    bootstrap-servers: kafka:9092
+
+#notification service
+notification:
+  service: mock # [mock, sync, async]
+
+#storage
+storage:
+  type: inMemory #[inMemory, cloud, local]

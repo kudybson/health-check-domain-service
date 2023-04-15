@@ -22,7 +22,6 @@ spring:
     username: akh
     password: akh2023
 
-
 #notification service
 notification:
   service: mock # [mock, sync, async]

@@ -10,6 +10,17 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 5MB
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: none
+    show-sql: false
+    defer-datasource-initialization: false
+    open-in-view: false
+  h2:
+    console:
+      enabled: off
 management:
   security:
     enabled: false
