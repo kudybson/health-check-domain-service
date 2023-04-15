@@ -6,7 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
-import pl.akh.domainservicesvc.model.entities.*;
+import pl.akh.domainservicesvc.domain.model.entities.*;
+import pl.akh.domainservicesvc.domain.repository.AppointmentRepository;
+import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
+import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
+import pl.akh.domainservicesvc.domain.repository.PatientRepository;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.JpaSystemException;
 import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
-import pl.akh.domainservicesvc.model.entities.Address;
-import pl.akh.domainservicesvc.model.entities.Department;
-import pl.akh.domainservicesvc.model.entities.Doctor;
-import pl.akh.domainservicesvc.model.entities.Specialization;
+import pl.akh.domainservicesvc.domain.model.entities.Address;
+import pl.akh.domainservicesvc.domain.model.entities.Department;
+import pl.akh.domainservicesvc.domain.model.entities.Doctor;
+import pl.akh.domainservicesvc.domain.model.entities.Specialization;
+import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
+import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -21,7 +23,7 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static pl.akh.domainservicesvc.model.entities.Specialization.ANESTHESIA;
+import static pl.akh.domainservicesvc.domain.model.entities.Specialization.ANESTHESIA;
 
 @ExtendWith(MockitoExtension.class)
 public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
