@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.repository;
+package pl.akh.domainservicesvc.domain.repository;
 
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Assertions;
@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
 import pl.akh.domainservicesvc.domain.model.entities.Address;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
-import pl.akh.domainservicesvc.domain.repository.AddressRepository;
-import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;

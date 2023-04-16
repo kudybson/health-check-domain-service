@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.repository;
+package pl.akh.domainservicesvc.domain.repository;
 
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Assertions;
@@ -13,8 +13,6 @@ import pl.akh.domainservicesvc.domain.model.entities.Address;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
 import pl.akh.domainservicesvc.domain.model.entities.Doctor;
 import pl.akh.domainservicesvc.domain.model.entities.Specialization;
-import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
-import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -25,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static pl.akh.domainservicesvc.domain.model.entities.Specialization.ANESTHESIA;
 
-@ExtendWith(MockitoExtension.class)
 public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
 
     @Autowired

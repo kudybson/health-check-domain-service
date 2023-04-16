@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -27,6 +28,13 @@ public class Referral implements Serializable {
     @OneToOne(mappedBy = "referral", cascade = CascadeType.DETACH)
     @LazyGroup("treatment")
     private Treatment treatment;
+
+    @Column(name ="TYPE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TestType testType;
+
+    @Column(name ="TYPE", nullable = false)
+    private Timestamp expirationDate;
 
     @Override
     public boolean equals(Object o) {

@@ -1,5 +1,6 @@
-package pl.akh.domainservicesvc.repository;
+package pl.akh.domainservicesvc.domain.repository;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,17 +9,14 @@ import pl.akh.domainservicesvc.domain.model.entities.Address;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
 import pl.akh.domainservicesvc.domain.model.entities.Gender;
 import pl.akh.domainservicesvc.domain.model.entities.Patient;
-import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
-import pl.akh.domainservicesvc.domain.repository.PatientRepository;
-import pl.akh.domainservicesvc.domain.repository.TestRepository;
 
 import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
-public class TestRepositoryIT extends DomainServiceIntegrationTest {
+public class MedicalMedicalTestRepositoryIT extends DomainServiceIntegrationTest {
 
     @Autowired
-    private TestRepository testRepository;
+    private MedicalTestRepository medicalTestRepository;
 
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -26,7 +24,7 @@ public class TestRepositoryIT extends DomainServiceIntegrationTest {
     private PatientRepository patientRepository;
 
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void shouldCreateTest() {
         //TODO
     }

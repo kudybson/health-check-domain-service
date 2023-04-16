@@ -2,12 +2,16 @@ package pl.akh.model.rq;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import pl.akh.model.common.Specialization;
 
 @Data
 @Builder
-public class CreateUserRQ {
+public class DoctorRQ {
+    @NotNull
+    private Long departmentId;
     @NotBlank
     private String username;
     @NotBlank
@@ -21,4 +25,6 @@ public class CreateUserRQ {
     @NotBlank
     private String lastName;
 
+    @NotNull
+    private Specialization specialization;
 }

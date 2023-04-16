@@ -1,13 +1,12 @@
 package pl.akh.services;
 
-import jakarta.validation.constraints.NotEmpty;
-import pl.akh.model.rq.department.CreateDepartmentRQ;
+import pl.akh.model.rq.DepartmentRQ;
 import pl.akh.model.rs.DepartmentRS;
 
 import java.util.Collection;
 
 public interface DepartmentService {
-    DepartmentRS createDepartment(CreateDepartmentRQ createDepartmentRQ);
+    DepartmentRS createDepartment(DepartmentRQ departmentRQ);
 
     Collection<DepartmentRS> getAllDepartments();
 

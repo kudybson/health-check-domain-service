@@ -1,6 +1,6 @@
 package pl.akh.services;
 
-import pl.akh.model.rq.rating.RateRQ;
+import pl.akh.model.rq.RateRQ;
 
 import java.util.UUID;
 

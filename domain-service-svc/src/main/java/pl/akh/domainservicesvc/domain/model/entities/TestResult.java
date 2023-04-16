@@ -29,7 +29,7 @@ public class TestResult implements Serializable {
 
     @OneToOne(mappedBy = "testResult", cascade = CascadeType.DETACH)
     @LazyGroup("test")
-    private Test test;
+    private MedicalTest medicalTest;
 
     @Override
     public boolean equals(Object o) {
