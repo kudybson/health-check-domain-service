@@ -1,6 +1,8 @@
 package pl.akh.domainservicesvc.domain.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,10 +27,13 @@ public class TestResult implements Serializable {
     private Long id;
 
     @Column(name = "DESCRIPTION")
+    @NotEmpty
     private String description;
 
-    @OneToOne(mappedBy = "testResult", cascade = CascadeType.DETACH)
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE}, targetEntity = MedicalTest.class)
+    @JoinColumn(name = "TEST_ID", referencedColumnName = "TEST_ID")
     @LazyGroup("test")
+    @NotNull
     private MedicalTest medicalTest;
 
     @Override

@@ -3,8 +3,6 @@ package pl.akh.domainservicesvc.domain.repository;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.JpaSystemException;
@@ -44,7 +42,7 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
         Optional<Doctor> byId = doctorRepository.findById(id);
         Doctor savedDoctor = byId.orElseThrow();
         assertNotNull(savedDoctor.getFirstName());
-        assertNotNull(savedDoctor.getSecondName());
+        assertNotNull(savedDoctor.getLastName());
 
         assertNotNull(savedDoctor.getDepartment());
         Assertions.assertEquals(savedDoctor.getDepartment(), attatchedDepartment);
@@ -147,7 +145,7 @@ public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
         doctor.setDepartment(department);
         doctor.setSpecialization(specialization);
         doctor.setFirstName(firstName);
-        doctor.setSecondName(lastName);
+        doctor.setLastName(lastName);
         return doctor;
     }
 

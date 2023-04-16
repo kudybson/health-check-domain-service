@@ -10,7 +10,6 @@ import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
 import pl.akh.domainservicesvc.domain.model.entities.Address;
 import pl.akh.domainservicesvc.domain.model.entities.Gender;
 import pl.akh.domainservicesvc.domain.model.entities.Patient;
-import pl.akh.domainservicesvc.domain.repository.PatientRepository;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -45,7 +44,7 @@ public class PatientRepositoryIT extends DomainServiceIntegrationTest {
         Patient savedPatient = savedPatientOptional.get();
         assertEquals(uuid, savedPatient.getId());
         assertEquals(firstName, savedPatient.getFirstName());
-        assertEquals(lastName, savedPatient.getSecondName());
+        assertEquals(lastName, savedPatient.getLastName());
         assertNotNull(savedPatient.getAddress());
     }
     @Test
@@ -128,7 +127,7 @@ public class PatientRepositoryIT extends DomainServiceIntegrationTest {
         Patient patient = new Patient();
         patient.setId(id);
         patient.setFirstName(firstName);
-        patient.setSecondName(lastName);
+        patient.setLastName(lastName);
         patient.setGender(gender);
         patient.setPhoneNumber(phone);
         patient.setPesel(pesel);

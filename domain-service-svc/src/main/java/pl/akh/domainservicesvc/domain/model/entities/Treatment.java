@@ -40,12 +40,12 @@ public class Treatment implements Serializable {
     @NotEmpty
     private String recommendation;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "treatment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "TREATMENT_ID", referencedColumnName = "TREATMENT_ID")
     @LazyGroup("prescription")
     private Prescription prescription;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "treatment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "TREATMENT_ID", referencedColumnName = "TREATMENT_ID")
     @LazyGroup("referral")
     private Referral referral;

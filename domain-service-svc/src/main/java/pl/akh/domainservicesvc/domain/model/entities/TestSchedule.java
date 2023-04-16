@@ -1,6 +1,7 @@
 package pl.akh.domainservicesvc.domain.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,16 +27,20 @@ public class TestSchedule implements Serializable {
 
     @Column(name = "TYPE")
     @Enumerated(value = EnumType.STRING)
+    @NotNull
     private TestType type;
 
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "DEPARTMENT_ID")
     @LazyGroup("department")
+    @NotNull
     private Department department;
 
     @Column(name = "START_DATE_TIME")
+    @NotNull
     private Timestamp startDateTime;
 
     @Column(name = "END_DATE_TIME")
+    @NotNull
     private Timestamp endDateTime;
 }

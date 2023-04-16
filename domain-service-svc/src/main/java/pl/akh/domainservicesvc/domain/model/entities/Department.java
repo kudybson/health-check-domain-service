@@ -46,9 +46,10 @@ public class Department implements Serializable {
             targetEntity = Doctor.class)
     private Set<Doctor> doctors = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
-    @LazyGroup("receptionist")
+    @OneToMany(mappedBy = "department",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            targetEntity = Receptionist.class)
     private Set<Receptionist> receptionists = new HashSet<>();
 
     @OneToOne(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -45,7 +45,7 @@ public class MedicalTest implements Serializable {
     @Column(name = "TEST_DATE")
     private Timestamp testDate;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "medicalTest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "TEST_ID", referencedColumnName = "TEST_ID")
     @LazyGroup("testResult")
     private TestResult testResult;
