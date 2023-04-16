@@ -1,6 +1,7 @@
 package pl.akh.domainservicesvc.domain.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class TestResult implements Serializable {
     private Long id;
 
     @Column(name = "DESCRIPTION")
+    @NotEmpty
     private String description;
 
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE}, targetEntity = MedicalTest.class)
