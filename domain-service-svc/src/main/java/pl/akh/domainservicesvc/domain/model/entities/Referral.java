@@ -33,9 +33,6 @@ public class Referral implements Serializable {
     @Enumerated(EnumType.STRING)
     private TestType testType;
 
-    @Column(name ="TYPE", nullable = false)
-    private Timestamp expirationDate;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

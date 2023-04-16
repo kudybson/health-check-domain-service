@@ -1,4 +1,4 @@
-package pl.akh.model.common;
+package pl.akh.domainservicesvc.infrastructure.externalservices.oauth.keycloak;
 
 public enum Groups {
     PATIENT_GROUP("/PATIENT_GROUP"),

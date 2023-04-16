@@ -66,8 +66,8 @@ public class KeycloakClient implements OAuth2Service {
                 .type("password")
                 .build();
         return CreateKeycloakUser.builder()
-                .enabled(createUserRQ.getEnabled())
-                .groups(createUserRQ.getGroups())
+                .enabled(true)
+                .groups(List.of(Groups.ADMIN_GROUP))
                 .firstName(createUserRQ.getFirstName())
                 .lastName(createUserRQ.getLastName())
                 .email(createUserRQ.getEmail())
