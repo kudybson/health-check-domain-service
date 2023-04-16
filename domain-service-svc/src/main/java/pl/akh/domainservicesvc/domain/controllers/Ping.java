@@ -1,7 +1,6 @@
 package pl.akh.domainservicesvc.domain.controllers;
 
 import jakarta.security.auth.message.AuthException;
-import jakarta.servlet.UnavailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,15 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.akh.domainservicesvc.domain.utils.auth.AuthDataExtractor;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Service;
-import pl.akh.domainservicesvc.domain.utils.auth.oauth.OAuthDataExtractorFacade;
 import pl.akh.domainservicesvc.domain.utils.roles.HasAnyRole;
-import pl.akh.model.common.Groups;
-import pl.akh.model.rq.CreateUserRQ;
 import pl.akh.notificationserviceapi.model.Notification;
 import pl.akh.notificationserviceapi.services.NotificationService;
-
-import java.util.List;
-import java.util.Random;
 
 @RestController
 @Slf4j

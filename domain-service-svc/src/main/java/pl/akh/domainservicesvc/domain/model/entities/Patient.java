@@ -52,5 +52,5 @@ public class Patient extends Person implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "patient")
     @LazyGroup("test")
-    private Set<Test> tests;
+    private Set<MedicalTest> medicalTests;
 }

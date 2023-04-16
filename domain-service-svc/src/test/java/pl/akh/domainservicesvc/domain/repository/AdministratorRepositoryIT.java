@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.repository;
+package pl.akh.domainservicesvc.domain.repository;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,9 +8,6 @@ import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
 import pl.akh.domainservicesvc.domain.model.entities.Address;
 import pl.akh.domainservicesvc.domain.model.entities.Administrator;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
-import pl.akh.domainservicesvc.domain.repository.AddressRepository;
-import pl.akh.domainservicesvc.domain.repository.AdministratorRepository;
-import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 
 import java.util.UUID;
 

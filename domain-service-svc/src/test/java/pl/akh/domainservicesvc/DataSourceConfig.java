@@ -17,7 +17,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "pl.akh.domainservicesvc.repository")
+@EnableJpaRepositories(basePackages = "pl.akh.domainservicesvc.domain.repository")
 @TestPropertySource(locations = "application-test.yml")
 @EnableTransactionManagement
 public class DataSourceConfig {

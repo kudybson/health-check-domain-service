@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.repository;
+package pl.akh.domainservicesvc.domain.repository;
 
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;

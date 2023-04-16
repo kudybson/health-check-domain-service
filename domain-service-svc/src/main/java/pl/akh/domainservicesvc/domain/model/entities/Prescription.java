@@ -37,7 +37,7 @@ public class Prescription implements Serializable {
 
     @Column(name = "EXPIRATION_DATE")
     private LocalDate expirationDate;
-
+    //do wywalenia
 
     @Override
     public boolean equals(Object o) {

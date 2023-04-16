@@ -1,13 +1,18 @@
 package pl.akh.services;
 
-import pl.akh.model.rq.appointment.CreateTreatmentRQ;
-import pl.akh.model.rs.AppointmentRS;
+import pl.akh.model.rq.PrescriptionRQ;
+import pl.akh.model.rq.TreatmentRQ;
 import pl.akh.model.rs.TreatmentRS;
 
 public interface TreatmentService {
-    TreatmentRS addTreatmentToAppointment(long appointmentId, CreateTreatmentRQ comment);
-    TreatmentRS updateTreatment(long treatmentId, CreateTreatmentRQ comment);
-    void removeTreatmentFromAppointment(long appointmentId);
+    TreatmentRS addTreatmentToAppointment(TreatmentRQ comment);
+
+    TreatmentRS updateTreatment(long treatmentId, TreatmentRQ comment);
+
+    void removeTreatmentByAppointmentId(long appointmentId);
+
     void deleteTreatment(long treatmentId);
+
+    void addPrescription(PrescriptionRQ prescriptionRQ);
 
 }

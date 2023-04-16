@@ -1,5 +1,6 @@
 package pl.akh.model.rq;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class AddressRQ {
     private String street;
     @NotBlank
     private String houseNumber;
-    @NotBlank
+    @Nullable
     private String apartmentNumber;
     @NotBlank
     private String postalCode;
