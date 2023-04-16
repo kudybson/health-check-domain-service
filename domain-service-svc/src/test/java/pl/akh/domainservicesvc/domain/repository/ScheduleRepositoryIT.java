@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
 import pl.akh.domainservicesvc.domain.model.entities.*;
-import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
-import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
-import pl.akh.domainservicesvc.domain.repository.ScheduleRepository;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -88,7 +85,7 @@ public class ScheduleRepositoryIT extends DomainServiceIntegrationTest {
         Doctor doctor = new Doctor();
         doctor.setId(doctorUUID);
         doctor.setSpecialization(Specialization.ANESTHESIA);
-        doctor.setSecondName("Nazwisko");
+        doctor.setLastName("Nazwisko");
         doctor.setFirstName("Imie");
         doctor.setDepartment(prepareDepartment());
         return doctorRepository.saveAndFlush(doctor);

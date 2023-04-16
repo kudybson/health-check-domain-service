@@ -33,7 +33,7 @@ public class MedicalMedicalTestRepositoryIT extends DomainServiceIntegrationTest
         Patient patient = new Patient();
         patient.setId(UUID.randomUUID());
         patient.setFirstName("John");
-        patient.setSecondName("Wick");
+        patient.setLastName("Wick");
         patient.setGender(Gender.MALE);
         patient.setPhoneNumber("797634917");
         patient.setPesel("00210147133");

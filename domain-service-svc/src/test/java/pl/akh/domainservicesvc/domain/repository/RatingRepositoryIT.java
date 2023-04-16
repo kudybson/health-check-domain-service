@@ -7,10 +7,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
 import pl.akh.domainservicesvc.domain.model.entities.*;
-import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
-import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
-import pl.akh.domainservicesvc.domain.repository.PatientRepository;
-import pl.akh.domainservicesvc.domain.repository.RatingRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -130,7 +126,7 @@ public class RatingRepositoryIT extends DomainServiceIntegrationTest {
         doctor.setDepartment(prepareDepartment());
         doctor.setSpecialization(Specialization.ANESTHESIA);
         doctor.setFirstName("James");
-        doctor.setSecondName("McGill");
+        doctor.setLastName("McGill");
         return doctorRepository.saveAndFlush(doctor);
     }
 
@@ -138,7 +134,7 @@ public class RatingRepositoryIT extends DomainServiceIntegrationTest {
         Patient patient = new Patient();
         patient.setId(patientUUID);
         patient.setFirstName("John");
-        patient.setSecondName("Wick");
+        patient.setLastName("Wick");
         patient.setGender(Gender.MALE);
         patient.setPhoneNumber("797634917");
         patient.setPesel("00210147133");

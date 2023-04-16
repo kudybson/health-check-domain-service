@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
 import pl.akh.domainservicesvc.domain.model.entities.*;
-import pl.akh.domainservicesvc.domain.repository.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -104,7 +103,7 @@ public class TreatmentRepositoryIT extends DomainServiceIntegrationTest {
         doctor.setDepartment(prepareDepartment());
         doctor.setSpecialization(Specialization.ANESTHESIA);
         doctor.setFirstName("James");
-        doctor.setSecondName("McGill");
+        doctor.setLastName("McGill");
         return doctorRepository.saveAndFlush(doctor);
     }
 
@@ -112,7 +111,7 @@ public class TreatmentRepositoryIT extends DomainServiceIntegrationTest {
         Patient patient = new Patient();
         patient.setId(UUID.randomUUID());
         patient.setFirstName("John");
-        patient.setSecondName("Wick");
+        patient.setLastName("Wick");
         patient.setGender(Gender.MALE);
         patient.setPhoneNumber("797634917");
         patient.setPesel("00210147133");

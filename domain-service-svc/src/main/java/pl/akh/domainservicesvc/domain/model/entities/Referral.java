@@ -29,7 +29,7 @@ public class Referral implements Serializable {
     @LazyGroup("treatment")
     private Treatment treatment;
 
-    @Column(name ="TYPE", nullable = false)
+    @Column(name ="EXPIRATION_DATE", nullable = false)
     @Enumerated(EnumType.STRING)
     private TestType testType;
 

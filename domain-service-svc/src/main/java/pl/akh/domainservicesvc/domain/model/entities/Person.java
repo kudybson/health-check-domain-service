@@ -28,7 +28,7 @@ public abstract class Person {
 
     @Column(name = "SECOND_NAME", nullable = false)
     @NotEmpty
-    private String secondName;
+    private String lastName;
 
     @Override
     public boolean equals(Object o) {

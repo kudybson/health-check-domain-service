@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -36,8 +36,7 @@ public class Prescription implements Serializable {
     private String description;
 
     @Column(name = "EXPIRATION_DATE")
-    private LocalDate expirationDate;
-    //do wywalenia
+    private Timestamp expirationDate;
 
     @Override
     public boolean equals(Object o) {
