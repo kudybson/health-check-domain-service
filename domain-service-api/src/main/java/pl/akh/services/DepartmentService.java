@@ -1,5 +1,6 @@
 package pl.akh.services;
 
+import jdk.jfr.Description;
 import pl.akh.model.rq.DepartmentRQ;
 import pl.akh.model.rs.DepartmentRS;
 
@@ -10,10 +11,11 @@ public interface DepartmentService {
 
     Collection<DepartmentRS> getAllDepartments();
 
-    Collection<DepartmentRS> getAllDepartments(Long pageNumber, Long pageSize);
-
-    Collection<DepartmentRS> getDepartmentsByCriteria(String city, String street, String postalCode, String county,
+    @Description(value = "no need to implement")
+    Collection<DepartmentRS> getDepartmentsByCriteria(String city, String street, String county,
                                                       String province, String country);
 
     DepartmentRS getDepartmentById(Long id);
+
+    DepartmentRS updateDepartment(DepartmentRQ departmentRQ, Long departmentId);
 }

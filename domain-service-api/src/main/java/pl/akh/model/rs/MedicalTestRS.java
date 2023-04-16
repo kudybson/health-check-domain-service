@@ -10,12 +10,11 @@ import java.util.UUID;
 @Data
 @Builder
 public class MedicalTestRS {
-
     private Long id;
     private TestStatus testStatus;
-    long departmentId;
-    UUID patientUUID;
-    TestType type;
-    String description;
-    TestResultRS testResultRS;
+    private Long departmentId;
+    private UUID patientUUID;
+    private TestType type;
+    private String description;
+    private TestResultRS testResultRS;
 }

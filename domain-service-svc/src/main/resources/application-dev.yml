@@ -1,6 +1,7 @@
 keycloak-client:
   type: keycloak # [mock, keycloak]
   url: http://keycloak:80
+  context-path: "/auth"
   admin:
     username: admin
     password: admin
@@ -12,7 +13,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${keycloak-client.url}/realms/health-check
+          issuer-uri: ${keycloak-client.context-path}${keycloak-client.url}/realms/health-check
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@149.156.138.232:1521:orcl

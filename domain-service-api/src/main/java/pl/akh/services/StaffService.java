@@ -10,15 +10,15 @@ import pl.akh.model.rs.ReceptionistRS;
 import java.util.UUID;
 
 public interface StaffService {
-    AdministratorRS addAdministrator(AdministratorRQ administratorRQ);
+    AdministratorRS addAdministrator(AdministratorRQ administratorRQ) throws Exception;
 
-    ReceptionistRS createReceptionist(ReceptionistRQ receptionistRQ);
+    ReceptionistRS createReceptionist(ReceptionistRQ receptionistRQ) throws Exception;
 
-    DoctorRS createDoctor(DoctorRQ doctorRQ);
+    DoctorRS createDoctor(DoctorRQ doctorRQ) throws Exception;
 
-    void deleteStaffMember(UUID staffMemberUUID);
+    void deleteStaffMember(UUID staffMemberUUID) throws Exception;
 
-    void lockStaffMemberAccount(UUID receptionistUUID);
+    void lockStaffMemberAccount(UUID receptionistUUID) throws Exception;
 
-    void unlockStaffMemberAccount(UUID receptionistUUID);
+    void unlockStaffMemberAccount(UUID receptionistUUID) throws Exception;
 }

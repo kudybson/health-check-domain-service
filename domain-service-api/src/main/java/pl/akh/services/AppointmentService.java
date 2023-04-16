@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.UUID;
 
 public interface AppointmentService {
-    Collection<AppointmentRS> getAllAppointments();
     AppointmentRS getAppointmentById(long id);
     AppointmentRS createAppointment(AppointmentRQ appointmentRQ);
     AppointmentRS removeAppointmentById(long id);

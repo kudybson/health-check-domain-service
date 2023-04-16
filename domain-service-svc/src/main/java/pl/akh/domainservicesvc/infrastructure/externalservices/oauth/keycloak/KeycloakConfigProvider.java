@@ -17,9 +17,11 @@ public class KeycloakConfigProvider {
     private String realm;
     @Value("${keycloak-client.client-id}")
     private String clientId;
+    @Value("${keycloak-client.context-path}")
+    private String contextPath;
 
     public String getKeycloakUrl() {
-        return keycloakUrl;
+        return keycloakUrl + contextPath;
     }
 
     public void setKeycloakUrl(String keycloakUrl) {
@@ -56,5 +58,13 @@ public class KeycloakConfigProvider {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
     }
 }

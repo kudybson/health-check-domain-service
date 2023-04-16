@@ -1,4 +1,4 @@
 package pl.akh.model.rs;
 
-public class RateRS {
+public class RatingRS {
 }

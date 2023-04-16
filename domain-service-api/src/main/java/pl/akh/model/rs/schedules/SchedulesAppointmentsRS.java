@@ -9,5 +9,5 @@ import java.util.Collection;
 @Builder
 public class SchedulesAppointmentsRS {
     private Collection<ScheduleRS> schedules;
-    private Collection<ScheduleRS> appointments;
+    private Collection<AppointmentDateRS> appointments;
 }
