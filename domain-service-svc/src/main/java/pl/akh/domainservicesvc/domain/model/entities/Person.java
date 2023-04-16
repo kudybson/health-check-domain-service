@@ -26,7 +26,7 @@ public abstract class Person {
     @NotEmpty
     private String firstName;
 
-    @Column(name = "SECOND_NAME", nullable = false)
+    @Column(name = "LAST_NAME", nullable = false)
     @NotEmpty
     private String lastName;
 

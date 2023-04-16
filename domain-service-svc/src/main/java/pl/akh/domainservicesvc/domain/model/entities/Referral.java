@@ -1,6 +1,7 @@
 package pl.akh.domainservicesvc.domain.model.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,13 +26,20 @@ public class Referral implements Serializable {
     @Column(name = "REFERRAL_ID")
     private Long id;
 
-    @OneToOne(mappedBy = "referral", cascade = CascadeType.DETACH)
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE}, targetEntity = Treatment.class)
+    @JoinColumn(name = "TREATMENT_ID", referencedColumnName = "TREATMENT_ID")
     @LazyGroup("treatment")
+    @NotNull
     private Treatment treatment;
 
-    @Column(name ="EXPIRATION_DATE", nullable = false)
+    @Column(name = "TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
+    @NotNull
     private TestType testType;
+
+    @Column(name = "EXPIRATION_DATE", nullable = false)
+    @NotNull
+    private Timestamp expirationDate;
 
     @Override
     public boolean equals(Object o) {
