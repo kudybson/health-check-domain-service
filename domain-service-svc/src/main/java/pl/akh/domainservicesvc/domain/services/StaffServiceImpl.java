@@ -5,11 +5,9 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFountException;
-import pl.akh.domainservicesvc.domain.mappers.EntityToDtoMapper;
-import pl.akh.domainservicesvc.domain.mappers.MapperFactory;
+import pl.akh.domainservicesvc.domain.mappers.AdministratorMapper;
 import pl.akh.domainservicesvc.domain.model.entities.Administrator;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
-import pl.akh.domainservicesvc.domain.model.entities.Receptionist;
 import pl.akh.domainservicesvc.domain.repository.AdministratorRepository;
 import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 import pl.akh.domainservicesvc.domain.repository.ReceptionistRepository;
@@ -36,17 +34,13 @@ public class StaffServiceImpl implements StaffService {
     private final DepartmentRepository departmentRepository;
     private final ReceptionistRepository receptionistRepository;
     private final OAuth2Service oAuth2Service;
-    private EntityToDtoMapper<Administrator, AdministratorRS> administratorMapper;
-    private EntityToDtoMapper<Receptionist, ReceptionistRS> receptionistMapper;
 
     public StaffServiceImpl(AdministratorRepository administratorRepository, DepartmentRepository departmentRepository, ReceptionistRepository receptionistRepository, OAuth2Service oAuth2Service) {
         this.administratorRepository = administratorRepository;
         this.departmentRepository = departmentRepository;
         this.receptionistRepository = receptionistRepository;
         this.oAuth2Service = oAuth2Service;
-        administratorMapper = MapperFactory.getEntityToDtoMapper(Administrator.class, AdministratorRS.class);
-        receptionistMapper = MapperFactory.getEntityToDtoMapper(Receptionist.class, ReceptionistRS.class);
-    }
+  }
 
     @Override
     public AdministratorRS addAdministrator(AdministratorRQ administratorRQ) throws Exception {
@@ -61,8 +55,8 @@ public class StaffServiceImpl implements StaffService {
         administrator.setDepartment(department);
         administrator.setId(administratorUUID);
         administrator.setFirstName(administratorRQ.getFirstName());
-        administrator.setSecondName(administratorRQ.getLastName());
-        return administratorMapper.mapToDto(administrator);
+        administrator.setLastName(administratorRQ.getLastName());
+        return AdministratorMapper.mapToDto(administrator);
     }
 
     @Override
