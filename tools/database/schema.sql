@@ -189,5 +189,9 @@ alter table APPOINTMENT modify APPOINTMENT_DATE timestamp;
 alter table SCHEDULE modify START_DATE_TIME timestamp;
 alter table SCHEDULE modify END_DATE_TIME timestamp;
 alter table TEST add TEST_DATE timestamp;
-alter table APPOINTMENT drop column CABINET_NUMBER
+alter table APPOINTMENT drop column CABINET_NUMBER;
+alter table REFERRAL modify EXPIRATION_DATE timestamp;
+alter table PRESCRIPTION modify EXPIRATION_DATE timestamp;
+alter table PERSON rename column SECOND_NAME to LAST_NAME;
+
 

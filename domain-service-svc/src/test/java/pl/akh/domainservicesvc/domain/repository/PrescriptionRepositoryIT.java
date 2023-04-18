@@ -11,10 +11,9 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
-public class TreatmentRepositoryIT extends DomainServiceIntegrationTest {
+public class PrescriptionRepositoryIT extends DomainServiceIntegrationTest {
 
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -26,64 +25,90 @@ public class TreatmentRepositoryIT extends DomainServiceIntegrationTest {
     private PatientRepository patientRepository;
     @Autowired
     private TreatmentRepository treatmentRepository;
-
+    @Autowired
+    private PrescriptionRepository prescriptionRepository;
 
     @Test
-    public void shouldCreateTreatment() {
+    public void shouldCreatePrescription() {
         //given
-        Appointment appointment = createAppointment();
-        Treatment treatment = createTreatment(appointment, "zwichnięta kostka", "unikanie aktywności fizycznej", null, null);
-        //when
-        Treatment savedTreatment = treatmentRepository.saveAndFlush(treatment);
-        //then
+        Treatment treatment = createTreatment();
+        Prescription prescription = createPrescription(treatment, "123456", "Mucosolvan", Timestamp.from(Instant.now()));
 
-        Assertions.assertEquals(1, treatmentRepository.findAll().size());
+        //when
+        prescriptionRepository.saveAndFlush(prescription);
+
+        //then
+        Assertions.assertEquals(1, prescriptionRepository.findAll().size());
     }
 
     @Test
-    public void shouldNotCreateTreatmentWhenAppointmentIsNull() {
+    public void shouldNotCreatePrescriptionWhenTreatmentIsNull() {
         //given
-        Appointment appointment = createAppointment();
-        Treatment treatment = createTreatment(null, "zwichnięta kostka", "unikanie aktywności fizycznej", null, null);
+        Prescription prescription = createPrescription(null, "123456", "Mucosolvan", Timestamp.from(Instant.now()));
+
         //when
         //then
         assertThrows(ConstraintViolationException.class, () -> {
-            Treatment savedTreatment = treatmentRepository.saveAndFlush(treatment);
+            prescriptionRepository.saveAndFlush(prescription);
         });
     }
 
     @Test
-    public void shouldNotCreateTreatmentWhenDiagnosisIsNull() {
+    public void shouldNotCreatePrescriptionWhenCodeIsEmpty() {
         //given
-        Appointment appointment = createAppointment();
-        Treatment treatment = createTreatment(appointment, null, "unikanie aktywności fizycznej", null, null);
+        Treatment treatment = createTreatment();
+        Prescription prescription = createPrescription(treatment, "", "Mucosolvan", Timestamp.from(Instant.now()));
+
         //when
         //then
         assertThrows(ConstraintViolationException.class, () -> {
-            Treatment savedTreatment = treatmentRepository.saveAndFlush(treatment);
+            prescriptionRepository.saveAndFlush(prescription);
         });
     }
 
     @Test
-    public void shouldNotCreateTreatmentWhenRecommendationIsEmpty() {
+    public void shouldNotCreatePrescriptionWhenDescriptionIsEmpty() {
         //given
-        Appointment appointment = createAppointment();
-        Treatment treatment = createTreatment(appointment, "zwichnięta kostka", "", null, null);
+        Treatment treatment = createTreatment();
+        Prescription prescription = createPrescription(treatment, "123456", "", Timestamp.from(Instant.now()));
+
         //when
         //then
         assertThrows(ConstraintViolationException.class, () -> {
-            Treatment savedTreatment = treatmentRepository.saveAndFlush(treatment);
+            prescriptionRepository.saveAndFlush(prescription);
         });
     }
 
-    private Treatment createTreatment(Appointment appointment, String diagnosis, String recommendation, Referral referral, Prescription prescription) {
+    @Test
+    public void shouldNotCreatePrescriptionWhenExpirationDateIsNull() {
+        //given
+        Treatment treatment = createTreatment();
+        Prescription prescription = createPrescription(treatment, "123456", "Mucosolvan", null);
+
+        //when
+        //then
+        assertThrows(ConstraintViolationException.class, () -> {
+            prescriptionRepository.saveAndFlush(prescription);
+        });
+    }
+
+    private Prescription createPrescription(Treatment treatment, String code, String description, Timestamp expirationDate) {
+        Prescription prescription = new Prescription();
+        prescription.setTreatment(treatment);
+        prescription.setCode(code);
+        prescription.setDescription(description);
+        prescription.setExpirationDate(expirationDate);
+        return prescription;
+    }
+
+    private Treatment createTreatment() {
         Treatment treatment = new Treatment();
-        treatment.setAppointment(appointment);
-        treatment.setDiagnosis(diagnosis);
-        treatment.setReferral(referral);
-        treatment.setRecommendation(recommendation);
-        treatment.setPrescription(prescription);
-        return treatment;
+        treatment.setAppointment(createAppointment());
+        treatment.setDiagnosis("zwichnięta kostka");
+        treatment.setReferral(null);
+        treatment.setRecommendation("unikanie aktywności fizycznej");
+        treatment.setPrescription(null);
+        return treatmentRepository.saveAndFlush(treatment);
     }
 
     private Appointment createAppointment() {

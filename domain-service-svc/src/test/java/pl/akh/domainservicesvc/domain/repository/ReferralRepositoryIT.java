@@ -11,10 +11,10 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
+import static pl.akh.domainservicesvc.domain.model.entities.TestType.HARMONY_TEST;
 
-public class TreatmentRepositoryIT extends DomainServiceIntegrationTest {
+public class ReferralRepositoryIT extends DomainServiceIntegrationTest {
 
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -26,64 +26,75 @@ public class TreatmentRepositoryIT extends DomainServiceIntegrationTest {
     private PatientRepository patientRepository;
     @Autowired
     private TreatmentRepository treatmentRepository;
-
+    @Autowired
+    private ReferralRepository referralRepository;
 
     @Test
-    public void shouldCreateTreatment() {
+    public void shouldCreateReferral() {
         //given
-        Appointment appointment = createAppointment();
-        Treatment treatment = createTreatment(appointment, "zwichnięta kostka", "unikanie aktywności fizycznej", null, null);
-        //when
-        Treatment savedTreatment = treatmentRepository.saveAndFlush(treatment);
-        //then
+        Treatment treatment = createTreatment();
+        Referral referral = createReferral(HARMONY_TEST, treatment, Timestamp.from(Instant.now()));
 
-        Assertions.assertEquals(1, treatmentRepository.findAll().size());
+        //when
+        referralRepository.saveAndFlush(referral);
+
+        //then
+        Assertions.assertEquals(1, referralRepository.findAll().size());
     }
 
     @Test
-    public void shouldNotCreateTreatmentWhenAppointmentIsNull() {
+    public void shouldNotCreateReferralWhenTreatmentIsNull() {
         //given
-        Appointment appointment = createAppointment();
-        Treatment treatment = createTreatment(null, "zwichnięta kostka", "unikanie aktywności fizycznej", null, null);
+        Referral referral = createReferral(HARMONY_TEST, null, Timestamp.from(Instant.now()));
         //when
         //then
         assertThrows(ConstraintViolationException.class, () -> {
-            Treatment savedTreatment = treatmentRepository.saveAndFlush(treatment);
+            referralRepository.saveAndFlush(referral);
         });
     }
 
     @Test
-    public void shouldNotCreateTreatmentWhenDiagnosisIsNull() {
+    public void shouldNotCreateReferralWhenTestTypeIsNull() {
         //given
-        Appointment appointment = createAppointment();
-        Treatment treatment = createTreatment(appointment, null, "unikanie aktywności fizycznej", null, null);
+        Treatment treatment = createTreatment();
+        Referral referral = createReferral(null, treatment, Timestamp.from(Instant.now()));
+
         //when
         //then
         assertThrows(ConstraintViolationException.class, () -> {
-            Treatment savedTreatment = treatmentRepository.saveAndFlush(treatment);
+            referralRepository.saveAndFlush(referral);
         });
     }
 
     @Test
-    public void shouldNotCreateTreatmentWhenRecommendationIsEmpty() {
+    public void shouldNotCreateReferralWhenExpirationDateIsNull() {
         //given
-        Appointment appointment = createAppointment();
-        Treatment treatment = createTreatment(appointment, "zwichnięta kostka", "", null, null);
+        Treatment treatment = createTreatment();
+        Referral referral = createReferral(HARMONY_TEST, treatment, null);
+
         //when
         //then
         assertThrows(ConstraintViolationException.class, () -> {
-            Treatment savedTreatment = treatmentRepository.saveAndFlush(treatment);
+            referralRepository.saveAndFlush(referral);
         });
     }
 
-    private Treatment createTreatment(Appointment appointment, String diagnosis, String recommendation, Referral referral, Prescription prescription) {
+    private Referral createReferral(TestType testType, Treatment treatment, Timestamp expirationDate) {
+        Referral referral = new Referral();
+        referral.setTreatment(treatment);
+        referral.setTestType(testType);
+        referral.setExpirationDate(expirationDate);
+        return referral;
+    }
+
+    private Treatment createTreatment() {
         Treatment treatment = new Treatment();
-        treatment.setAppointment(appointment);
-        treatment.setDiagnosis(diagnosis);
-        treatment.setReferral(referral);
-        treatment.setRecommendation(recommendation);
-        treatment.setPrescription(prescription);
-        return treatment;
+        treatment.setAppointment(createAppointment());
+        treatment.setDiagnosis("zwichnięta kostka");
+        treatment.setReferral(null);
+        treatment.setRecommendation("unikanie aktywności fizycznej");
+        treatment.setPrescription(null);
+        return treatmentRepository.saveAndFlush(treatment);
     }
 
     private Appointment createAppointment() {

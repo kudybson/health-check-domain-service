@@ -35,7 +35,7 @@ public class AdministratorRepositoryIT extends DomainServiceIntegrationTest {
         UUID uuid = UUID.randomUUID();
         Administrator administrator = new Administrator();
         administrator.setFirstName("Piotr");
-        administrator.setSecondName("Kowalski");
+        administrator.setLastName("Kowalski");
         administrator.setId(uuid);
         administrator.setDepartment(save);
 
@@ -54,7 +54,7 @@ public class AdministratorRepositoryIT extends DomainServiceIntegrationTest {
         UUID uuid = UUID.randomUUID();
         Administrator administrator = new Administrator();
         administrator.setFirstName("Piotr");
-        administrator.setSecondName("Kowalski");
+        administrator.setLastName("Kowalski");
         administrator.setId(uuid);
         administrator.setDepartment(save);
 
