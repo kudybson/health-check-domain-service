@@ -10,6 +10,9 @@ import java.util.stream.Stream;
 public class AddressValidator implements ConstraintValidator<AddressConstraint, AddressRQ> {
     @Override
     public boolean isValid(AddressRQ addressRQ, ConstraintValidatorContext constraintValidatorContext) {
+        if (addressRQ == null) {
+            return false;
+        }
         String country = addressRQ.getCountry();
         if (!CountryUtils.getAvailableCountriesCodes().contains(country)) {
             return false;

@@ -4,6 +4,7 @@ import com.nimbusds.jose.shaded.gson.internal.LinkedTreeMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,6 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/public/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/departments/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/doctors/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer()

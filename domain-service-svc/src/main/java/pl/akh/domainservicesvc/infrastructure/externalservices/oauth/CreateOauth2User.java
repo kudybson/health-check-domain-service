@@ -1,13 +1,16 @@
-package pl.akh.model.rq;
+package pl.akh.domainservicesvc.infrastructure.externalservices.oauth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
-public class CreateUserRQ {
+public class CreateOauth2User {
     @NotBlank
     private String username;
     @NotBlank
@@ -20,5 +23,8 @@ public class CreateUserRQ {
     private String firstName;
     @NotBlank
     private String lastName;
+    @NotEmpty
+    private List<Groups> groups;
 
+    private boolean enabled;
 }

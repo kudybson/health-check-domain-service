@@ -47,23 +47,6 @@ public class Ping {
         stringBuilder.append(authDataExtractor.getRoles());
         stringBuilder.append("\n");
 
-//        Random random = new Random();
-//        int i = random.nextInt();
-//        CreateUserRQ build = CreateUserRQ.builder()
-//                .username("testUser" + i)
-//                .firstName("FirstName")
-//                .lastName("LastName")
-//                .password("password")
-//                .email("testUser" + i + "@test.com")
-//                .groups(List.of(Groups.ADMIN_GROUP))
-//                .enabled(true)
-//                .build();
-//        try {
-//            keycloakClient.createUser(build);
-//        } catch (UnavailableException e) {
-//            log.error("e", e);
-//        }
-
         Notification wizytaOdwolana = Notification.builder()
                 .userId(authDataExtractor.getId())
                 .payload("Wizyta odwolana")

@@ -10,6 +10,5 @@ public interface PatientService {
 
     PatientRS updatePatientData(UUID patientUUID, PatientDataRQ patientData);
 
-    boolean isPatientRegistered(UUID uuid);
-
+    boolean hasPatientDataUpdated(UUID uuid);
 }

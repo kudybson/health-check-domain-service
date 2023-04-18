@@ -8,7 +8,7 @@ import java.util.Collection;
 
 @Data
 @Builder
-public class MedicalTestSchedules {
+public class MedicalTestSchedulesRS {
     private Long departmentId;
     private TestType type;
     private Collection<ScheduleRS> receptionSchedules;

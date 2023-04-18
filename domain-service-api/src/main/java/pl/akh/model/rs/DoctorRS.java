@@ -14,4 +14,6 @@ public class DoctorRS {
     private String lastname;
     private Specialization specialization;
     private Long departmentId;
+    private int rate;
+    private int rateNumber;
 }
