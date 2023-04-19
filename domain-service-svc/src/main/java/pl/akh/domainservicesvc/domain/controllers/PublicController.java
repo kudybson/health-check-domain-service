@@ -5,13 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.CreateOauth2User;
+import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Oauth2User;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Groups;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Service;
 
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 /***
  * Test controller user to verify connection between services inside cluster
@@ -29,7 +28,7 @@ public class PublicController {
     @GetMapping("ping")
     public String ping() throws UnavailableException {
         Random random = new Random();
-        CreateOauth2User build = CreateOauth2User.builder()
+        Oauth2User build = Oauth2User.builder()
                 .username("useeeee" + random.nextInt())
                 .groups(List.of(Groups.DOCTOR_GROUP))
                 .firstName("first")
@@ -40,7 +39,7 @@ public class PublicController {
                 .passwordConfirmation("password")
                 .build();
 
-        oAuth2Service.createUser(build);
+        //oAuth2Service.createUser(build);
         return "pong";
     }
 }

@@ -82,6 +82,11 @@ public class DepartmentServiceImpl implements DepartmentService {
         return DepartmentMapper.mapToDto(department);
     }
 
+    @Override
+    public void deleteDepartment(Long id) {
+        departmentRepository.deleteById(id);
+    }
+
     private void setupAddress(Address address, AddressRQ addressRQ) {
         address.setProvince(addressRQ.getProvince());
         address.setCountry(addressRQ.getCountry());

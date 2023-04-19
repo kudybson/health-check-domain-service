@@ -2,6 +2,7 @@ package pl.akh.services;
 
 import jdk.jfr.Description;
 import pl.akh.model.common.Specialization;
+import pl.akh.model.rq.DoctorRQ;
 import pl.akh.model.rq.ScheduleRQ;
 import pl.akh.model.rs.DoctorRS;
 import pl.akh.model.rs.RatingRS;
@@ -13,6 +14,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 public interface DoctorService {
+    DoctorRS createDoctor(DoctorRQ doctorRQ) throws Exception;
     Collection<DoctorRS> getAllDoctors();
 
     Collection<DoctorRS> getAllDoctors(long pageNumber, long pageSize);
@@ -33,4 +35,5 @@ public interface DoctorService {
     Collection<ScheduleRS> insertSchedules(UUID doctorUUID, Collection<ScheduleRQ> schedules);
 
     Collection<RatingRS> getDoctorRates(UUID doctorUUID);
+    void deleteDoctor(UUID doctorUUID) throws Exception;
 }

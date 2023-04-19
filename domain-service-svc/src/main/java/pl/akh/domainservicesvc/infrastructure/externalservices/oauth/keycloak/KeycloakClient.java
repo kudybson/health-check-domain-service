@@ -5,25 +5,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.token.TokenManager;
-import org.keycloak.admin.client.token.TokenService;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Groups;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Service;
-import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.CreateOauth2User;
+import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Oauth2User;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,25 +49,28 @@ public class KeycloakClient implements OAuth2Service {
     }
 
     @Override
-    public boolean createUser(CreateOauth2User createOauth2User) throws UnavailableException {
+    public boolean createUser(Oauth2User oauth2User) throws UnavailableException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         String token = getAccessToken();
         headers.set("Authorization", "Bearer " + token);
-        HttpEntity<UserRepresentation> request = new HttpEntity<>(mapToUserRepresentation(createOauth2User), headers);
+        HttpEntity<UserRepresentation> request = new HttpEntity<>(mapToUserRepresentation(oauth2User), headers);
         final String keycloakURL = keycloakConfigProvider.getKeycloakUrl() + createUserPath;
         ResponseEntity<Object> exchange = restTemplate.exchange(keycloakURL, HttpMethod.POST, request, Object.class);
         if (exchange.getStatusCode().is2xxSuccessful()) {
             log.info(exchange.toString());
             return true;
         }
-        log.error("Error during creating user");
+        if (exchange.getStatusCode() == HttpStatus.CONFLICT) {
+            log.error(exchange.toString());
+            throw new UnsupportedOperationException("Given username or email already exists.");
+        }
         keycloak.tokenManager().invalidate(token);
         return false;
     }
 
     @Override
-    public UUID getUUIDByUsername(String username) throws UnavailableException {
+    public Optional<UUID> getUUIDByUsername(String username) throws UnavailableException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         final String keycloakURL = keycloakConfigProvider.getKeycloakUrl() + createUserPath;
@@ -88,35 +86,34 @@ public class KeycloakClient implements OAuth2Service {
                 httpEntity,
                 org.keycloak.representations.account.UserRepresentation[].class,
                 params);
-        org.keycloak.representations.account.UserRepresentation[] body = exchange.getBody();
 
         if (exchange.getStatusCode().is2xxSuccessful()) {
-            if (body != null) {
-                String id = Arrays.stream(body).filter(x -> Objects.equals(x.getUsername(), username))
-                        .findFirst()
-                        .orElseThrow(() -> new UnavailableException(""))
-                        .getId();
-                return UUID.fromString(id);
+            if (exchange.getBody() != null) {
+                return Arrays.stream(exchange.getBody())
+                        .filter(keycloakUser -> Objects.equals(keycloakUser.getUsername(), username))
+                        .map(org.keycloak.representations.account.UserRepresentation::getId)
+                        .map(UUID::fromString)
+                        .findFirst();
             }
         }
         log.error("Error during creating user");
-        return null;
+        throw new UnavailableException("Authorization service is unavailable");
     }
 
-    private UserRepresentation mapToUserRepresentation(CreateOauth2User createOauth2User) {
+    private UserRepresentation mapToUserRepresentation(Oauth2User oauth2User) {
         UserRepresentation userRepresentation = new UserRepresentation();
-        userRepresentation.setUsername(createOauth2User.getUsername());
-        userRepresentation.setEmail(createOauth2User.getEmail());
-        userRepresentation.setFirstName(createOauth2User.getFirstName());
-        userRepresentation.setLastName(createOauth2User.getLastName());
+        userRepresentation.setUsername(oauth2User.getUsername());
+        userRepresentation.setEmail(oauth2User.getEmail());
+        userRepresentation.setFirstName(oauth2User.getFirstName());
+        userRepresentation.setLastName(oauth2User.getLastName());
         userRepresentation.setEmailVerified(false);
-        userRepresentation.setEnabled(createOauth2User.isEnabled());
-        userRepresentation.setGroups(createOauth2User.getGroups().stream().map(Groups::getGroup).collect(Collectors.toList()));
+        userRepresentation.setEnabled(oauth2User.isEnabled());
+        userRepresentation.setGroups(oauth2User.getGroups().stream().map(Groups::getGroup).collect(Collectors.toList()));
 
         CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
         credentialRepresentation.setTemporary(true);
         credentialRepresentation.setType("password");
-        credentialRepresentation.setValue(createOauth2User.getPassword());
+        credentialRepresentation.setValue(oauth2User.getPassword());
         userRepresentation.setCredentials(List.of(credentialRepresentation));
 
         return userRepresentation;

@@ -18,4 +18,6 @@ public interface DepartmentService {
     DepartmentRS getDepartmentById(Long id);
 
     DepartmentRS updateDepartment(DepartmentRQ departmentRQ, Long departmentId);
+
+    void deleteDepartment(Long id);
 }

@@ -41,5 +41,9 @@ public enum Specialization {
     SPEECHPATHOLOGY,
     SURGICAL,
     TOXICOLOGIC,
-    UROLOGIC
+    UROLOGIC;
+
+    public pl.akh.model.common.Specialization map(){
+        return pl.akh.model.common.Specialization.valueOf(this.name());
+    }
 }
