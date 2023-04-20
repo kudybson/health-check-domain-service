@@ -3,7 +3,7 @@ package pl.akh.domainservicesvc.domain.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFountException;
+import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.PasswordConfirmationException;
 import pl.akh.domainservicesvc.domain.mappers.AdministratorMapper;
 import pl.akh.domainservicesvc.domain.model.entities.Administrator;
@@ -14,7 +14,6 @@ import pl.akh.model.rq.AdministratorRQ;
 import pl.akh.model.rs.AdministratorRS;
 import pl.akh.services.AdministratorService;
 
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,7 +41,7 @@ public class AdministratorServiceImpl implements AdministratorService {
             throw new PasswordConfirmationException("Passwords are not the same.");
         }
         Department department = departmentRepository.findById(administratorRQ.getDepartmentId())
-                .orElseThrow(() -> new DepartmentNotFountException(String.format("Department with id: %d not found.", administratorRQ.getDepartmentId())));
+                .orElseThrow(() -> new DepartmentNotFoundException(String.format("Department with id: %d not found.", administratorRQ.getDepartmentId())));
         if (department.getAdministrator() != null) {
             throw new UnsupportedOperationException("Admin is already assigned to this department.");
         }
