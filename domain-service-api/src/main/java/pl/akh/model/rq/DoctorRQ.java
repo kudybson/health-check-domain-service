@@ -28,7 +28,6 @@ public class DoctorRQ {
     private String firstName;
     @NotBlank
     private String lastName;
-
     @NotNull
     private Specialization specialization;
 }

@@ -18,6 +18,5 @@ public class DepartmentRQ {
     String name;
     @AddressConstraint
     @NotNull
-
     private AddressRQ addressRQ;
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Groups;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Service;
@@ -56,7 +57,13 @@ public class KeycloakClient implements OAuth2Service {
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<UserRepresentation> request = new HttpEntity<>(mapToUserRepresentation(oauth2User), headers);
         final String keycloakURL = keycloakConfigProvider.getKeycloakUrl() + createUserPath;
-        ResponseEntity<Object> exchange = restTemplate.exchange(keycloakURL, HttpMethod.POST, request, Object.class);
+        ResponseEntity<Object> exchange;
+        try {
+            exchange = restTemplate.exchange(keycloakURL, HttpMethod.POST, request, Object.class);
+        } catch (HttpClientErrorException.Conflict e) {
+            log.error("error: ", e);
+            throw new UnsupportedOperationException("Given username or email already exists.");
+        }
         if (exchange.getStatusCode().is2xxSuccessful()) {
             log.info(exchange.toString());
             return true;

@@ -1,12 +1,14 @@
 package pl.akh.domainservicesvc.domain.services;
 
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFountException;
 import pl.akh.domainservicesvc.domain.exceptions.PasswordConfirmationException;
-import pl.akh.domainservicesvc.domain.mappers.AdministratorMapper;
 import pl.akh.domainservicesvc.domain.mappers.DoctorMapper;
-import pl.akh.domainservicesvc.domain.model.entities.Administrator;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
 import pl.akh.domainservicesvc.domain.model.entities.Doctor;
 import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
@@ -21,12 +23,15 @@ import pl.akh.model.rs.schedules.SchedulesAppointmentsRS;
 import pl.akh.services.DoctorService;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static pl.akh.domainservicesvc.domain.mappers.SpecializationMapper.toEntity;
+import static java.util.Optional.ofNullable;
 
 @Service
 @Slf4j
+@Transactional
 public class DoctorServiceImpl implements DoctorService {
 
     private final StuffServiceImpl stuffService;
@@ -51,37 +56,26 @@ public class DoctorServiceImpl implements DoctorService {
 
         Doctor doctor = new Doctor();
         doctor.setId(doctorUUID);
-        return DoctorMapper.mapToDto(doctor);
+        doctor.setFirstName(doctorRQ.getFirstName());
+        doctor.setLastName(doctorRQ.getLastName());
+        doctor.setSpecialization(toEntity(doctorRQ.getSpecialization()));
+        doctor.setDepartment(department);
+        Doctor save = doctorRepository.save(doctor);
+        return DoctorMapper.mapToDto(save);
     }
 
     @Override
-    public Collection<DoctorRS> getAllDoctors() {
-        return null;
+    public Optional<DoctorRS> getDoctorById(UUID doctorUUID) {
+        return doctorRepository.findById(doctorUUID)
+                .map(DoctorMapper::mapToDto);
     }
 
     @Override
-    public Collection<DoctorRS> getAllDoctors(long pageNumber, long pageSize) {
-        return null;
-    }
-
-    @Override
-    public DoctorRS getDoctorById(UUID doctorUUID) {
-        return null;
-    }
-
-    @Override
-    public Collection<DoctorRS> getDoctorsByDepartment(long departmentId) {
-        return null;
-    }
-
-    @Override
-    public Collection<DoctorRS> getDoctorsByName(String firstName, String lastName) {
-        return null;
-    }
-
-    @Override
-    public Collection<DoctorRS> getDoctorsBySpecialization(Specialization specialization) {
-        return null;
+    public Collection<DoctorRS> getDoctorsByCriteria(Specialization specialization, Long departmentId, String firstname, String lastName) {
+        return doctorRepository.findAll(createSearchCriteria(specialization, departmentId, firstname, lastName))
+                .stream()
+                .map(DoctorMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -107,5 +101,16 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public void deleteDoctor(UUID doctorUUID) throws Exception {
 
+    }
+
+    Specification<Doctor> createSearchCriteria(Specialization specialization, Long departmentId, String firstname, String lastName) {
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            ofNullable(specialization).ifPresent((spec) -> predicates.add(criteriaBuilder.equal(root.get("specialization"), spec)));
+            ofNullable(departmentId).ifPresent((depId) -> predicates.add(criteriaBuilder.equal(root.get("department").get("id"), depId)));
+            ofNullable(firstname).ifPresent((fName) -> predicates.add(criteriaBuilder.like(root.get("firstName"), fName)));
+            ofNullable(lastName).ifPresent((lName) -> predicates.add(criteriaBuilder.equal(root.get("lastName"), lName)));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
     }
 }

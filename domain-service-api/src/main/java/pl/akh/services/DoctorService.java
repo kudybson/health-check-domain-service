@@ -11,21 +11,16 @@ import pl.akh.model.rs.schedules.SchedulesAppointmentsRS;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface DoctorService {
     DoctorRS createDoctor(DoctorRQ doctorRQ) throws Exception;
-    Collection<DoctorRS> getAllDoctors();
 
-    Collection<DoctorRS> getAllDoctors(long pageNumber, long pageSize);
+    Optional<DoctorRS> getDoctorById(UUID doctorUUID);
 
-    DoctorRS getDoctorById(UUID doctorUUID);
-
-    Collection<DoctorRS> getDoctorsByDepartment(long departmentId);
-
-    Collection<DoctorRS> getDoctorsByName(String firstName, String lastName);
-
-    Collection<DoctorRS> getDoctorsBySpecialization(Specialization specialization);
+    Collection<DoctorRS> getDoctorsByCriteria(Specialization specialization, Long departmentId,
+                                              String firstname, String lastName);
 
     @Description(value = "no need to implement yet")
     Collection<ScheduleRS> getSchedulesByDoctorIdBetweenDates(UUID doctorUUID, LocalDate startDate, LocalDate endDate);
@@ -35,5 +30,6 @@ public interface DoctorService {
     Collection<ScheduleRS> insertSchedules(UUID doctorUUID, Collection<ScheduleRQ> schedules);
 
     Collection<RatingRS> getDoctorRates(UUID doctorUUID);
+
     void deleteDoctor(UUID doctorUUID) throws Exception;
 }
