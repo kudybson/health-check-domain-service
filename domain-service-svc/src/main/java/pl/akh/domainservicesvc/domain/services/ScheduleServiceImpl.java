@@ -22,11 +22,9 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.sql.Timestamp.valueOf;
 
@@ -72,7 +70,25 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Collection<ScheduleRS> insertSchedules(UUID doctorUUID, Collection<ScheduleRQ> schedules) {
         schedules = truncateMinutes(schedules);
-        if (isAnyOutdated(schedules) || !isTimeValid(schedules) || !isChronologyValid(schedules)) {
+        Timestamp min = Timestamp.valueOf(schedules.stream()
+                .map(ScheduleRQ::getStartDateTime)
+                .min(LocalDateTime::compareTo)
+                .orElseThrow());
+        Timestamp max = Timestamp.valueOf(schedules.stream()
+                .map(ScheduleRQ::getEndDateTime)
+                .max(LocalDateTime::compareTo)
+                .orElseThrow());
+
+        Stream<ScheduleRQ> savedSchedules = scheduleRepository.getSchedulesByDoctorIdAndStartDateTimeAfterAndEndDateTimeBefore(doctorUUID, min, max)
+                .stream()
+                .map(schedule -> ScheduleRQ.builder()
+                        .startDateTime(schedule.getStartDateTime().toLocalDateTime())
+                        .endDateTime(schedule.getEndDateTime().toLocalDateTime())
+                        .build());
+
+        Collection<ScheduleRQ> allSchedules = Stream.concat(savedSchedules, schedules.stream()).toList();
+
+        if (isAnyOutdated(schedules) || !isTimeValid(schedules) || !isChronologyValid(allSchedules)) {
             throw new IllegalArgumentException();
         }
 
@@ -86,7 +102,6 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .map(ScheduleMapper::mapToDto)
                 .collect(Collectors.toList());
     }
-
 
     private Schedule createSchedule(ScheduleRQ scheduleRQ, Doctor doctor) {
         Schedule schedule = new Schedule();

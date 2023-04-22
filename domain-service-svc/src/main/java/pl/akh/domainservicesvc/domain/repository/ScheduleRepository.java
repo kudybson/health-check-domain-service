@@ -11,5 +11,5 @@ import java.util.UUID;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
-    public List<Schedule> getSchedulesByDoctorIdAndStartDateTimeAfterAndEndDateTimeBefore(UUID uuid, Timestamp startDate, Timestamp endDate);
+    List<Schedule> getSchedulesByDoctorIdAndStartDateTimeAfterAndEndDateTimeBefore(UUID uuid, Timestamp startDate, Timestamp endDate);
 }
