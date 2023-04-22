@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.domain.controllers;
+package pl.akh.domainservicesvc.domain.controllers.test;
 
 import jakarta.security.auth.message.AuthException;
 import lombok.extern.slf4j.Slf4j;

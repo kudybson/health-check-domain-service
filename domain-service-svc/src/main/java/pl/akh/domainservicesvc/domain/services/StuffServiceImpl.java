@@ -87,7 +87,7 @@ public class StuffServiceImpl {
                 .password(doctorRQ.getPassword())
                 .passwordConfirmation(doctorRQ.getPasswordConfirmation())
                 .email(doctorRQ.getEmail())
-                .groups(List.of(Groups.RECEPTIONIST_GROUP))
+                .groups(List.of(Groups.DOCTOR_GROUP))
                 .enabled(true)
                 .build();
     }

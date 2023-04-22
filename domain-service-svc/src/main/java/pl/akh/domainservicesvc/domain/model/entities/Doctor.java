@@ -22,7 +22,7 @@ public class Doctor extends Person implements Serializable {
 
     private static final long serialVersionUID = 5L;
 
-    @ManyToOne(cascade = {CascadeType.DETACH}, targetEntity = Department.class)
+    @ManyToOne(cascade = {CascadeType.DETACH}, targetEntity = Department.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID", nullable = false)
     @NotNull
     private Department department;
