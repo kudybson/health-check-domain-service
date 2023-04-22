@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFountException;
+import pl.akh.domainservicesvc.domain.exceptions.DoctorNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.PasswordConfirmationException;
 import pl.akh.domainservicesvc.domain.exceptions.UsernameOrEmailAlreadyExistsException;
 import pl.akh.domainservicesvc.domain.services.AccessService;
@@ -16,11 +17,12 @@ import pl.akh.domainservicesvc.domain.utils.roles.HasRoleAdmin;
 import pl.akh.domainservicesvc.domain.utils.roles.Public;
 import pl.akh.model.common.Specialization;
 import pl.akh.model.rq.DoctorRQ;
-import pl.akh.model.rs.AdministratorRS;
 import pl.akh.model.rs.DoctorRS;
+import pl.akh.model.rs.RatingRS;
 import pl.akh.services.DoctorService;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -47,7 +49,7 @@ public class DoctorController extends DomainServiceController {
     }
 
     @Public
-    @GetMapping("/uuid")
+    @GetMapping("/{uuid}")
     public ResponseEntity<DoctorRS> getDoctorById(@PathVariable UUID uuid) {
         return doctorService.getDoctorById(uuid)
                 .map(ResponseEntity::ok)
@@ -57,7 +59,7 @@ public class DoctorController extends DomainServiceController {
 
     @HasRoleAdmin
     @PostMapping
-    public ResponseEntity<DoctorRS> createDoctor(@RequestBody @Valid DoctorRQ doctorRQ) {
+    public ResponseEntity<DoctorRS> createDoctor(@RequestBody @Valid DoctorRQ doctorRQ) throws Exception {
         if (!hasAccessAdministrationAccessToDepartment(doctorRQ.getDepartmentId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -70,8 +72,31 @@ public class DoctorController extends DomainServiceController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (PasswordConfirmationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @HasRoleAdmin
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<String> deleteDoctorById(@PathVariable UUID uuid) throws Exception {
+        Optional<DoctorRS> doctorById = doctorService.getDoctorById(uuid);
+        if (doctorById.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        if (!hasAccessAdministrationAccessToDepartment(doctorById.get().getDepartmentId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        doctorService.deleteDoctor(uuid);
+        return ResponseEntity.status(HttpStatus.OK).build();
+
+    }
+
+    @Public
+    @GetMapping("/{uuid}/rates")
+    public ResponseEntity<Collection<RatingRS>> getDoctorRatesById(@PathVariable UUID uuid) throws Exception {
+        try {
+            return ResponseEntity.ok(doctorService.getDoctorRates(uuid));
+        } catch (DoctorNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }

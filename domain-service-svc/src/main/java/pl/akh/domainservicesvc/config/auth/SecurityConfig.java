@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/public/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/departments/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/doctors/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/schedules/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer()

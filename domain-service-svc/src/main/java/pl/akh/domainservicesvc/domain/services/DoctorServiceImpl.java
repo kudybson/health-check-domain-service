@@ -1,33 +1,30 @@
 package pl.akh.domainservicesvc.domain.services;
 
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFountException;
+import pl.akh.domainservicesvc.domain.exceptions.DoctorNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.PasswordConfirmationException;
 import pl.akh.domainservicesvc.domain.mappers.DoctorMapper;
+import pl.akh.domainservicesvc.domain.mappers.RatingMapper;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
 import pl.akh.domainservicesvc.domain.model.entities.Doctor;
 import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
 import pl.akh.model.common.Specialization;
 import pl.akh.model.rq.DoctorRQ;
-import pl.akh.model.rq.ScheduleRQ;
 import pl.akh.model.rs.DoctorRS;
 import pl.akh.model.rs.RatingRS;
-import pl.akh.model.rs.schedules.ScheduleRS;
-import pl.akh.model.rs.schedules.SchedulesAppointmentsRS;
 import pl.akh.services.DoctorService;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static pl.akh.domainservicesvc.domain.mappers.SpecializationMapper.toEntity;
 import static java.util.Optional.ofNullable;
+import static pl.akh.domainservicesvc.domain.mappers.SpecializationMapper.toEntity;
 
 @Service
 @Slf4j
@@ -79,31 +76,20 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Collection<ScheduleRS> getSchedulesByDoctorIdBetweenDates(UUID doctorUUID, LocalDate startDate, LocalDate endDate) {
-        return null;
+    public Collection<RatingRS> getDoctorRates(UUID doctorUUID) throws DoctorNotFoundException {
+        Doctor doctor = doctorRepository.findById(doctorUUID).orElseThrow(DoctorNotFoundException::new);
+        return doctor.getRatings()
+                .stream()
+                .map(RatingMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public SchedulesAppointmentsRS getSchedulesWithAppointmentByDoctorId(UUID doctorUUID, LocalDate startDate, LocalDate endDate) {
-        return null;
+    public void deleteDoctor(UUID doctorUUID) {
+        doctorRepository.deleteById(doctorUUID);
     }
 
-    @Override
-    public Collection<ScheduleRS> insertSchedules(UUID doctorUUID, Collection<ScheduleRQ> schedules) {
-        return null;
-    }
-
-    @Override
-    public Collection<RatingRS> getDoctorRates(UUID doctorUUID) {
-        return null;
-    }
-
-    @Override
-    public void deleteDoctor(UUID doctorUUID) throws Exception {
-
-    }
-
-    Specification<Doctor> createSearchCriteria(Specialization specialization, Long departmentId, String firstname, String lastName) {
+    private Specification<Doctor> createSearchCriteria(Specialization specialization, Long departmentId, String firstname, String lastName) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             ofNullable(specialization).ifPresent((spec) -> predicates.add(criteriaBuilder.equal(root.get("specialization"), spec)));
