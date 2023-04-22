@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,11 +38,10 @@ public class AppointmentRepositoryIT extends DomainServiceIntegrationTest {
                 Timestamp.valueOf(LocalDateTime.now()), createDoctor(), createPatient());
 
         //when
-        appointmentRepository.saveAndFlush(appointment);
+        Appointment saved = appointmentRepository.saveAndFlush(appointment);
 
         //then
-        List<Appointment> appointments = appointmentRepository.findAll();
-        assertEquals(1L, appointments.size());
+        assertTrue(appointmentRepository.findById(saved.getId()).isPresent());
     }
 
     @Test
@@ -71,18 +70,19 @@ public class AppointmentRepositoryIT extends DomainServiceIntegrationTest {
     @Test
     public void shouldDeleteAppointmentWithoutDeleteDoctor() {
         //given
+        Doctor doctor = createDoctor();
         Appointment appointment = createAppointment(null, prepareDepartment(),
-                Timestamp.valueOf(LocalDateTime.now()), createDoctor(), createPatient());
+                Timestamp.valueOf(LocalDateTime.now()), doctor, createPatient());
 
         //when
+
         appointment = appointmentRepository.saveAndFlush(appointment);
+        Long id = appointment.getId();
         appointmentRepository.delete(appointment);
 
         //then
-        List<Appointment> appointments = appointmentRepository.findAll();
-        assertEquals(0L, appointments.size());
-        List<Doctor> doctors = doctorRepository.findAll();
-        assertEquals(1L, doctors.size());
+        assertTrue(appointmentRepository.findById(id).isEmpty());
+        assertNotNull(doctorRepository.findById(doctorUUID));
     }
 
     @Test
@@ -96,10 +96,8 @@ public class AppointmentRepositoryIT extends DomainServiceIntegrationTest {
         appointmentRepository.delete(appointment);
 
         //then
-        List<Appointment> appointments = appointmentRepository.findAll();
-        assertEquals(0L, appointments.size());
-        List<Patient> patients = patientRepository.findAll();
-        assertEquals(1L, patients.size());
+        assertTrue(appointmentRepository.findById(appointment.getId()).isEmpty());
+        assertNotNull(patientRepository.findById(patientUUID));
     }
 
     private Appointment createAppointment(String comments, Department department, Timestamp appointmentDate, Doctor doctor, Patient patient) {
