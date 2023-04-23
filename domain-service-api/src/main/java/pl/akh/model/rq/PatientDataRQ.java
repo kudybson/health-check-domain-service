@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.pl.PESEL;
 import pl.akh.model.common.Gender;
 import pl.akh.utils.AddressConstraint;
 
@@ -16,12 +15,20 @@ import pl.akh.utils.AddressConstraint;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PatientDataRQ {
-    @PESEL
+
+    //    @PESEL
     @Nullable
     private String pesel;
 
     @NotBlank
+    private String firstName;
+
+    @NotBlank
+    private String lastName;
+
+    @NotBlank
     private String phoneNumber;
+
     @NotNull
     private Gender gender;
 

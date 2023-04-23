@@ -1,0 +1,108 @@
+package pl.akh.domainservicesvc.domain.controllers;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFoundException;
+import pl.akh.domainservicesvc.domain.exceptions.PasswordConfirmationException;
+import pl.akh.domainservicesvc.domain.exceptions.UsernameOrEmailAlreadyExistsException;
+import pl.akh.domainservicesvc.domain.services.AccessService;
+import pl.akh.domainservicesvc.domain.utils.auth.AuthDataExtractor;
+import pl.akh.domainservicesvc.domain.utils.roles.HasRoleAdmin;
+import pl.akh.model.rq.ReceptionistRQ;
+import pl.akh.model.rs.AdministratorRS;
+import pl.akh.model.rs.ReceptionistRS;
+import pl.akh.services.AdministratorService;
+import pl.akh.services.ReceptionistService;
+
+import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/receptionists")
+@Slf4j
+@Validated
+public class ReceptionistController extends DomainServiceController {
+
+    private final ReceptionistService receptionistService;
+
+    private final AdministratorService administratorService;
+
+    public ReceptionistController(AuthDataExtractor authDataExtractor, AccessService accessService, ReceptionistService receptionistService, AdministratorService administratorService) {
+        super(authDataExtractor, accessService);
+        this.receptionistService = receptionistService;
+        this.administratorService = administratorService;
+    }
+
+    @HasRoleAdmin
+    @GetMapping(path = "/{uuid}")
+    public ResponseEntity<ReceptionistRS> getReceptionistByUUID(@PathVariable @NotNull UUID uuid) {
+        try {
+            Optional<ReceptionistRS> receptionist = receptionistService.getReceptionistByUUID(uuid);
+            if (receptionist.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            if (!hasAccessAdministrationAccessToDepartment(receptionist.get().getDepartmentId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            return receptionist.map(ResponseEntity::ok).get();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @HasRoleAdmin
+    @PostMapping
+    public ResponseEntity<ReceptionistRS> createReceptionist(@RequestBody @Valid ReceptionistRQ receptionistRQ) {
+        try {
+            ReceptionistRS receptionistRS = receptionistService.createReceptionist(receptionistRQ);
+            return ResponseEntity.ok(receptionistRS);
+        } catch (DepartmentNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (UsernameOrEmailAlreadyExistsException | UnsupportedOperationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (PasswordConfirmationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @HasRoleAdmin
+    @DeleteMapping(path = "/{uuid}")
+    public ResponseEntity<String> deleteReceptionistByUUID(@PathVariable @NotNull UUID uuid) {
+        try {
+            Optional<ReceptionistRS> receptionist = receptionistService.getReceptionistByUUID(uuid);
+            if (receptionist.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            if (!hasAccessAdministrationAccessToDepartment(receptionist.get().getDepartmentId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            receptionistService.deleteReceptionist(uuid);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @HasRoleAdmin
+    @GetMapping
+    public ResponseEntity<Collection<ReceptionistRS>> getReceptionists() {
+        try {
+            AdministratorRS administrator = administratorService.getAdministratorById(authDataExtractor.getId())
+                    .orElseThrow();
+            Long departmentId = administrator.getDepartmentId();
+            Collection<ReceptionistRS> receptionists = receptionistService.getReceptionistsByDepartmentId(departmentId);
+            return ResponseEntity.ok(receptionists);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+}

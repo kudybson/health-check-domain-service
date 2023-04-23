@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFountException;
+import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.PasswordConfirmationException;
 import pl.akh.domainservicesvc.domain.exceptions.UsernameOrEmailAlreadyExistsException;
 import pl.akh.domainservicesvc.domain.utils.roles.HasRoleSuperAdmin;
@@ -14,11 +14,7 @@ import pl.akh.model.rq.AdministratorRQ;
 import pl.akh.model.rs.AdministratorRS;
 import pl.akh.services.AdministratorService;
 
-import javax.ws.rs.PathParam;
-import java.util.Optional;
 import java.util.UUID;
-
-import static java.util.Optional.ofNullable;
 
 
 @RestController
@@ -64,7 +60,7 @@ public class AdministratorController {
         try {
             AdministratorRS administratorRS = administratorService.addAdministrator(administratorRQ);
             return ResponseEntity.ok(administratorRS);
-        } catch (DepartmentNotFountException e) {
+        } catch (DepartmentNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (UsernameOrEmailAlreadyExistsException | UnsupportedOperationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();

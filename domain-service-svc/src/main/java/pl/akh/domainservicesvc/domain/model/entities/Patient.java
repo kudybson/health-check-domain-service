@@ -12,6 +12,7 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity(name = "PATIENT")
 @NoArgsConstructor
@@ -36,6 +37,7 @@ public class Patient extends Person implements Serializable {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Gender gender;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ADDRESS_ID")
     @LazyGroup("address")
@@ -53,4 +55,8 @@ public class Patient extends Person implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "patient")
     @LazyGroup("test")
     private Set<MedicalTest> medicalTests;
+
+    public Patient(UUID id) {
+        super(id);
+    }
 }
