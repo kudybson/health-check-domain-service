@@ -5,7 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFountException;
+import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.DoctorNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.PasswordConfirmationException;
 import pl.akh.domainservicesvc.domain.mappers.DoctorMapper;
@@ -47,7 +47,7 @@ public class DoctorServiceImpl implements DoctorService {
             throw new PasswordConfirmationException("Passwords are not the same.");
         }
         Department department = departmentRepository.findById(doctorRQ.getDepartmentId())
-                .orElseThrow(() -> new DepartmentNotFountException(String.format("Department with id: %d not found.", doctorRQ.getDepartmentId())));
+                .orElseThrow(() -> new DepartmentNotFoundException(String.format("Department with id: %d not found.", doctorRQ.getDepartmentId())));
 
         UUID doctorUUID = stuffService.addStuffMember(doctorRQ);
 

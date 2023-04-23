@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import pl.akh.domainservicesvc.domain.mappers.AddressMapper;
 import pl.akh.domainservicesvc.domain.mappers.DepartmentMapper;
 import pl.akh.domainservicesvc.domain.model.entities.Address;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
@@ -42,8 +43,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         ValidationUtils.validateEntity(departmentRQ, validator);
 
         log.info("Saving new department.");
-        Address address = new Address();
-        setupAddress(address, departmentRQ.getAddressRQ());
+        Address address = AddressMapper.mapToEntity(departmentRQ.getAddressRQ());
         Department department = new Department();
         department.setName(departmentRQ.getName());
         department.setAddress(address);
@@ -77,7 +77,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         ValidationUtils.validateEntity(departmentRQ, validator);
         Department department = departmentRepository.findById(departmentId).orElseThrow();
         Optional.of(department.getAddress())
-                .ifPresent(address -> setupAddress(address, departmentRQ.getAddressRQ()));
+                .ifPresent(address -> AddressMapper.mapToEntity(address, departmentRQ.getAddressRQ()));
         department.setName(departmentRQ.getName());
         return DepartmentMapper.mapToDto(department);
     }
@@ -85,17 +85,5 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public void deleteDepartment(Long id) {
         departmentRepository.deleteById(id);
-    }
-
-    private void setupAddress(Address address, AddressRQ addressRQ) {
-        address.setProvince(addressRQ.getProvince());
-        address.setCountry(addressRQ.getCountry());
-        address.setPost(addressRQ.getPost());
-        address.setStreet(addressRQ.getStreet());
-        address.setPostalCode(addressRQ.getPostalCode());
-        address.setHouseNumber(addressRQ.getHouseNumber());
-        address.setApartmentNumber(addressRQ.getApartmentNumber());
-        address.setCounty(addressRQ.getCounty());
-        address.setCity(addressRQ.getCity());
     }
 }

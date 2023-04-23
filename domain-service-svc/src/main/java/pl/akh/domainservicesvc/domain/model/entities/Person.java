@@ -42,4 +42,8 @@ public abstract class Person {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public Person(UUID id) {
+        this.id = id;
+    }
 }

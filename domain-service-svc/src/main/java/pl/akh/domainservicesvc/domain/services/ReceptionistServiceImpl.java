@@ -15,6 +15,7 @@ import pl.akh.model.rq.ReceptionistRQ;
 import pl.akh.model.rs.ReceptionistRS;
 import pl.akh.services.ReceptionistService;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,8 +51,8 @@ public class ReceptionistServiceImpl implements ReceptionistService {
         receptionist.setId(receptionistUUID);
         receptionist.setFirstName(receptionistRQ.getFirstName());
         receptionist.setLastName(receptionistRQ.getLastName());
-        receptionistRepository.save(receptionist);
-        return ReceptionistMapper.mapToDto(receptionist);
+        Receptionist saved = receptionistRepository.save(receptionist);
+        return ReceptionistMapper.mapToDto(saved);
     }
 
     @Override
@@ -63,5 +64,13 @@ public class ReceptionistServiceImpl implements ReceptionistService {
     public void deleteReceptionist(UUID receptionistUUID) throws Exception {
         Optional<Receptionist> receptionist = receptionistRepository.findById(receptionistUUID);
         receptionist.ifPresent(receptionistRepository::delete);
+    }
+
+    @Override
+    public Collection<ReceptionistRS> getReceptionistsByDepartmentId(Long departmentId) {
+        return receptionistRepository.findAllByDepartmentId(departmentId)
+                .stream()
+                .map(ReceptionistMapper::mapToDto)
+                .toList();
     }
 }

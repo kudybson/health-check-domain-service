@@ -15,5 +15,5 @@ public class PatientRS {
     private String lastName;
     private Gender gender;
 
-    private AddressRQ addressRQ;
+    private AddressRS addressRS;
 }

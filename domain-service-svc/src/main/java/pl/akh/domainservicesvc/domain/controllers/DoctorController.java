@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFountException;
+import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.DoctorNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.PasswordConfirmationException;
 import pl.akh.domainservicesvc.domain.exceptions.UsernameOrEmailAlreadyExistsException;
@@ -66,7 +66,7 @@ public class DoctorController extends DomainServiceController {
         try {
             DoctorRS doctorRS = doctorService.createDoctor(doctorRQ);
             return ResponseEntity.ok(doctorRS);
-        } catch (DepartmentNotFountException e) {
+        } catch (DepartmentNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (UsernameOrEmailAlreadyExistsException | UnsupportedOperationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
