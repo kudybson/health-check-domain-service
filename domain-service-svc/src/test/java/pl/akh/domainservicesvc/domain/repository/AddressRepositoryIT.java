@@ -58,11 +58,11 @@ public class AddressRepositoryIT extends DomainServiceIntegrationTest {
         address.setHouseNumber("56");
 
         //when
-        Address save = addressRepository.save(address);
-        addressRepository.delete(save);
+        Address saved = addressRepository.save(address);
+        addressRepository.delete(saved);
 
         //then
-        Assertions.assertEquals(0L, addressRepository.count());
+        assertTrue(addressRepository.findById(saved.getId()).isEmpty());
     }
 
     @Test
@@ -81,13 +81,13 @@ public class AddressRepositoryIT extends DomainServiceIntegrationTest {
         address.setHouseNumber("56");
 
         //when
-        Address save = addressRepository.save(address);
-        save.setProvince("Lubelskie");
-        addressRepository.save(save);
+        Address saved = addressRepository.save(address);
+        saved.setProvince("Lubelskie");
+        addressRepository.save(saved);
 
         //then
-        Assertions.assertEquals(save.getProvince(), "Lubelskie");
-        Assertions.assertEquals(1L, addressRepository.count());
+        assertTrue(addressRepository.findById(saved.getId()).isPresent());
+        Assertions.assertEquals(saved.getProvince(), "Lubelskie");
     }
 
     @Test

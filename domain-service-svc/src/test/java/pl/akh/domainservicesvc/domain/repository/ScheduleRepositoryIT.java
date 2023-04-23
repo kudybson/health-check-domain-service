@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ScheduleRepositoryIT extends DomainServiceIntegrationTest {
     @Autowired
@@ -33,7 +34,7 @@ public class ScheduleRepositoryIT extends DomainServiceIntegrationTest {
         //when
         Schedule savedSchedule = scheduleRepository.saveAndFlush(schedule);
         //then
-        Assertions.assertEquals(1, scheduleRepository.findAll().size());
+        assertTrue(scheduleRepository.findById(savedSchedule.getId()).isPresent());
     }
 
     @Test

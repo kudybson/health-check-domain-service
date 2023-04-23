@@ -103,6 +103,7 @@ public class ReferralRepositoryIT extends DomainServiceIntegrationTest {
         appointment.setComments("comments");
         appointment.setAppointmentDate(Timestamp.from(Instant.now()));
         appointment.setDepartment(doctor.getDepartment());
+        appointment.setStatus(Status.SCHEDULED);
         appointment.setPatient(createPatient());
         appointment.setDoctor(doctor);
         return appointmentRepository.saveAndFlush(appointment);

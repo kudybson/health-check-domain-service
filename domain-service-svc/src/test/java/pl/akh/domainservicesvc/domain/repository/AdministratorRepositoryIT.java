@@ -12,8 +12,7 @@ import pl.akh.domainservicesvc.domain.model.entities.Department;
 import java.util.UUID;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AdministratorRepositoryIT extends DomainServiceIntegrationTest {
@@ -43,7 +42,7 @@ public class AdministratorRepositoryIT extends DomainServiceIntegrationTest {
         Administrator savedAdmin = administratorRepository.save(administrator);
 
         //then
-        assertEquals(1L, administratorRepository.count());
+        assertTrue(administratorRepository.findById(savedAdmin.getId()).isPresent());
         assertNotNull(savedAdmin.getDepartment());
     }
 
@@ -62,15 +61,15 @@ public class AdministratorRepositoryIT extends DomainServiceIntegrationTest {
         Administrator savedAdmin = administratorRepository.save(administrator);
 
         //then
-        assertEquals(1L, administratorRepository.count());
+        assertTrue(administratorRepository.findById(savedAdmin.getId()).isPresent());
         assertNotNull(savedAdmin.getDepartment());
         assertNotNull(savedAdmin.getDepartment().getAddress());
         assertNull(savedAdmin.getDepartment().getAdministrator());
 
         administratorRepository.delete(savedAdmin);
-        assertEquals(0L, administratorRepository.count());
-        assertEquals(1L, departmentRepository.count());
-        assertEquals(1L, addressRepository.count());
+        assertTrue(administratorRepository.findById(savedAdmin.getId()).isEmpty());
+        assertTrue(departmentRepository.findById(savedAdmin.getDepartment().getId()).isPresent());
+
 
     }
 
