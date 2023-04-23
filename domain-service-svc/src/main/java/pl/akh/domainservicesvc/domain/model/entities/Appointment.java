@@ -44,6 +44,11 @@ public class Appointment implements Serializable {
     @NotNull
     private Department department;
 
+    @Column(name = "STATUS", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Status status;
+
     @Column(name = "APPOINTMENT_DATE")
     @NotNull
     private Timestamp appointmentDate;

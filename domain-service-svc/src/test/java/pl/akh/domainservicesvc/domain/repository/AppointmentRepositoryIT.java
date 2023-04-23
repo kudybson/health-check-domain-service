@@ -105,6 +105,7 @@ public class AppointmentRepositoryIT extends DomainServiceIntegrationTest {
         appointment.setComments(comments);
         appointment.setAppointmentDate(appointmentDate);
         appointment.setDepartment(department);
+        appointment.setStatus(Status.SCHEDULED);
         appointment.setPatient(patient);
         appointment.setDoctor(doctor);
         return appointment;

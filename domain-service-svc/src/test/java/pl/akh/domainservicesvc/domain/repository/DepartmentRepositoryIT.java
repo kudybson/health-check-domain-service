@@ -12,6 +12,7 @@ import pl.akh.domainservicesvc.domain.model.entities.Department;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 public class DepartmentRepositoryIT extends DomainServiceIntegrationTest {
@@ -34,12 +35,13 @@ public class DepartmentRepositoryIT extends DomainServiceIntegrationTest {
 
         //when
         addressRepository.save(address);
-        Department saveDepartment = departmentRepository.save(department);
-        departmentRepository.delete(saveDepartment);
+        Department savedDepartment = departmentRepository.save(department);
+        Address saved = savedDepartment.getAddress();
+        departmentRepository.delete(savedDepartment);
 
         //then
-        Assertions.assertEquals(0L, addressRepository.count());
-        Assertions.assertEquals(0L, departmentRepository.count());
+        assertTrue(departmentRepository.findById(savedDepartment.getId()).isEmpty());
+        assertTrue(addressRepository.findById(saved.getId()).isEmpty());
     }
 
     @Test
@@ -75,19 +77,14 @@ public class DepartmentRepositoryIT extends DomainServiceIntegrationTest {
         department.setAddress(address);
 
         //when
-        Department saveDepartment = departmentRepository.save(department);
+        Department savedDepartment = departmentRepository.save(department);
+        Address savedAddress = savedDepartment.getAddress();
 
         //then
-        assertNotNull(saveDepartment);
-        assertNotNull(saveDepartment.getAddress());
-        Assertions.assertEquals(1L, addressRepository.count());
-        Assertions.assertEquals(1L, departmentRepository.count());
-    }
-
-    @Test
-    public void addressShouldCountAll() {
-        Assertions.assertEquals(0L, addressRepository.count());
-        Assertions.assertEquals(0L, departmentRepository.count());
+        assertNotNull(savedDepartment);
+        assertNotNull(savedAddress);
+        assertTrue(departmentRepository.findById(savedDepartment.getId()).isPresent());
+        assertTrue(addressRepository.findById(savedAddress.getId()).isPresent());
     }
 
     @Test

@@ -89,6 +89,7 @@ public class TreatmentRepositoryIT extends DomainServiceIntegrationTest {
     private Appointment createAppointment() {
         Doctor doctor = createDoctor();
         Appointment appointment = new Appointment();
+        appointment.setStatus(Status.SCHEDULED);
         appointment.setComments("comments");
         appointment.setAppointmentDate(Timestamp.from(Instant.now()));
         appointment.setDepartment(doctor.getDepartment());
