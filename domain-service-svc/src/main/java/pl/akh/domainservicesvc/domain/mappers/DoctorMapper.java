@@ -12,7 +12,7 @@ public class DoctorMapper {
                 .firstname(entity.getFirstName())
                 .lastname(entity.getLastName())
                 .departmentId(entity.getDepartment().getId())
-                .specialization(entity.getSpecialization().map())
+                .specialization(entity.getSpecialization().toDto())
                 .build();
     }
 }

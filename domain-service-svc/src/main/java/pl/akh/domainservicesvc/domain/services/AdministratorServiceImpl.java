@@ -1,5 +1,6 @@
 package pl.akh.domainservicesvc.domain.services;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 @Service
 @Slf4j
+@Transactional
 public class AdministratorServiceImpl implements AdministratorService {
 
     private final StuffServiceImpl stuffService;

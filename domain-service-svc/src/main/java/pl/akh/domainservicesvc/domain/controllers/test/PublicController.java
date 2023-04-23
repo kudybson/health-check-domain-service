@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.domain.controllers;
+package pl.akh.domainservicesvc.domain.controllers.test;
 
 import jakarta.servlet.UnavailableException;
 import org.springframework.beans.factory.annotation.Autowired;

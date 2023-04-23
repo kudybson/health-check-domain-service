@@ -43,7 +43,7 @@ public enum Specialization {
     TOXICOLOGIC,
     UROLOGIC;
 
-    public pl.akh.model.common.Specialization map(){
+    public pl.akh.model.common.Specialization toDto() {
         return pl.akh.model.common.Specialization.valueOf(this.name());
     }
 }

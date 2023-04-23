@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.domain.controllers;
+package pl.akh.domainservicesvc.domain.controllers.test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

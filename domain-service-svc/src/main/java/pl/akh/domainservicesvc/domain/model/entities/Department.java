@@ -42,17 +42,15 @@ public class Department implements Serializable {
 
     @OneToMany(mappedBy = "department",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
             targetEntity = Doctor.class)
     private Set<Doctor> doctors = new HashSet<>();
 
     @OneToMany(mappedBy = "department",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
             targetEntity = Receptionist.class)
     private Set<Receptionist> receptionists = new HashSet<>();
 
-    @OneToOne(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "department", cascade = CascadeType.ALL)
     @LazyGroup("administrator")
     private Administrator administrator;
 
@@ -60,12 +58,12 @@ public class Department implements Serializable {
     @LazyGroup("appointment")
     private Set<Appointment> appointments = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
     @LazyGroup("test")
     private Set<MedicalTest> medicalTests = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
     @LazyGroup("testSchedule")
     private Set<TestSchedule> testSchedules = new HashSet<>();

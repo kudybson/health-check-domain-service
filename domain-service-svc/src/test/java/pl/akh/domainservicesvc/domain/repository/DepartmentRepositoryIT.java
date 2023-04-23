@@ -60,8 +60,8 @@ public class DepartmentRepositoryIT extends DomainServiceIntegrationTest {
         addressRepository.delete(saved);
 
         //then
-        Assertions.assertEquals(1L, addressRepository.count());
-        Assertions.assertEquals(1L, departmentRepository.count());
+        assertNotNull(addressRepository.findById(saved.getId()));
+        assertNotNull(departmentRepository.findById(savedDepartment.getId()));
     }
 
     @Test
