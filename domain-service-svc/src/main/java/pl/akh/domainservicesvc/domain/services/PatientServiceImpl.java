@@ -1,5 +1,6 @@
 package pl.akh.domainservicesvc.domain.services;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import pl.akh.domainservicesvc.domain.mappers.AddressMapper;
 import pl.akh.domainservicesvc.domain.mappers.PatientMapper;
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
@@ -32,6 +34,8 @@ public class PatientServiceImpl implements PatientService {
         Patient patient = patientRepository.findById(patientUUID)
                 .orElse(new Patient(patientUUID));
 
+        patient.setFirstName(patientData.getFirstName());
+        patient.setLastName(patientData.getLastName());
         patient.setGender(Gender.valueOf(patientData.getGender()));
         patient.setPhoneNumber(patientData.getPhoneNumber());
         patient.setPesel(patientData.getPesel());
