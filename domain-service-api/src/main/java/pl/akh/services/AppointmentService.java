@@ -4,14 +4,22 @@ import pl.akh.model.rq.AppointmentRQ;
 import pl.akh.model.rs.AppointmentRS;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface AppointmentService {
-    AppointmentRS getAppointmentById(long id);
-    AppointmentRS createAppointment(AppointmentRQ appointmentRQ);
-    AppointmentRS removeAppointmentById(long id);
+
+    Optional<AppointmentRS> getAppointmentById(Long id);
+
+    AppointmentRS createAppointment(AppointmentRQ appointmentRQ) throws Exception;
+
+    AppointmentRS removeAppointmentById(Long id);
+
     Collection<AppointmentRS> getAppointmentsByDoctorId(UUID doctorUUID);
+
     Collection<AppointmentRS> getAppointmentsByPatientId(UUID patientUUID);
-    Collection<AppointmentRS> getAppointmentsByDepartmentId(long id);
-    AppointmentRS addCommentToAppointment(long appointmentId, String comment);
+
+    Collection<AppointmentRS> getAppointmentsByDepartmentId(Long id);
+
+    AppointmentRS addCommentToAppointment(Long appointmentId, String comment);
 }

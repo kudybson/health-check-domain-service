@@ -59,7 +59,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Collection<ScheduleRS> schedulesByDoctorIdBetweenDates = getSchedulesByDoctorIdBetweenDates(doctorUUID, startDate, endDate);
         Collection<AppointmentDateRS> appointmentsByDoctorIdBetweenDates = appointmentRepository.getAppointmentsByDoctorIdAndAppointmentDateIsBetween(doctorUUID, valueOf(startDate), valueOf(endDate))
                 .stream()
-                .map(AppointmentMapper::mapToDto)
+                .map(AppointmentMapper::mapToAppointmentDateDto)
                 .toList();
         return SchedulesAppointmentsRS.builder()
                 .schedules(schedulesByDoctorIdBetweenDates)

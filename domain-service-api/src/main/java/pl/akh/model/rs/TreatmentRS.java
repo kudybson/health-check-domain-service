@@ -7,10 +7,9 @@ import lombok.Data;
 @Builder
 public class TreatmentRS {
     private Long id;
-    long appointmentId;
-    long referralId;
+    Long appointmentId;
+    Long referralId;
     private String diagnosis;
     private String recommendation;
-    PrescriptionRS prescription;
-
+    Long prescriptionId;
 }
