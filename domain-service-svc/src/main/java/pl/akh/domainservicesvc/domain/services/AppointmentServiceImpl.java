@@ -8,6 +8,7 @@ import pl.akh.domainservicesvc.domain.mappers.AppointmentMapper;
 import pl.akh.domainservicesvc.domain.model.entities.Appointment;
 import pl.akh.domainservicesvc.domain.model.entities.Doctor;
 import pl.akh.domainservicesvc.domain.model.entities.Patient;
+import pl.akh.domainservicesvc.domain.model.entities.Status;
 import pl.akh.domainservicesvc.domain.repository.AppointmentRepository;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
 import pl.akh.domainservicesvc.domain.repository.PatientRepository;
@@ -51,6 +52,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
         appointment.setAppointmentDate(Timestamp.valueOf(appointmentRQ.getAppointmentDateTime()));
+        appointment.setStatus(Status.SCHEDULED);
+        appointment.setDepartment(doctor.getDepartment());
         Appointment save = appointmentRepository.save(appointment);
         return AppointmentMapper.mapToDto(save);
     }

@@ -15,10 +15,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AppointmentRQ {
     @NotNull
-    @org.hibernate.validator.constraints.UUID
     private UUID doctorUUID;
     @NotNull
-    @org.hibernate.validator.constraints.UUID
     private UUID patientUUID;
     @NotNull
     private LocalDateTime appointmentDateTime;
