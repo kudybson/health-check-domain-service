@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Service;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Groups;
 import pl.akh.model.rq.AdministratorRQ;
-import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Oauth2User;
+import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2User;
 import pl.akh.model.rq.DoctorRQ;
 import pl.akh.model.rq.ReceptionistRQ;
 
@@ -26,7 +26,7 @@ public class StuffServiceImpl {
     }
 
     public UUID addStuffMember(Object stuffMember) throws Exception {
-        Oauth2User oauth2User;
+        OAuth2User oauth2User;
         if (stuffMember instanceof AdministratorRQ) {
             oauth2User = mapToOauthUser((AdministratorRQ) stuffMember);
         } else if (stuffMember instanceof ReceptionistRQ) {
@@ -53,8 +53,8 @@ public class StuffServiceImpl {
 
     }
 
-    private Oauth2User mapToOauthUser(AdministratorRQ administratorRQ) {
-        return Oauth2User.builder()
+    private OAuth2User mapToOauthUser(AdministratorRQ administratorRQ) {
+        return OAuth2User.builder()
                 .username(administratorRQ.getUsername())
                 .firstName(administratorRQ.getFirstName())
                 .lastName(administratorRQ.getLastName())
@@ -66,8 +66,8 @@ public class StuffServiceImpl {
                 .build();
     }
 
-    private Oauth2User mapToOauthUser(ReceptionistRQ receptionistRQ) {
-        return Oauth2User.builder()
+    private OAuth2User mapToOauthUser(ReceptionistRQ receptionistRQ) {
+        return OAuth2User.builder()
                 .username(receptionistRQ.getUsername())
                 .firstName(receptionistRQ.getFirstName())
                 .lastName(receptionistRQ.getLastName())
@@ -79,8 +79,8 @@ public class StuffServiceImpl {
                 .build();
     }
 
-    private Oauth2User mapToOauthUser(DoctorRQ doctorRQ) {
-        return Oauth2User.builder()
+    private OAuth2User mapToOauthUser(DoctorRQ doctorRQ) {
+        return OAuth2User.builder()
                 .username(doctorRQ.getUsername())
                 .firstName(doctorRQ.getFirstName())
                 .lastName(doctorRQ.getLastName())

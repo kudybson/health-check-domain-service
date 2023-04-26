@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class Oauth2User {
+public class OAuth2User {
     @NotBlank
     private String username;
     @NotBlank

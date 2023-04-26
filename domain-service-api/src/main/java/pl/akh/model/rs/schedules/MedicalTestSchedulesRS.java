@@ -11,6 +11,6 @@ import java.util.Collection;
 public class MedicalTestSchedulesRS {
     private Long departmentId;
     private TestType type;
-    private Collection<ScheduleRS> receptionSchedules;
+    private Collection<ScheduleRS> schedules;
     private Collection<ScheduleRS> assignedSchedules;
 }

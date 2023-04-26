@@ -17,7 +17,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Groups;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Service;
-import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Oauth2User;
+import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2User;
 
 import java.time.Instant;
 import java.util.*;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @ConditionalOnProperty(prefix = "keycloak-client", name = "type", havingValue = "keycloak")
-public class KeycloakClient implements OAuth2Service {
+public class OAuth2KeycloakAdapter implements OAuth2Service {
 
     private final String createUserPath = "/admin/realms/health-check/users";
     private KeycloakConfigProvider keycloakConfigProvider;
@@ -36,7 +36,7 @@ public class KeycloakClient implements OAuth2Service {
     private Instant refreshTokenDate;
 
     @Autowired
-    public KeycloakClient(KeycloakConfigProvider keycloakConfigProvider) {
+    public OAuth2KeycloakAdapter(KeycloakConfigProvider keycloakConfigProvider) {
         this.keycloakConfigProvider = keycloakConfigProvider;
         this.keycloak = KeycloakBuilder.builder()
                 .serverUrl(keycloakConfigProvider.getKeycloakUrl())
@@ -50,7 +50,7 @@ public class KeycloakClient implements OAuth2Service {
     }
 
     @Override
-    public boolean createUser(Oauth2User oauth2User) throws UnavailableException {
+    public boolean createUser(OAuth2User oauth2User) throws UnavailableException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         String token = getAccessToken();
@@ -107,7 +107,7 @@ public class KeycloakClient implements OAuth2Service {
         throw new UnavailableException("Authorization service is unavailable");
     }
 
-    private UserRepresentation mapToUserRepresentation(Oauth2User oauth2User) {
+    private UserRepresentation mapToUserRepresentation(OAuth2User oauth2User) {
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setUsername(oauth2User.getUsername());
         userRepresentation.setEmail(oauth2User.getEmail());

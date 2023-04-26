@@ -23,6 +23,8 @@ import java.time.temporal.ChronoField;
 import java.util.Collection;
 import java.util.UUID;
 
+import static pl.akh.domainservicesvc.domain.utils.DateUtils.getDayOfCurrentWeek;
+
 @RestController
 @RequestMapping("schedules")
 @Slf4j
@@ -41,7 +43,7 @@ public class ScheduleController extends DomainServiceController {
     ResponseEntity<Collection<ScheduleRS>> getSchedules(@PathVariable UUID doctorUUID,
                                                         @RequestParam(required = false) LocalDateTime startDateTime,
                                                         @RequestParam(required = false) LocalDateTime endDateTime) {
-        if (startDateTime == null && endDateTime == null) {
+        if (startDateTime == null || endDateTime == null) {
             startDateTime = getDayOfCurrentWeek(DayOfWeek.MONDAY);
             endDateTime = getDayOfCurrentWeek(DayOfWeek.SUNDAY);
         }
@@ -60,7 +62,10 @@ public class ScheduleController extends DomainServiceController {
     ResponseEntity<SchedulesAppointmentsRS> getSchedulesWithAppointments(@PathVariable UUID doctorUUID,
                                                                          @RequestParam(required = false) LocalDateTime startDateTime,
                                                                          @RequestParam(required = false) LocalDateTime endDateTime) {
-        if (startDateTime == null && endDateTime == null) {
+        if (startDateTime != null && endDateTime != null && startDateTime.isAfter(endDateTime)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        if (startDateTime == null || endDateTime == null) {
             startDateTime = getDayOfCurrentWeek(DayOfWeek.MONDAY);
             endDateTime = getDayOfCurrentWeek(DayOfWeek.SUNDAY);
         }
@@ -69,6 +74,8 @@ public class ScheduleController extends DomainServiceController {
             return ResponseEntity.ok(schedulesByDoctorIdBetweenDates);
         } catch (DoctorNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -86,9 +93,5 @@ public class ScheduleController extends DomainServiceController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-    }
-
-    private LocalDateTime getDayOfCurrentWeek(DayOfWeek dayOfWeek) {
-        return LocalDate.now().with(ChronoField.DAY_OF_WEEK, dayOfWeek.getValue()).atTime(0, 0);
     }
 }

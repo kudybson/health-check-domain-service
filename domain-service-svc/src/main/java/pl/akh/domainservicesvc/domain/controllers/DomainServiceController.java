@@ -23,4 +23,12 @@ public abstract class DomainServiceController {
         }
     }
 
+    protected boolean hasReceptionistAccessToDepartment(Long departmentId){
+        try {
+            return accessService.hasReceptionistAccessToDepartment(authDataExtractor.getId(), departmentId)
+                    || authDataExtractor.getRoles().contains("ROLE_SUPERADMIN");
+        } catch (AuthException e) {
+            return false;
+        }
+    }
 }
