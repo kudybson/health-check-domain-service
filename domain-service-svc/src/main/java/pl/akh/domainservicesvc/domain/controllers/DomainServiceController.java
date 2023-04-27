@@ -4,6 +4,8 @@ import jakarta.security.auth.message.AuthException;
 import pl.akh.domainservicesvc.domain.services.AccessGuard;
 import pl.akh.domainservicesvc.domain.utils.auth.AuthDataExtractor;
 
+import java.util.Collection;
+
 public abstract class DomainServiceController {
     protected final AuthDataExtractor authDataExtractor;
     private final AccessGuard accessGuard;
@@ -28,6 +30,19 @@ public abstract class DomainServiceController {
                     || authDataExtractor.getRoles().contains("ROLE_SUPERADMIN");
         } catch (AuthException e) {
             return false;
+        }
+    }
+
+    protected boolean isPatient() {
+        try {
+            Collection<String> roles =
+                    authDataExtractor.getRoles();
+            return !(roles.contains("ROLE_DOCTOR") ||
+                    roles.contains("ROLE_RECEPTIONIST") ||
+                    roles.contains("ROLE_ADMIN") ||
+                    roles.contains("ROLE_SUPERADMIN"));
+        } catch (AuthException e) {
+            throw new RuntimeException(e);
         }
     }
 }

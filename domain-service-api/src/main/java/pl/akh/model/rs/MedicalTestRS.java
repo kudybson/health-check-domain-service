@@ -15,6 +15,5 @@ public class MedicalTestRS {
     private Long departmentId;
     private UUID patientUUID;
     private TestType type;
-    private String description;
-    private TestResultRS testResultRS;
+    private Long medicalTestResultId;
 }

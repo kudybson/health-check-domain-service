@@ -71,10 +71,12 @@ public class MedicalTestScheduleServiceImpl implements MedicalTestScheduleServic
     @Override
     @Transactional(readOnly = true)
     public MedicalTestSchedulesRS getMedicalTestSchedules(Long departmentId, TestType testType, LocalDateTime startDate, LocalDateTime endDate) {
-        Collection<MedicalTestSchedule> schedules = medicalTestScheduleRepository.findByDepartmentAndTypeBetweenDates(departmentId,
-                pl.akh.domainservicesvc.domain.model.entities.TestType.valueOf(testType.name()), Timestamp.valueOf(startDate), Timestamp.valueOf(endDate));
+        pl.akh.domainservicesvc.domain.model.entities.TestType testTypeDomain = pl.akh.domainservicesvc.domain.model.entities.TestType.valueOf(testType.name());
 
-        List<ScheduleRS> assignedTests = medicalTestRepository.findScheduleDatesBetween(Timestamp.valueOf(startDate), Timestamp.valueOf(endDate))
+        Collection<MedicalTestSchedule> schedules = medicalTestScheduleRepository.findByDepartmentAndTypeBetweenDates(departmentId,
+                testTypeDomain, Timestamp.valueOf(startDate), Timestamp.valueOf(endDate));
+
+        List<ScheduleRS> assignedTests = medicalTestRepository.findScheduleDatesBetween(departmentId, testTypeDomain, Timestamp.valueOf(startDate), Timestamp.valueOf(endDate))
                 .stream()
                 .map(medicalTestStartDate -> ScheduleRS.builder()
                         .startDateTime(medicalTestStartDate.toLocalDateTime())
