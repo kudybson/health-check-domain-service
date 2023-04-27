@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Oauth2User;
+import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2User;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Groups;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Service;
 
@@ -28,7 +28,7 @@ public class PublicController {
     @GetMapping("ping")
     public String ping() throws UnavailableException {
         Random random = new Random();
-        Oauth2User build = Oauth2User.builder()
+        OAuth2User build = OAuth2User.builder()
                 .username("useeeee" + random.nextInt())
                 .groups(List.of(Groups.DOCTOR_GROUP))
                 .firstName("first")

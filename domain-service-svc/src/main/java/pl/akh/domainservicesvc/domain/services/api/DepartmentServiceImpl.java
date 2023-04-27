@@ -1,22 +1,17 @@
-package pl.akh.domainservicesvc.domain.services;
+package pl.akh.domainservicesvc.domain.services.api;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import pl.akh.domainservicesvc.domain.mappers.AddressMapper;
 import pl.akh.domainservicesvc.domain.mappers.DepartmentMapper;
 import pl.akh.domainservicesvc.domain.model.entities.Address;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
 import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 import pl.akh.domainservicesvc.domain.utils.validation.ValidationUtils;
-import pl.akh.model.rq.AddressRQ;
 import pl.akh.model.rq.DepartmentRQ;
 import pl.akh.model.rs.DepartmentRS;
 import pl.akh.services.DepartmentService;

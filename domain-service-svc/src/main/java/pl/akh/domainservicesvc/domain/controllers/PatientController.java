@@ -46,6 +46,20 @@ public class PatientController {
     }
 
     @HasRolePatient
+    @GetMapping
+    public ResponseEntity<PatientRS> getPatientData() {
+        try {
+            Optional<PatientRS> patient = patientService.getPatientById(oAuthDataExtractorFacade.getId());
+            if (patient.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return patient.map(ResponseEntity::ok).get();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @HasRolePatient
     @PutMapping
     public ResponseEntity<PatientRS> updatePatientData(@RequestBody @Valid PatientDataRQ patientData) {
         try {
@@ -57,6 +71,7 @@ public class PatientController {
         }
     }
 
+    //should we use this method? may use 404 code on fetching patient data
     @HasRolePatient
     @GetMapping(path = "is-updated/{uuid}")
     public ResponseEntity<Boolean> hasPatientDataUpdated(@PathVariable @NotNull UUID uuid) {

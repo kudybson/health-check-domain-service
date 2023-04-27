@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.domain.services;
+package pl.akh.domainservicesvc.domain.services.api;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,7 @@ import pl.akh.domainservicesvc.domain.model.entities.Administrator;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
 import pl.akh.domainservicesvc.domain.repository.AdministratorRepository;
 import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
+import pl.akh.domainservicesvc.domain.services.StuffServiceImpl;
 import pl.akh.model.rq.AdministratorRQ;
 import pl.akh.model.rs.AdministratorRS;
 import pl.akh.services.AdministratorService;

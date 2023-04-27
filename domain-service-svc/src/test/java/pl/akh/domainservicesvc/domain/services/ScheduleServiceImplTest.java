@@ -11,16 +11,13 @@ import pl.akh.domainservicesvc.domain.model.entities.Schedule;
 import pl.akh.domainservicesvc.domain.model.entities.Specialization;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
 import pl.akh.domainservicesvc.domain.repository.ScheduleRepository;
+import pl.akh.domainservicesvc.domain.services.api.ScheduleServiceImpl;
 import pl.akh.model.rq.ScheduleRQ;
 import pl.akh.model.rs.schedules.ScheduleRS;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
@@ -160,6 +157,21 @@ class ScheduleServiceImplTest {
         List<ScheduleRQ> schedules = List.of(
                 create(fromHHMM(1, 1), fromHHMM(1, 30)),
                 create(fromHHMM(2, 15), fromHHMM(2, 45)));
+
+        //when
+        assertThrows(IllegalArgumentException.class, () -> {
+            scheduleService.insertSchedules(doctorUUID, schedules);
+        });
+
+        //then
+        verify(scheduleRepository, times(0)).saveAll(any());
+    }
+
+    @Test
+    void shouldNotCreateScheduleWhenDayOfScheduleAreDiffer() {
+        //given
+        UUID doctorUUID = UUID.randomUUID();
+        List<ScheduleRQ> schedules = List.of(create(fromHHMM(1, 1), fromHHMM(1, 30).plusDays(1)));
 
         //when
         assertThrows(IllegalArgumentException.class, () -> {

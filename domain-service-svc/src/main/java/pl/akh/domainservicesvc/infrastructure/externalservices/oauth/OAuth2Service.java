@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface OAuth2Service {
-    boolean createUser(Oauth2User oauth2User) throws UnavailableException, UsernameOrEmailAlreadyExistsException;
+    boolean createUser(OAuth2User oauth2User) throws UnavailableException, UsernameOrEmailAlreadyExistsException;
 
     Optional<UUID> getUUIDByUsername(String username) throws UnavailableException;
 }

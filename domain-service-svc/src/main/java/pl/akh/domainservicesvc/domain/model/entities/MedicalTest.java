@@ -48,7 +48,7 @@ public class MedicalTest implements Serializable {
     @OneToOne(mappedBy = "medicalTest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "TEST_ID", referencedColumnName = "TEST_ID")
     @LazyGroup("testResult")
-    private TestResult testResult;
+    private MedicalTestResult medicalTestResult;
 
     @Override
     public boolean equals(Object o) {
