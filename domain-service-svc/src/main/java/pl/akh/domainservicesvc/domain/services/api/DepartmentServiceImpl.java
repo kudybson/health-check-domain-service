@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.domain.services;
+package pl.akh.domainservicesvc.domain.services.api;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Validator;

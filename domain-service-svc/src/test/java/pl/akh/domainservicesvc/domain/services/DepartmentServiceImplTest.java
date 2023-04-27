@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
 import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
+import pl.akh.domainservicesvc.domain.services.api.DepartmentServiceImpl;
 import pl.akh.model.rq.AddressRQ;
 import pl.akh.model.rq.DepartmentRQ;
 import pl.akh.model.rs.DepartmentRS;

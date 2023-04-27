@@ -22,6 +22,7 @@ import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2User;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -78,6 +79,7 @@ public class OAuth2KeycloakAdapter implements OAuth2Service {
 
     @Override
     public Optional<UUID> getUUIDByUsername(String username) throws UnavailableException {
+        if (username == null) throw new IllegalArgumentException();
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         final String keycloakURL = keycloakConfigProvider.getKeycloakUrl() + createUserPath;
@@ -96,11 +98,13 @@ public class OAuth2KeycloakAdapter implements OAuth2Service {
 
         if (exchange.getStatusCode().is2xxSuccessful()) {
             if (exchange.getBody() != null) {
-                return Arrays.stream(exchange.getBody())
-                        .filter(keycloakUser -> Objects.equals(keycloakUser.getUsername(), username))
+                List<UUID> uuidStream = Arrays.stream(exchange.getBody())
+                        .filter(keycloakUser -> Objects.nonNull(keycloakUser.getUsername()))
+                        .filter(keycloakUser -> Objects.equals(keycloakUser.getUsername().toLowerCase(), username.toLowerCase()))
                         .map(org.keycloak.representations.account.UserRepresentation::getId)
                         .map(UUID::fromString)
-                        .findFirst();
+                        .toList();
+                return uuidStream.stream().findFirst();
             }
         }
         log.error("Error during creating user");

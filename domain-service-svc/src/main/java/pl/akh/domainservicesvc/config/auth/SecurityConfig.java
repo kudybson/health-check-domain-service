@@ -25,29 +25,27 @@ import java.util.List;
 
 @EnableWebSecurity
 @Configuration
-@EnableMethodSecurity(
-        securedEnabled = true
-)
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(authorize -> authorize
+        http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/public/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/departments/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/doctors/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/schedules/**").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .requestMatchers(HttpMethod.GET, "/medical-tests-schedules/**").permitAll()
+                        .anyRequest().authenticated())
                 .oauth2ResourceServer()
                 .jwt().jwtAuthenticationConverter(new CustomJwtAuthenticationConverter());
-
-        http.sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.cors().configurationSource(corsConfigurationSource());
-        http.csrf().disable();
-        http.anonymous();
+        http.sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors().configurationSource(corsConfigurationSource()).and()
+                .csrf().disable()
+                .anonymous().and()
+                .headers()
+                .xssProtection().and()
+                .contentSecurityPolicy("script-src 'self'");
         return http.build();
     }
 

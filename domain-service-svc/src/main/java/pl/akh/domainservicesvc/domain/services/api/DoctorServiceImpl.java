@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.domain.services;
+package pl.akh.domainservicesvc.domain.services.api;
 
 import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
@@ -14,6 +14,7 @@ import pl.akh.domainservicesvc.domain.model.entities.Department;
 import pl.akh.domainservicesvc.domain.model.entities.Doctor;
 import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
+import pl.akh.domainservicesvc.domain.services.StuffServiceImpl;
 import pl.akh.model.common.Specialization;
 import pl.akh.model.rq.DoctorRQ;
 import pl.akh.model.rs.DoctorRS;

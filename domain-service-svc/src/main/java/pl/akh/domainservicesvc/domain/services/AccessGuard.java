@@ -13,12 +13,12 @@ import java.util.UUID;
 
 @Service
 @Transactional
-public class AccessService {
-    DepartmentRepository departmentRepository;
-    ReceptionistRepository receptionistRepository;
+public class AccessGuard {
+    private final DepartmentRepository departmentRepository;
+    private final ReceptionistRepository receptionistRepository;
 
     @Autowired
-    public AccessService(DepartmentRepository departmentRepository, ReceptionistRepository receptionistRepository) {
+    public AccessGuard(DepartmentRepository departmentRepository, ReceptionistRepository receptionistRepository) {
         this.departmentRepository = departmentRepository;
         this.receptionistRepository = receptionistRepository;
     }

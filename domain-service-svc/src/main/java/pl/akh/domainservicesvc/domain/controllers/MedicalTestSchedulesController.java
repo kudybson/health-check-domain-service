@@ -8,17 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.akh.domainservicesvc.domain.exceptions.DoctorNotFoundException;
-import pl.akh.domainservicesvc.domain.services.AccessService;
+import pl.akh.domainservicesvc.domain.services.AccessGuard;
 import pl.akh.domainservicesvc.domain.utils.auth.AuthDataExtractor;
 import pl.akh.domainservicesvc.domain.utils.roles.HasRoleReceptionist;
 import pl.akh.domainservicesvc.domain.utils.roles.Public;
-import pl.akh.model.common.Specialization;
 import pl.akh.model.common.TestType;
 import pl.akh.model.rq.MedicalTestScheduleRQ;
 import pl.akh.model.rs.schedules.MedicalTestSchedulesRS;
 import pl.akh.model.rs.schedules.ScheduleRS;
-import pl.akh.model.rs.schedules.SchedulesAppointmentsRS;
 import pl.akh.services.MedicalTestScheduleService;
 
 import java.time.DayOfWeek;
@@ -36,8 +33,8 @@ public class MedicalTestSchedulesController extends DomainServiceController {
     private final MedicalTestScheduleService medicalTestScheduleService;
 
     @Autowired
-    public MedicalTestSchedulesController(AuthDataExtractor authDataExtractor, AccessService accessService, MedicalTestScheduleService medicalTestScheduleService) {
-        super(authDataExtractor, accessService);
+    public MedicalTestSchedulesController(AuthDataExtractor authDataExtractor, AccessGuard accessGuard, MedicalTestScheduleService medicalTestScheduleService) {
+        super(authDataExtractor, accessGuard);
         this.medicalTestScheduleService = medicalTestScheduleService;
     }
 

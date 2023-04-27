@@ -1,31 +1,30 @@
 package pl.akh.domainservicesvc.domain.controllers;
 
 import jakarta.security.auth.message.AuthException;
-import org.springframework.beans.factory.annotation.Autowired;
-import pl.akh.domainservicesvc.domain.services.AccessService;
+import pl.akh.domainservicesvc.domain.services.AccessGuard;
 import pl.akh.domainservicesvc.domain.utils.auth.AuthDataExtractor;
 
 public abstract class DomainServiceController {
-    protected AuthDataExtractor authDataExtractor;
-    private AccessService accessService;
+    protected final AuthDataExtractor authDataExtractor;
+    private final AccessGuard accessGuard;
 
-    public DomainServiceController(AuthDataExtractor authDataExtractor, AccessService accessService) {
+    public DomainServiceController(AuthDataExtractor authDataExtractor, AccessGuard accessGuard) {
         this.authDataExtractor = authDataExtractor;
-        this.accessService = accessService;
+        this.accessGuard = accessGuard;
     }
 
-    protected boolean hasAccessAdministrationAccessToDepartment(Long departmentId) {
+    protected boolean hasAdministrativeAccessToDepartment(Long departmentId) {
         try {
-            return accessService.hasAccessAdministrationAccessToDepartment(authDataExtractor.getId(), departmentId)
+            return accessGuard.hasAccessAdministrationAccessToDepartment(authDataExtractor.getId(), departmentId)
                     || authDataExtractor.getRoles().contains("ROLE_SUPERADMIN");
         } catch (AuthException e) {
             return false;
         }
     }
 
-    protected boolean hasReceptionistAccessToDepartment(Long departmentId){
+    protected boolean hasReceptionistAccessToDepartment(Long departmentId) {
         try {
-            return accessService.hasReceptionistAccessToDepartment(authDataExtractor.getId(), departmentId)
+            return accessGuard.hasReceptionistAccessToDepartment(authDataExtractor.getId(), departmentId)
                     || authDataExtractor.getRoles().contains("ROLE_SUPERADMIN");
         } catch (AuthException e) {
             return false;

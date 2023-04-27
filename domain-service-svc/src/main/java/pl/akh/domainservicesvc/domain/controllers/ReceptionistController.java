@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.PasswordConfirmationException;
 import pl.akh.domainservicesvc.domain.exceptions.UsernameOrEmailAlreadyExistsException;
-import pl.akh.domainservicesvc.domain.services.AccessService;
+import pl.akh.domainservicesvc.domain.services.AccessGuard;
 import pl.akh.domainservicesvc.domain.utils.auth.AuthDataExtractor;
 import pl.akh.domainservicesvc.domain.utils.roles.HasRoleAdmin;
 import pl.akh.model.rq.ReceptionistRQ;
@@ -33,8 +33,8 @@ public class ReceptionistController extends DomainServiceController {
 
     private final AdministratorService administratorService;
 
-    public ReceptionistController(AuthDataExtractor authDataExtractor, AccessService accessService, ReceptionistService receptionistService, AdministratorService administratorService) {
-        super(authDataExtractor, accessService);
+    public ReceptionistController(AuthDataExtractor authDataExtractor, AccessGuard accessGuard, ReceptionistService receptionistService, AdministratorService administratorService) {
+        super(authDataExtractor, accessGuard);
         this.receptionistService = receptionistService;
         this.administratorService = administratorService;
     }
@@ -47,7 +47,7 @@ public class ReceptionistController extends DomainServiceController {
             if (receptionist.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            if (!hasAccessAdministrationAccessToDepartment(receptionist.get().getDepartmentId())) {
+            if (!hasAdministrativeAccessToDepartment(receptionist.get().getDepartmentId())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
@@ -60,6 +60,9 @@ public class ReceptionistController extends DomainServiceController {
     @HasRoleAdmin
     @PostMapping
     public ResponseEntity<ReceptionistRS> createReceptionist(@RequestBody @Valid ReceptionistRQ receptionistRQ) {
+        if (!hasAdministrativeAccessToDepartment(receptionistRQ.getDepartmentId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         try {
             ReceptionistRS receptionistRS = receptionistService.createReceptionist(receptionistRQ);
             return ResponseEntity.ok(receptionistRS);
@@ -82,7 +85,7 @@ public class ReceptionistController extends DomainServiceController {
             if (receptionist.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            if (!hasAccessAdministrationAccessToDepartment(receptionist.get().getDepartmentId())) {
+            if (!hasAdministrativeAccessToDepartment(receptionist.get().getDepartmentId())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
             receptionistService.deleteReceptionist(uuid);

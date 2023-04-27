@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.akh.domainservicesvc.domain.exceptions.DoctorNotFoundException;
-import pl.akh.domainservicesvc.domain.services.AccessService;
+import pl.akh.domainservicesvc.domain.services.AccessGuard;
 import pl.akh.domainservicesvc.domain.utils.auth.AuthDataExtractor;
 import pl.akh.domainservicesvc.domain.utils.roles.HasRoleDoctor;
 import pl.akh.domainservicesvc.domain.utils.roles.Public;
@@ -17,9 +17,7 @@ import pl.akh.model.rs.schedules.SchedulesAppointmentsRS;
 import pl.akh.services.ScheduleService;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -33,8 +31,8 @@ public class ScheduleController extends DomainServiceController {
     private ScheduleService scheduleService;
 
     @Autowired
-    public ScheduleController(AuthDataExtractor authDataExtractor, AccessService accessService, ScheduleService scheduleService) {
-        super(authDataExtractor, accessService);
+    public ScheduleController(AuthDataExtractor authDataExtractor, AccessGuard accessGuard, ScheduleService scheduleService) {
+        super(authDataExtractor, accessGuard);
         this.scheduleService = scheduleService;
     }
 

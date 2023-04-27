@@ -11,6 +11,7 @@ import pl.akh.domainservicesvc.domain.model.entities.Schedule;
 import pl.akh.domainservicesvc.domain.model.entities.Specialization;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
 import pl.akh.domainservicesvc.domain.repository.ScheduleRepository;
+import pl.akh.domainservicesvc.domain.services.api.ScheduleServiceImpl;
 import pl.akh.model.rq.ScheduleRQ;
 import pl.akh.model.rs.schedules.ScheduleRS;
 
