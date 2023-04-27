@@ -2,6 +2,7 @@ package pl.akh.domainservicesvc.domain.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.akh.domainservicesvc.domain.exceptions.AppointmentConflictException;
 import pl.akh.domainservicesvc.domain.exceptions.DoctorNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.PatientNotFoundException;
 import pl.akh.domainservicesvc.domain.mappers.AppointmentMapper;
@@ -12,14 +13,19 @@ import pl.akh.domainservicesvc.domain.model.entities.Status;
 import pl.akh.domainservicesvc.domain.repository.AppointmentRepository;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
 import pl.akh.domainservicesvc.domain.repository.PatientRepository;
+import pl.akh.domainservicesvc.domain.repository.ScheduleRepository;
 import pl.akh.model.rq.AppointmentRQ;
 import pl.akh.model.rs.AppointmentRS;
 import pl.akh.services.AppointmentService;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+
+import static pl.akh.domainservicesvc.domain.repository.AppointmentRepository.APPOINTMENT_TIME;
 
 @Service
 @Transactional
@@ -28,11 +34,13 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
+    private final ScheduleRepository scheduleRepository;
 
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, DoctorRepository doctorRepository, PatientRepository patientRepository) {
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, ScheduleRepository scheduleRepository) {
         this.appointmentRepository = appointmentRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
+        this.scheduleRepository = scheduleRepository;
     }
 
     @Override
@@ -43,15 +51,33 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public AppointmentRS createAppointment(AppointmentRQ appointmentRQ) throws Exception {
+        if (appointmentRQ.getAppointmentDateTime().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException();
+        }
         Doctor doctor = doctorRepository.findById(appointmentRQ.getDoctorUUID())
                 .orElseThrow(() -> new DoctorNotFoundException(String.format("Doctor with id: %s not found.", appointmentRQ.getDoctorUUID())));
         Patient patient = patientRepository.findById(appointmentRQ.getPatientUUID())
                 .orElseThrow(() -> new PatientNotFoundException(String.format("Patient with id: %s not found.", appointmentRQ.getPatientUUID())));
 
+        LocalDateTime appointmentDateTime = appointmentRQ.getAppointmentDateTime().truncatedTo(ChronoUnit.MINUTES);
+        final Timestamp appointmentDateTimestamp = Timestamp.valueOf(appointmentDateTime);
+        final Timestamp appointmentEndDateTimestamp = Timestamp.valueOf(appointmentDateTime.plusMinutes(APPOINTMENT_TIME.toMinutes()));
+
+        if ((appointmentRQ.getAppointmentDateTime().getMinute() % APPOINTMENT_TIME.toMinutes()) != 0) {
+            throw new IllegalArgumentException();
+        }
+        if (appointmentRepository.findAppointmentByDoctorIdAndAppointmentDate(doctor.getId(), appointmentDateTimestamp, Status.SCHEDULED).isPresent()) {
+            throw new AppointmentConflictException();
+        }
+        if (scheduleRepository.getScheduleByDoctorIdAndStartDateTimeAndEndDateTime(doctor.getId(), appointmentDateTimestamp,
+                appointmentEndDateTimestamp).isEmpty()) {
+            throw new AppointmentConflictException();
+        }
+
         Appointment appointment = new Appointment();
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
-        appointment.setAppointmentDate(Timestamp.valueOf(appointmentRQ.getAppointmentDateTime()));
+        appointment.setAppointmentDate(appointmentDateTimestamp);
         appointment.setStatus(Status.SCHEDULED);
         appointment.setDepartment(doctor.getDepartment());
         Appointment save = appointmentRepository.save(appointment);

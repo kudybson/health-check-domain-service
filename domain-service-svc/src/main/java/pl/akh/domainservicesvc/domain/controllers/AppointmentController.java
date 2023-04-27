@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pl.akh.domainservicesvc.domain.exceptions.AppointmentConflictException;
 import pl.akh.domainservicesvc.domain.exceptions.DoctorNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.PatientNotFoundException;
 import pl.akh.model.rq.AppointmentRQ;
@@ -38,6 +39,10 @@ public class AppointmentController {
             return ResponseEntity.ok(appointmentRS);
         } catch (PatientNotFoundException | DoctorNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (AppointmentConflictException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }
