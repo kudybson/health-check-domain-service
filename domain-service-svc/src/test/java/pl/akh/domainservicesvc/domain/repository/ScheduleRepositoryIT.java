@@ -9,6 +9,9 @@ import pl.akh.domainservicesvc.domain.model.entities.enums.Specialization;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -74,12 +77,52 @@ public class ScheduleRepositoryIT extends DomainServiceIntegrationTest {
         });
     }
 
+    @Test
+    public void shouldFindSchedulesByDoctorAndDates() {
+        //given
+        Doctor d1 = prepareDoctor();
+        Doctor d2 = prepareDoctor(UUID.randomUUID());
+        List<Schedule> schedules = List.of(
+                createSchedule(d1, Timestamp.valueOf(LocalDateTime.of(2023, 2, 20, 9, 30, 0))
+                        , Timestamp.valueOf(LocalDateTime.of(2023, 2, 20, 11, 0, 0))),
+                createSchedule(d1, Timestamp.valueOf(LocalDateTime.of(2023, 2, 20, 13, 30, 0)),
+                        Timestamp.valueOf(LocalDateTime.of(2023, 2, 20, 16, 30, 0))),
+                createSchedule(d1, Timestamp.valueOf(LocalDateTime.of(2023, 3, 20, 9, 30, 0)),
+                        Timestamp.valueOf(LocalDateTime.of(2023, 3, 20, 16, 30, 0))),
+                createSchedule(d2, Timestamp.valueOf(LocalDateTime.of(2023, 2, 21, 9, 30, 0)),
+                        Timestamp.valueOf(LocalDateTime.of(2023, 2, 21, 15, 30, 0))));
+
+        //when
+        scheduleRepository.saveAll(schedules);
+
+        Optional<Schedule> schedule1 = scheduleRepository.getScheduleByDoctorIdAndStartDateTimeAndEndDateTime(d1.getId(),
+                Timestamp.valueOf(LocalDateTime.of(2023, 2, 20, 9, 30, 0)),
+                Timestamp.valueOf(LocalDateTime.of(2023, 2, 20, 9, 45, 0)));
+
+        Optional<Schedule> schedule2 = scheduleRepository.getScheduleByDoctorIdAndStartDateTimeAndEndDateTime(d1.getId(),
+                Timestamp.valueOf(LocalDateTime.of(2023, 2, 20, 16, 30, 0)),
+                Timestamp.valueOf(LocalDateTime.of(2023, 2, 20, 16, 45, 0)));
+
+        //then
+        assertTrue(schedule1.isPresent());
+        assertTrue(schedule2.isEmpty());
+    }
+
     private Schedule createSchedule(Doctor doctor, Timestamp startTime, Timestamp endTime) {
         Schedule schedule = new Schedule();
         schedule.setDoctor(doctor);
         schedule.setStartDateTime(startTime);
         schedule.setEndDateTime(endTime);
         return schedule;
+    }
+    private Doctor prepareDoctor(UUID uuid) {
+        Doctor doctor = new Doctor();
+        doctor.setId(uuid);
+        doctor.setSpecialization(Specialization.ANESTHESIA);
+        doctor.setLastName("Nazwisko");
+        doctor.setFirstName("Imie");
+        doctor.setDepartment(prepareDepartment());
+        return doctorRepository.saveAndFlush(doctor);
     }
 
     private Doctor prepareDoctor() {

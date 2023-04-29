@@ -45,4 +45,36 @@ public abstract class DomainServiceController {
             throw new RuntimeException(e);
         }
     }
+
+    protected boolean isDoctor() {
+        try {
+            return authDataExtractor.getRoles().contains("ROLE_DOCTOR");
+        } catch (AuthException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected boolean isReceptionist() {
+        try {
+            return authDataExtractor.getRoles().contains("ROLE_RECEPTIONIST");
+        } catch (AuthException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected boolean isAdmin() {
+        try {
+            return authDataExtractor.getRoles().contains("ROLE_ADMIN");
+        } catch (AuthException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected boolean isSuperAdmin() {
+        try {
+            return authDataExtractor.getRoles().contains("ROLE_SUPERADMIN");
+        } catch (AuthException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
