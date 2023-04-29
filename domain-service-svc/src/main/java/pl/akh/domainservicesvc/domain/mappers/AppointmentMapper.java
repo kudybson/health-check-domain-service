@@ -23,7 +23,7 @@ public class AppointmentMapper {
                 .appointmentDate(appointment.getAppointmentDate())
                 .comments(appointment.getComments())
                 .status(appointment.getStatus().toDto())
-                .departmentRS(DepartmentMapper.mapToDto(appointment.getDepartment()))
+                .departmentId(appointment.getDepartment().getId())
                 .treatmentRS(TreatmentMapper.mapToDto(appointment.getTreatment()))
                 .build();
     }

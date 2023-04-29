@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.domain.services;
+package pl.akh.domainservicesvc.domain.services.api;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +16,8 @@ import pl.akh.domainservicesvc.domain.repository.PatientRepository;
 import pl.akh.domainservicesvc.domain.repository.ScheduleRepository;
 import pl.akh.model.rq.AppointmentRQ;
 import pl.akh.model.rs.AppointmentRS;
+import pl.akh.notificationserviceapi.model.Notification;
+import pl.akh.notificationserviceapi.services.NotificationService;
 import pl.akh.services.AppointmentService;
 
 import java.sql.Timestamp;
@@ -24,6 +26,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static pl.akh.domainservicesvc.domain.repository.AppointmentRepository.APPOINTMENT_TIME;
 
@@ -35,12 +38,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     private final ScheduleRepository scheduleRepository;
+    private final NotificationService notificationService;
 
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, ScheduleRepository scheduleRepository) {
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, ScheduleRepository scheduleRepository, NotificationService notificationService) {
         this.appointmentRepository = appointmentRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.scheduleRepository = scheduleRepository;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -85,27 +90,47 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public AppointmentRS removeAppointmentById(Long id) {
-        return null;
+    public void removeAppointmentById(Long id) throws Exception {
+        Appointment appointment = appointmentRepository.findById(id).orElseThrow();
+        if (appointment.getAppointmentDate().before(Timestamp.valueOf(LocalDateTime.now()))) {
+            throw new IllegalArgumentException();
+        }
+        appointment.setStatus(Status.CANCELED);
+        Notification notification = new Notification();
+        notification.setUserId(appointment.getPatient().getId());
+        notification.setPayload("Your appointment in " + appointment.getDepartment().getName() + " of " + appointment.getAppointmentDate() +
+                " with doctor " + appointment.getDoctor().getLastName() + " has been cancelled");
+        notificationService.sendNotification(notification);
     }
 
     @Override
-    public Collection<AppointmentRS> getAppointmentsByDoctorId(UUID doctorUUID) {
-        return null;
+    public Collection<AppointmentRS> getAppointmentsByDoctorId(UUID doctorUUID, LocalDateTime start, LocalDateTime end) {
+        return appointmentRepository.getAppointmentsByDoctorId(doctorUUID, Timestamp.valueOf(start), Timestamp.valueOf(end), Status.SCHEDULED)
+                .stream()
+                .map(AppointmentMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<AppointmentRS> getAppointmentsByPatientId(UUID patientUUID) {
-        return null;
+    public Collection<AppointmentRS> getAppointmentsByPatientId(UUID patientUUID, LocalDateTime start, LocalDateTime end) {
+        return appointmentRepository.getAppointmentsByPatientId(patientUUID, Timestamp.valueOf(start), Timestamp.valueOf(end), Status.SCHEDULED)
+                .stream()
+                .map(AppointmentMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<AppointmentRS> getAppointmentsByDepartmentId(Long id) {
-        return null;
+    public Collection<AppointmentRS> getAppointmentsByDepartmentId(Long id, LocalDateTime start, LocalDateTime end) {
+        return appointmentRepository.getAppointmentsByDepartmentId(id, Timestamp.valueOf(start), Timestamp.valueOf(end), Status.SCHEDULED)
+                .stream()
+                .map(AppointmentMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public AppointmentRS addCommentToAppointment(Long appointmentId, String comment) {
-        return null;
+    public AppointmentRS addCommentToAppointment(Long id, String comment) {
+        Appointment appointment = appointmentRepository.findById(id).orElseThrow();
+        appointment.setComments(comment);
+        return AppointmentMapper.mapToDto(appointment);
     }
 }

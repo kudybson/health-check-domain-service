@@ -12,7 +12,7 @@ public class AppointmentRS {
     private Long id;
     private DoctorRS doctorRS;
     private PatientRS patientRS;
-    private DepartmentRS departmentRS;
+    private Long departmentId;
     private Status status;
     private Timestamp appointmentDate;
     private String comments;

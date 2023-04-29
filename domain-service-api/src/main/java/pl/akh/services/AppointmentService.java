@@ -3,6 +3,7 @@ package pl.akh.services;
 import pl.akh.model.rq.AppointmentRQ;
 import pl.akh.model.rs.AppointmentRS;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,13 +14,13 @@ public interface AppointmentService {
 
     AppointmentRS createAppointment(AppointmentRQ appointmentRQ) throws Exception;
 
-    AppointmentRS removeAppointmentById(Long id);
+    void removeAppointmentById(Long id) throws Exception;
 
-    Collection<AppointmentRS> getAppointmentsByDoctorId(UUID doctorUUID);
+    Collection<AppointmentRS> getAppointmentsByDoctorId(UUID doctorUUID, LocalDateTime start, LocalDateTime end);
 
-    Collection<AppointmentRS> getAppointmentsByPatientId(UUID patientUUID);
+    Collection<AppointmentRS> getAppointmentsByPatientId(UUID patientUUID, LocalDateTime start, LocalDateTime end);
 
-    Collection<AppointmentRS> getAppointmentsByDepartmentId(Long id);
+    Collection<AppointmentRS> getAppointmentsByDepartmentId(Long id, LocalDateTime start, LocalDateTime end);
 
-    AppointmentRS addCommentToAppointment(Long appointmentId, String comment);
+    AppointmentRS addCommentToAppointment(Long id, String comment);
 }

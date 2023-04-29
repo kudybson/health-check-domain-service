@@ -14,6 +14,8 @@ import pl.akh.domainservicesvc.domain.repository.AppointmentRepository;
 import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
 import pl.akh.domainservicesvc.domain.repository.PatientRepository;
+import pl.akh.domainservicesvc.domain.services.api.AppointmentServiceImpl;
+import pl.akh.domainservicesvc.domain.services.api.ScheduleServiceImpl;
 import pl.akh.model.rq.AppointmentRQ;
 import pl.akh.model.rq.ScheduleRQ;
 import pl.akh.model.rs.AppointmentRS;
