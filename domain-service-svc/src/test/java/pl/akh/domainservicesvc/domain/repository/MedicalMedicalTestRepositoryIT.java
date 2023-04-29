@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
 import pl.akh.domainservicesvc.domain.model.entities.*;
 import pl.akh.domainservicesvc.domain.model.entities.enums.Gender;
+import pl.akh.domainservicesvc.domain.model.entities.enums.TestResultStatus;
 import pl.akh.domainservicesvc.domain.model.entities.enums.TestType;
 
 import java.sql.Timestamp;
@@ -206,6 +207,7 @@ public class MedicalMedicalTestRepositoryIT extends DomainServiceIntegrationTest
         medicalTest.setTestDate(timestamp);
         medicalTest.setDepartment(department);
         medicalTest.setType(type);
+        medicalTest.setResultReady(TestResultStatus.WAITING_FOR_RESULT);
         return medicalTest;
     }
 
