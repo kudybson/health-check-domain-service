@@ -2,9 +2,8 @@ package pl.akh.domainservicesvc.domain.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import pl.akh.domainservicesvc.domain.model.entities.Gender;
 import pl.akh.domainservicesvc.domain.model.entities.MedicalTest;
-import pl.akh.domainservicesvc.domain.model.entities.TestType;
+import pl.akh.domainservicesvc.domain.model.entities.enums.TestType;
 
 import java.sql.Timestamp;
 import java.time.Duration;

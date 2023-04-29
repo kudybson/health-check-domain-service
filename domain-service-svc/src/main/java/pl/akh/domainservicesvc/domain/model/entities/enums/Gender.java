@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.domain.model.entities;
+package pl.akh.domainservicesvc.domain.model.entities.enums;
 
 public enum Gender {
     MALE, FEMALE;

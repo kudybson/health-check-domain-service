@@ -19,7 +19,7 @@ public class InMemoryStorageService implements StorageService {
     }
 
     @Override
-    public void saveFile(Path path, MultipartFile file) throws IOException {
+    public void saveFile(Path path, MultipartFile file, String ext) throws IOException {
         files.put(path.toString(), file.getBytes());
     }
 

@@ -2,10 +2,7 @@ package pl.akh.domainservicesvc.domain.controllers.test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.akh.domainservicesvc.infrastructure.storage.StorageService;
 
@@ -36,7 +33,7 @@ public class FileController {
     @PostMapping("/file")
     public ResponseEntity<String> saveFile(@RequestParam("file") MultipartFile file) {
         try {
-            storageService.saveFile(sample, file);
+            storageService.saveFile(sample, file, ".pdf");
             return ResponseEntity.ok("OK");
         } catch (IOException e) {
             return ResponseEntity.status(404).build();

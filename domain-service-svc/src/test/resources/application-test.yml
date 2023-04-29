@@ -30,3 +30,4 @@ notification:
 
 storage:
   type: inMemory #[inMemory, cloud, local]
+  path: mock

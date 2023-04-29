@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.akh.domainservicesvc.domain.mappers.MedicalTestMapper;
 import pl.akh.domainservicesvc.domain.mappers.MedicalTestScheduleMapper;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
 import pl.akh.domainservicesvc.domain.model.entities.MedicalTestSchedule;
@@ -19,11 +18,9 @@ import pl.akh.model.rs.schedules.MedicalTestSchedulesRS;
 import pl.akh.model.rs.schedules.ScheduleRS;
 import pl.akh.services.MedicalTestScheduleService;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,7 +56,7 @@ public class MedicalTestScheduleServiceImpl implements MedicalTestScheduleServic
 
         List<MedicalTestSchedule> schedulesEntities = schedules.stream()
                 .map(schedule -> createSchedule(department,
-                        pl.akh.domainservicesvc.domain.model.entities.TestType.valueOf(medicalTestScheduleRQ.getTestType().toString()),
+                        pl.akh.domainservicesvc.domain.model.entities.enums.TestType.valueOf(medicalTestScheduleRQ.getTestType().toString()),
                         schedule))
                 .toList();
 
@@ -73,7 +70,7 @@ public class MedicalTestScheduleServiceImpl implements MedicalTestScheduleServic
     @Override
     @Transactional(readOnly = true)
     public MedicalTestSchedulesRS getMedicalTestSchedules(Long departmentId, TestType testType, LocalDateTime startDate, LocalDateTime endDate) {
-        pl.akh.domainservicesvc.domain.model.entities.TestType testTypeDomain = pl.akh.domainservicesvc.domain.model.entities.TestType.valueOf(testType.name());
+        pl.akh.domainservicesvc.domain.model.entities.enums.TestType testTypeDomain = pl.akh.domainservicesvc.domain.model.entities.enums.TestType.valueOf(testType.name());
 
         Collection<MedicalTestSchedule> schedules = medicalTestScheduleRepository.findByDepartmentAndTypeBetweenDates(departmentId,
                 testTypeDomain, Timestamp.valueOf(startDate), Timestamp.valueOf(endDate));
@@ -98,7 +95,7 @@ public class MedicalTestScheduleServiceImpl implements MedicalTestScheduleServic
                 .build();
     }
 
-    private MedicalTestSchedule createSchedule(Department department, pl.akh.domainservicesvc.domain.model.entities.TestType type,
+    private MedicalTestSchedule createSchedule(Department department, pl.akh.domainservicesvc.domain.model.entities.enums.TestType type,
                                                ScheduleRQ schedule) {
         MedicalTestSchedule medicalTestSchedule = new MedicalTestSchedule();
         medicalTestSchedule.setDepartment(department);
@@ -113,7 +110,7 @@ public class MedicalTestScheduleServiceImpl implements MedicalTestScheduleServic
         Timestamp max = Timestamp.valueOf(ScheduleUtils.getLatestEndDateFromSchedules(medicalTestScheduleRQ.getSchedules()));
 
         return medicalTestScheduleRepository.findByDepartmentAndTypeBetweenDates(medicalTestScheduleRQ.getDepartmentId(),
-                        pl.akh.domainservicesvc.domain.model.entities.TestType.valueOf(medicalTestScheduleRQ.getTestType().name()), min, max)
+                        pl.akh.domainservicesvc.domain.model.entities.enums.TestType.valueOf(medicalTestScheduleRQ.getTestType().name()), min, max)
                 .stream()
                 .map(schedule -> ScheduleRQ.builder()
                         .startDateTime(schedule.getStartDateTime().toLocalDateTime())

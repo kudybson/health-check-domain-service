@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaSystemException;
 import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
 import pl.akh.domainservicesvc.domain.model.entities.Address;
-import pl.akh.domainservicesvc.domain.model.entities.Gender;
+import pl.akh.domainservicesvc.domain.model.entities.enums.Gender;
 import pl.akh.domainservicesvc.domain.model.entities.Patient;
 
 import java.util.Optional;

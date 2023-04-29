@@ -1,12 +1,15 @@
 package pl.akh.domainservicesvc.domain.model.entities;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
+import org.hibernate.annotations.Type;
+import pl.akh.domainservicesvc.domain.model.entities.enums.TestResultStatus;
+import pl.akh.domainservicesvc.domain.model.entities.enums.TestType;
+import pl.akh.model.common.TestStatus;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -48,11 +51,10 @@ public class MedicalTest implements Serializable {
     @NotNull
     private Timestamp testDate;
 
-    @OneToOne(mappedBy = "medicalTest", cascade = CascadeType.ALL)
-    @JoinColumn(name = "TEST_ID", referencedColumnName = "TEST_ID")
-    @LazyGroup("testResult")
-    @Nullable
-    private MedicalTestResult medicalTestResult;
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "RESULT")
+    @NotNull
+    private TestResultStatus resultReady;
 
     @Override
     public boolean equals(Object o) {
