@@ -9,7 +9,7 @@ import java.nio.file.Path;
 public interface StorageService {
     byte[] getFile(Path path) throws IOException;
 
-    void saveFile(Path path, MultipartFile file) throws IOException;
+    void saveFile(Path path, MultipartFile file, String ext) throws IOException;
 
     void deleteFile(Path path) throws IOException;
 

@@ -29,4 +29,6 @@ notification:
 
 #storage
 storage:
-  type: inMemory #[inMemory, cloud, local]
+  type: local #[inMemory, cloud, local]
+  path: D:\volumes\health-check\domain-service
+  encryption-key: key

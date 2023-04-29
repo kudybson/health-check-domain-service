@@ -7,6 +7,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
 import pl.akh.domainservicesvc.domain.model.entities.*;
+import pl.akh.domainservicesvc.domain.model.entities.enums.Gender;
+import pl.akh.domainservicesvc.domain.model.entities.enums.Specialization;
 
 import java.util.List;
 import java.util.Optional;
