@@ -21,10 +21,7 @@ import pl.akh.services.MedicalTestService;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static pl.akh.domainservicesvc.domain.utils.DateUtils.getDayOfCurrentWeek;
 
@@ -62,10 +59,9 @@ public class MedicalTestController extends DomainServiceController {
         }
     }
 
-
-    @GetMapping
+    @GetMapping("/department/{departmentId}")
     @HasRoleReceptionist
-    public ResponseEntity<Collection<MedicalTestRS>> getMedicalTestByDepartment(@RequestParam Long departmentId,
+    public ResponseEntity<Collection<MedicalTestRS>> getMedicalTestByDepartment(@PathVariable Long departmentId,
                                                                                 @RequestParam(required = false) TestType testType,
                                                                                 @RequestParam(required = false) LocalDateTime startDateTime,
                                                                                 @RequestParam(required = false) LocalDateTime endDateTime) {
@@ -85,8 +81,8 @@ public class MedicalTestController extends DomainServiceController {
         return ResponseEntity.ok(medicalTestService.getMedicalTestsByTypeAndDepartmentId(testType, departmentId, startDateTime, endDateTime));
     }
 
-    @GetMapping("/by-patientId")
-    public ResponseEntity<Collection<MedicalTestRS>> getMedicalTestByPatientId(@RequestParam UUID patientUUID) {
+    @GetMapping("/patient/{patientUUID}")
+    public ResponseEntity<Collection<MedicalTestRS>> getMedicalTestByPatientId(@PathVariable UUID patientUUID) {
         try {
             if (isPatient() && !Objects.equals(patientUUID, authDataExtractor.getId())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -94,10 +90,12 @@ public class MedicalTestController extends DomainServiceController {
             return ResponseEntity.ok(medicalTestService.getAllMedicalByPatientId(patientUUID));
         } catch (AuthException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    @GetMapping("by-id/{id}")
+    @GetMapping("id/{id}")
     public ResponseEntity<MedicalTestRS> getMedicalTestById(@PathVariable Long id) {
         Optional<MedicalTestRS> medicalTestById =
                 medicalTestService.getMedicalTestById(id);
@@ -105,7 +103,7 @@ public class MedicalTestController extends DomainServiceController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         try {
-            if (!isPatientOwnerOfTest(medicalTestById.get()) || !hasReceptionistAccessToDepartment(medicalTestById.get().getDepartmentId())) {
+            if (!medicalTestById.get().getPatientUUID().equals(authDataExtractor.getId()) && isPatient()) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
@@ -126,7 +124,7 @@ public class MedicalTestController extends DomainServiceController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         try {
-            if (!isPatientOwnerOfTest(medicalTestById.get()) || !hasReceptionistAccessToDepartment(medicalTestById.get().getDepartmentId())) {
+            if (!isPatientOwnerOfTest(medicalTestById.get()) && !hasReceptionistAccessToDepartment(medicalTestById.get().getDepartmentId())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
             medicalTestService.cancelMedicalTest(id);
@@ -135,7 +133,6 @@ public class MedicalTestController extends DomainServiceController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-
 
     private boolean isPatientOwnerOfTest(MedicalTestRS medicalTestRS) throws AuthException {
         return Objects.equals(medicalTestRS.getPatientUUID(), authDataExtractor.getId());

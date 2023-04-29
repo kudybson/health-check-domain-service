@@ -12,6 +12,7 @@ import pl.akh.domainservicesvc.domain.model.entities.MedicalTestSchedule;
 import pl.akh.domainservicesvc.domain.model.entities.Patient;
 import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 import pl.akh.domainservicesvc.domain.repository.MedicalTestRepository;
+import pl.akh.domainservicesvc.domain.repository.MedicalTestScheduleRepository;
 import pl.akh.domainservicesvc.domain.repository.PatientRepository;
 import pl.akh.model.common.TestType;
 import pl.akh.model.rq.MedicalTestRQ;
@@ -26,23 +27,28 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static pl.akh.domainservicesvc.domain.repository.MedicalTestRepository.MEDICAL_TEST_DURATION;
+
 @Service
 @Slf4j
 public class MedicalTestServiceImpl implements MedicalTestService {
+    private final MedicalTestScheduleRepository medicalTestScheduleRepository;
     private final MedicalTestRepository medicalTestRepository;
     private final DepartmentRepository departmentRepository;
     private final PatientRepository patientRepository;
 
     @Autowired
-    public MedicalTestServiceImpl(MedicalTestRepository medicalTestRepository, DepartmentRepository departmentRepository, PatientRepository patientRepository) {
+    public MedicalTestServiceImpl(MedicalTestRepository medicalTestRepository, DepartmentRepository departmentRepository, PatientRepository patientRepository,
+                                  MedicalTestScheduleRepository medicalTestScheduleRepository) {
         this.medicalTestRepository = medicalTestRepository;
         this.departmentRepository = departmentRepository;
         this.patientRepository = patientRepository;
+        this.medicalTestScheduleRepository = medicalTestScheduleRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Collection<MedicalTestRS> getMedicalTestsByTypeAndDepartmentId(TestType testType, long departmentId, LocalDateTime start, LocalDateTime end) {
+    public Collection<MedicalTestRS> getMedicalTestsByTypeAndDepartmentId(TestType testType, Long departmentId, LocalDateTime start, LocalDateTime end) {
         pl.akh.domainservicesvc.domain.model.entities.TestType testTypeDomain = pl.akh.domainservicesvc.domain.model.entities.TestType.valueOf(testType.name());
         return medicalTestRepository.findAllByDepartmentIdAndType(departmentId, testTypeDomain, Timestamp.valueOf(start), Timestamp.valueOf(end))
                 .stream()
@@ -75,18 +81,25 @@ public class MedicalTestServiceImpl implements MedicalTestService {
 
         final pl.akh.domainservicesvc.domain.model.entities.TestType testTypeDomain = pl.akh.domainservicesvc.domain.model.entities.TestType.valueOf(medicalTestRQ.getType().name());
         LocalDateTime medicalTestDate = medicalTestRQ.getTestDate().truncatedTo(ChronoUnit.MINUTES);
-        final Timestamp medicalTestDateTimestamp = Timestamp.valueOf(medicalTestDate);
-        if (medicalTestDate.getMinute() % MedicalTestRepository.MEDICAL_TEST_DURATION.toMinutes() != 0) {
+        final Timestamp medicalTestStartDateTimestamp = Timestamp.valueOf(medicalTestDate);
+        final Timestamp medicalTestEndDateTimestamp = Timestamp.valueOf(medicalTestDate.plus(MEDICAL_TEST_DURATION));
+        if (medicalTestDate.getMinute() % MEDICAL_TEST_DURATION.toMinutes() != 0) {
             throw new IllegalArgumentException();
         }
+        Optional<MedicalTestSchedule> scheduleWhichContainPeriod = medicalTestScheduleRepository.findScheduleWhichContainPeriod(medicalTestRQ.getDepartmentId(),
+                testTypeDomain, medicalTestStartDateTimestamp, medicalTestEndDateTimestamp);
+        if (scheduleWhichContainPeriod.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+
         Optional<MedicalTest> testAtTheSameTime = medicalTestRepository.findMedicalTestByDepartmentIdAndTypeAndTestDateEquals(
-                medicalTestRQ.getDepartmentId(), testTypeDomain, medicalTestDateTimestamp);
+                medicalTestRQ.getDepartmentId(), testTypeDomain, medicalTestStartDateTimestamp);
 
         if (testAtTheSameTime.isPresent()) {
             throw new OverwritingTimeException();
         }
         MedicalTest medicalTest = new MedicalTest();
-        medicalTest.setTestDate(medicalTestDateTimestamp);
+        medicalTest.setTestDate(medicalTestStartDateTimestamp);
         medicalTest.setType(testTypeDomain);
         medicalTest.setDepartment(department);
         medicalTest.setPatient(patient);
@@ -97,6 +110,7 @@ public class MedicalTestServiceImpl implements MedicalTestService {
     @Override
     @Transactional(readOnly = true)
     public Collection<MedicalTestRS> getAllMedicalByPatientId(UUID id) {
+        patientRepository.findById(id).orElseThrow();
         return medicalTestRepository.findMedicalTestsByPatientUUID(id)
                 .stream()
                 .map(MedicalTestMapper::toDTO)

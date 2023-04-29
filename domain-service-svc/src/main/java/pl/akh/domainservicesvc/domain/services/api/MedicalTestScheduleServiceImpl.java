@@ -23,6 +23,8 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,12 +84,16 @@ public class MedicalTestScheduleServiceImpl implements MedicalTestScheduleServic
                         .startDateTime(medicalTestStartDate.toLocalDateTime())
                         .endDateTime(medicalTestStartDate.toLocalDateTime().plus(MEDICAL_TEST_DURATION))
                         .build())
+                .sorted(Comparator.comparing(ScheduleRS::getStartDateTime))
                 .toList();
 
         return MedicalTestSchedulesRS.builder()
                 .type(testType)
                 .departmentId(departmentId)
-                .schedules(schedules.stream().map(MedicalTestScheduleMapper::toScheduleRS).toList())
+                .schedules(schedules.stream()
+                        .map(MedicalTestScheduleMapper::toScheduleRS)
+                        .sorted(Comparator.comparing(ScheduleRS::getStartDateTime))
+                        .toList())
                 .assignedSchedules(assignedTests)
                 .build();
     }

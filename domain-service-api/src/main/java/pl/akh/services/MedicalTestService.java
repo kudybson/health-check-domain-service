@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface MedicalTestService {
 
-    Collection<MedicalTestRS> getMedicalTestsByTypeAndDepartmentId(TestType testType, long departmentId, LocalDateTime start, LocalDateTime end);
+    Collection<MedicalTestRS> getMedicalTestsByTypeAndDepartmentId(TestType testType, Long departmentId, LocalDateTime start, LocalDateTime end);
 
     Collection<MedicalTestRS> getMedicalTestsByDepartmentId(Long departmentId, LocalDateTime start, LocalDateTime end);
 

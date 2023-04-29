@@ -29,6 +29,7 @@ public class MedicalTestMapper {
                         ofNullable(entity.getMedicalTestResult()).map(MedicalTestResult::getId).orElse(null))
                 .testStatus(status)
                 .patientUUID(entity.getPatient().getId())
+                .testDateTime(entity.getTestDate().toLocalDateTime())
                 .build();
     }
 }
