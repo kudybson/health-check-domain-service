@@ -8,7 +8,7 @@ import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
 import pl.akh.domainservicesvc.domain.model.entities.Address;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
 import pl.akh.domainservicesvc.domain.model.entities.MedicalTestSchedule;
-import pl.akh.domainservicesvc.domain.model.entities.TestType;
+import pl.akh.domainservicesvc.domain.model.entities.enums.TestType;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
-import static pl.akh.domainservicesvc.domain.model.entities.TestType.ARTHROSCOPY;
-import static pl.akh.domainservicesvc.domain.model.entities.TestType.BLOOD_ALLERGY_TESTS;
+import static pl.akh.domainservicesvc.domain.model.entities.enums.TestType.ARTHROSCOPY;
+import static pl.akh.domainservicesvc.domain.model.entities.enums.TestType.BLOOD_ALLERGY_TESTS;
 
 public class MedicalMedicalTestScheduleRepositoryIT extends DomainServiceIntegrationTest {
 

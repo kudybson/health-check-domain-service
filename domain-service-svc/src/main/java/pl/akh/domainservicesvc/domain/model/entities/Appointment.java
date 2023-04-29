@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
+import pl.akh.domainservicesvc.domain.model.entities.enums.Status;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

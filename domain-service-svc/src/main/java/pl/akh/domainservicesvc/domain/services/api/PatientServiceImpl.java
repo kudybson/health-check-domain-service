@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import pl.akh.domainservicesvc.domain.mappers.AddressMapper;
 import pl.akh.domainservicesvc.domain.mappers.PatientMapper;
-import pl.akh.domainservicesvc.domain.model.entities.Gender;
+import pl.akh.domainservicesvc.domain.model.entities.enums.Gender;
 import pl.akh.domainservicesvc.domain.model.entities.Patient;
 import pl.akh.domainservicesvc.domain.repository.PatientRepository;
 import pl.akh.model.rq.PatientDataRQ;

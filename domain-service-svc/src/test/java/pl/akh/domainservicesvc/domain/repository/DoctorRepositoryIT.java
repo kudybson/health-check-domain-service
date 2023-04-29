@@ -10,7 +10,7 @@ import pl.akh.domainservicesvc.DomainServiceIntegrationTest;
 import pl.akh.domainservicesvc.domain.model.entities.Address;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
 import pl.akh.domainservicesvc.domain.model.entities.Doctor;
-import pl.akh.domainservicesvc.domain.model.entities.Specialization;
+import pl.akh.domainservicesvc.domain.model.entities.enums.Specialization;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -19,7 +19,7 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static pl.akh.domainservicesvc.domain.model.entities.Specialization.ANESTHESIA;
+import static pl.akh.domainservicesvc.domain.model.entities.enums.Specialization.ANESTHESIA;
 
 public class DoctorRepositoryIT extends DomainServiceIntegrationTest {
 

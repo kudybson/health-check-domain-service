@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pl.akh.domainservicesvc.domain.exceptions.DoctorNotFoundException;
 import pl.akh.domainservicesvc.domain.model.entities.Doctor;
 import pl.akh.domainservicesvc.domain.model.entities.Schedule;
-import pl.akh.domainservicesvc.domain.model.entities.Specialization;
+import pl.akh.domainservicesvc.domain.model.entities.enums.Specialization;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
 import pl.akh.domainservicesvc.domain.repository.ScheduleRepository;
 import pl.akh.domainservicesvc.domain.services.api.ScheduleServiceImpl;

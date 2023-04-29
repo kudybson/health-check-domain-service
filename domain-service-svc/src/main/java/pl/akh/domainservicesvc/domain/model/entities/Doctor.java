@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.LazyGroup;
 import org.hibernate.annotations.SelectBeforeUpdate;
+import pl.akh.domainservicesvc.domain.model.entities.enums.Specialization;
 
 import java.io.Serializable;
 import java.util.HashSet;
