@@ -78,7 +78,6 @@ public class MedicalMedicalTestResultRepositoryIT extends DomainServiceIntegrati
         medicalTest.setPatient(createPatient());
         medicalTest.setType(BLOOD_ALLERGY_TESTS);
         medicalTest.setTestDate(Timestamp.from(Instant.now()));
-        medicalTest.setDescription("test alergiczny krwi");
         return medicalTestRepository.saveAndFlush(medicalTest);
     }
 

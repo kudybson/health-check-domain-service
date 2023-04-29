@@ -35,12 +35,13 @@ public class MedicalMedicalTestScheduleRepositoryIT extends DomainServiceIntegra
                 Timestamp.valueOf(LocalDateTime.of(2023, 4, 16, 16, 0)));
 
         //when
-        medicalTestScheduleRepository.saveAndFlush(medicalTestSchedule);
+        MedicalTestSchedule saved = medicalTestScheduleRepository.saveAndFlush(medicalTestSchedule);
 
         //then
-        Assertions.assertEquals(1, medicalTestScheduleRepository.findAll().size());
+        Optional<MedicalTestSchedule> byId = medicalTestScheduleRepository.findById(saved.getId());
+        assertTrue(byId.isPresent());
+        assertSchedules(medicalTestSchedule, byId.get());
     }
-
 
     @Test
     public void shouldReturnOnlySchedulesByDepartmentTypeAndDate() {
@@ -85,11 +86,12 @@ public class MedicalMedicalTestScheduleRepositoryIT extends DomainServiceIntegra
                 Timestamp.valueOf(LocalDateTime.of(2023, 4, 16, 16, 0)));
 
         //when
-        MedicalTestSchedule save = medicalTestScheduleRepository.saveAndFlush(medicalTestSchedule);
-        medicalTestScheduleRepository.delete(save);
+        MedicalTestSchedule saved = medicalTestScheduleRepository.saveAndFlush(medicalTestSchedule);
+        medicalTestScheduleRepository.delete(saved);
 
         //then
-        Assertions.assertEquals(0, medicalTestScheduleRepository.findAll().size());
+        Optional<MedicalTestSchedule> byId = medicalTestScheduleRepository.findById(saved.getId());
+        assertTrue(byId.isEmpty());
     }
 
     @Test
@@ -164,6 +166,13 @@ public class MedicalMedicalTestScheduleRepositoryIT extends DomainServiceIntegra
         assertThrows(ConstraintViolationException.class, () -> {
             medicalTestScheduleRepository.saveAndFlush(medicalTestSchedule);
         });
+    }
+
+    private void assertSchedules(MedicalTestSchedule s1, MedicalTestSchedule s2) {
+        assertEquals(s1.getStartDateTime(), s2.getStartDateTime());
+        assertEquals(s1.getEndDateTime(), s2.getEndDateTime());
+        assertEquals(s1.getType(), s2.getType());
+        assertEquals(s1.getDepartment(), s2.getDepartment());
     }
 
     private MedicalTestSchedule createTestSchedule(Department department, TestType testType, Timestamp startDateTime, Timestamp endDateTime) {

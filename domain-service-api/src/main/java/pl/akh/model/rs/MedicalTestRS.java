@@ -5,6 +5,7 @@ import lombok.Data;
 import pl.akh.model.common.TestStatus;
 import pl.akh.model.common.TestType;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -15,6 +16,6 @@ public class MedicalTestRS {
     private Long departmentId;
     private UUID patientUUID;
     private TestType type;
-    private String description;
-    private TestResultRS testResultRS;
+    private Long medicalTestResultId;
+    private LocalDateTime testDateTime;
 }

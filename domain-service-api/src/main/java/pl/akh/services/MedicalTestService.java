@@ -4,19 +4,22 @@ import pl.akh.model.common.TestType;
 import pl.akh.model.rq.MedicalTestRQ;
 import pl.akh.model.rs.MedicalTestRS;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface MedicalTestService {
-    Collection<MedicalTestRS> getMedicalTestsByTypeAndDepartmentId(TestType testType, long departmentId);
 
-    Collection<MedicalTestRS> getMedicalTestsByDepartmentId(long departmentId);
+    Collection<MedicalTestRS> getMedicalTestsByTypeAndDepartmentId(TestType testType, Long departmentId, LocalDateTime start, LocalDateTime end);
 
-    MedicalTestRS getMedicalTestById(long id);
+    Collection<MedicalTestRS> getMedicalTestsByDepartmentId(Long departmentId, LocalDateTime start, LocalDateTime end);
 
-    MedicalTestRS createMedicalTest(MedicalTestRQ medicalTestRQ);
+    Optional<MedicalTestRS> getMedicalTestById(Long id);
+
+    MedicalTestRS createMedicalTest(MedicalTestRQ medicalTestRQ) throws Exception;
 
     Collection<MedicalTestRS> getAllMedicalByPatientId(UUID id);
 
-
+    void cancelMedicalTest(Long testId);
 }

@@ -23,6 +23,8 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,21 +73,27 @@ public class MedicalTestScheduleServiceImpl implements MedicalTestScheduleServic
     @Override
     @Transactional(readOnly = true)
     public MedicalTestSchedulesRS getMedicalTestSchedules(Long departmentId, TestType testType, LocalDateTime startDate, LocalDateTime endDate) {
-        Collection<MedicalTestSchedule> schedules = medicalTestScheduleRepository.findByDepartmentAndTypeBetweenDates(departmentId,
-                pl.akh.domainservicesvc.domain.model.entities.TestType.valueOf(testType.name()), Timestamp.valueOf(startDate), Timestamp.valueOf(endDate));
+        pl.akh.domainservicesvc.domain.model.entities.TestType testTypeDomain = pl.akh.domainservicesvc.domain.model.entities.TestType.valueOf(testType.name());
 
-        List<ScheduleRS> assignedTests = medicalTestRepository.findScheduleDatesBetween(Timestamp.valueOf(startDate), Timestamp.valueOf(endDate))
+        Collection<MedicalTestSchedule> schedules = medicalTestScheduleRepository.findByDepartmentAndTypeBetweenDates(departmentId,
+                testTypeDomain, Timestamp.valueOf(startDate), Timestamp.valueOf(endDate));
+
+        List<ScheduleRS> assignedTests = medicalTestRepository.findScheduleDatesBetween(departmentId, testTypeDomain, Timestamp.valueOf(startDate), Timestamp.valueOf(endDate))
                 .stream()
                 .map(medicalTestStartDate -> ScheduleRS.builder()
                         .startDateTime(medicalTestStartDate.toLocalDateTime())
                         .endDateTime(medicalTestStartDate.toLocalDateTime().plus(MEDICAL_TEST_DURATION))
                         .build())
+                .sorted(Comparator.comparing(ScheduleRS::getStartDateTime))
                 .toList();
 
         return MedicalTestSchedulesRS.builder()
                 .type(testType)
                 .departmentId(departmentId)
-                .schedules(schedules.stream().map(MedicalTestScheduleMapper::toScheduleRS).toList())
+                .schedules(schedules.stream()
+                        .map(MedicalTestScheduleMapper::toScheduleRS)
+                        .sorted(Comparator.comparing(ScheduleRS::getStartDateTime))
+                        .toList())
                 .assignedSchedules(assignedTests)
                 .build();
     }

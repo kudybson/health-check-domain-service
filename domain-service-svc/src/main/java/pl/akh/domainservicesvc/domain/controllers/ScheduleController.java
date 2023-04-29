@@ -87,6 +87,8 @@ public class ScheduleController extends DomainServiceController {
             UUID id = authDataExtractor.getId();
             Collection<ScheduleRS> scheduleRS = scheduleService.insertSchedules(id, schedules);
             return ResponseEntity.ok(scheduleRS);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (AuthException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
