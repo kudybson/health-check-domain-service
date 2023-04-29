@@ -66,7 +66,7 @@ public class Department implements Serializable {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "DEPARTMENT_ID")
     @LazyGroup("testSchedule")
-    private Set<TestSchedule> testSchedules = new HashSet<>();
+    private Set<MedicalTestSchedule> medicalTestSchedules = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

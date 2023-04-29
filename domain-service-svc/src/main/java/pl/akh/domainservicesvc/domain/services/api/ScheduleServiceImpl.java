@@ -1,4 +1,4 @@
-package pl.akh.domainservicesvc.domain.services;
+package pl.akh.domainservicesvc.domain.services.api;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +12,7 @@ import pl.akh.domainservicesvc.domain.model.entities.Schedule;
 import pl.akh.domainservicesvc.domain.repository.AppointmentRepository;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
 import pl.akh.domainservicesvc.domain.repository.ScheduleRepository;
+import pl.akh.domainservicesvc.domain.utils.ScheduleUtils;
 import pl.akh.model.rq.ScheduleRQ;
 import pl.akh.model.rs.schedules.AppointmentDateRS;
 import pl.akh.model.rs.schedules.ScheduleRS;
@@ -19,9 +20,7 @@ import pl.akh.model.rs.schedules.SchedulesAppointmentsRS;
 import pl.akh.services.ScheduleService;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -69,15 +68,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public Collection<ScheduleRS> insertSchedules(UUID doctorUUID, Collection<ScheduleRQ> schedules) {
-        schedules = truncateMinutes(schedules);
-        Timestamp min = Timestamp.valueOf(schedules.stream()
-                .map(ScheduleRQ::getStartDateTime)
-                .min(LocalDateTime::compareTo)
-                .orElseThrow());
-        Timestamp max = Timestamp.valueOf(schedules.stream()
-                .map(ScheduleRQ::getEndDateTime)
-                .max(LocalDateTime::compareTo)
-                .orElseThrow());
+        schedules = ScheduleUtils.truncateMinutes(schedules);
+        Timestamp min = Timestamp.valueOf(ScheduleUtils.getEarliestStartDateFromSchedules(schedules));
+        Timestamp max = Timestamp.valueOf(ScheduleUtils.getLatestEndDateFromSchedules(schedules));
 
         Stream<ScheduleRQ> savedSchedules = scheduleRepository.getSchedulesByDoctorIdAndStartDateTimeAfterAndEndDateTimeBefore(doctorUUID, min, max)
                 .stream()
@@ -86,11 +79,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                         .endDateTime(schedule.getEndDateTime().toLocalDateTime())
                         .build());
 
-        Collection<ScheduleRQ> allSchedules = Stream.concat(savedSchedules, schedules.stream()).toList();
-
-        if (isAnyOutdated(schedules) || !isTimeValid(schedules) || !isChronologyValid(allSchedules)) {
-            throw new IllegalArgumentException();
-        }
+        ScheduleUtils.validate(Stream.concat(savedSchedules, schedules.stream()).toList());
 
         Doctor doctor = doctorRepository.findById(doctorUUID).orElseThrow();
         List<Schedule> scheduleEntities = schedules.stream()
@@ -109,56 +98,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         schedule.setEndDateTime(Timestamp.valueOf(scheduleRQ.getEndDateTime()));
         schedule.setDoctor(doctor);
         return schedule;
-    }
-
-    private boolean isAnyOutdated(Collection<ScheduleRQ> schedules) {
-        LocalDate now = LocalDate.now();
-        return schedules.stream()
-                .anyMatch(schedule -> schedule.getStartDateTime().toLocalDate().isBefore(now) ||
-                        schedule.getEndDateTime().toLocalDate().isBefore(now));
-    }
-
-    private Collection<ScheduleRQ> truncateMinutes(Collection<ScheduleRQ> schedules) {
-        return schedules.stream()
-                .peek(schedule -> schedule.setStartDateTime(schedule.getStartDateTime().truncatedTo(ChronoUnit.MINUTES)))
-                .peek(schedule -> schedule.setEndDateTime(schedule.getEndDateTime().truncatedTo(ChronoUnit.MINUTES)))
-                .collect(Collectors.toList());
-    }
-
-    private boolean isTimeValid(Collection<ScheduleRQ> schedules) {
-        return schedules.stream()
-                .allMatch(this::isScheduleValidAppointmentTime);
-    }
-
-    private boolean isScheduleValidAppointmentTime(ScheduleRQ scheduleRQ) {
-        long appointmentTime = AppointmentRepository.APPOINTMENT_TIME.toMinutes();
-        if ((scheduleRQ.getStartDateTime().getMinute() % appointmentTime) != 0) return false;
-        return (scheduleRQ.getEndDateTime().getMinute() % appointmentTime) == 0;
-    }
-
-    private boolean isChronologyValid(Collection<ScheduleRQ> schedules) {
-        //validates that start date is not after end date and that they are not equal
-        boolean startIsNotBeforeEnd = schedules.stream()
-                .anyMatch(schedule -> !schedule.getStartDateTime().isBefore(schedule.getEndDateTime()));
-        if (startIsNotBeforeEnd) return false;
-
-        for (ScheduleRQ schedule : schedules) {
-            for (ScheduleRQ scheduleToCheck : schedules) {
-                if (schedule == scheduleToCheck) continue;
-                if (areSchedulesOverlapped(schedule, scheduleToCheck)) return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean areSchedulesOverlapped(ScheduleRQ first, ScheduleRQ second) {
-        if (isBetweenDates(second.getStartDateTime(), first.getStartDateTime(), first.getEndDateTime())) return true;
-        if (isBetweenDates(second.getEndDateTime(), first.getStartDateTime(), first.getEndDateTime())) return true;
-        return Objects.equals(first, second);
-    }
-
-    private boolean isBetweenDates(LocalDateTime date, LocalDateTime min, LocalDateTime max) {
-        return date.isAfter(min) && date.isBefore(max);
     }
 }
 

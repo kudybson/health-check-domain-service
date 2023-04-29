@@ -16,7 +16,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TestResult implements Serializable {
+public class MedicalTestResult implements Serializable {
 
     private static final long serialVersionUID = 13L;
 
@@ -40,7 +40,7 @@ public class TestResult implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TestResult that = (TestResult) o;
+        MedicalTestResult that = (MedicalTestResult) o;
         return id.equals(that.id);
     }
 

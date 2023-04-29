@@ -17,16 +17,17 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Groups;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Service;
-import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Oauth2User;
+import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2User;
 
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
 @ConditionalOnProperty(prefix = "keycloak-client", name = "type", havingValue = "keycloak")
-public class KeycloakClient implements OAuth2Service {
+public class OAuth2KeycloakAdapter implements OAuth2Service {
 
     private final String createUserPath = "/admin/realms/health-check/users";
     private KeycloakConfigProvider keycloakConfigProvider;
@@ -36,7 +37,7 @@ public class KeycloakClient implements OAuth2Service {
     private Instant refreshTokenDate;
 
     @Autowired
-    public KeycloakClient(KeycloakConfigProvider keycloakConfigProvider) {
+    public OAuth2KeycloakAdapter(KeycloakConfigProvider keycloakConfigProvider) {
         this.keycloakConfigProvider = keycloakConfigProvider;
         this.keycloak = KeycloakBuilder.builder()
                 .serverUrl(keycloakConfigProvider.getKeycloakUrl())
@@ -50,7 +51,7 @@ public class KeycloakClient implements OAuth2Service {
     }
 
     @Override
-    public boolean createUser(Oauth2User oauth2User) throws UnavailableException {
+    public boolean createUser(OAuth2User oauth2User) throws UnavailableException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         String token = getAccessToken();
@@ -78,6 +79,7 @@ public class KeycloakClient implements OAuth2Service {
 
     @Override
     public Optional<UUID> getUUIDByUsername(String username) throws UnavailableException {
+        if (username == null) throw new IllegalArgumentException();
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         final String keycloakURL = keycloakConfigProvider.getKeycloakUrl() + createUserPath;
@@ -96,18 +98,20 @@ public class KeycloakClient implements OAuth2Service {
 
         if (exchange.getStatusCode().is2xxSuccessful()) {
             if (exchange.getBody() != null) {
-                return Arrays.stream(exchange.getBody())
-                        .filter(keycloakUser -> Objects.equals(keycloakUser.getUsername(), username))
+                List<UUID> uuidStream = Arrays.stream(exchange.getBody())
+                        .filter(keycloakUser -> Objects.nonNull(keycloakUser.getUsername()))
+                        .filter(keycloakUser -> Objects.equals(keycloakUser.getUsername().toLowerCase(), username.toLowerCase()))
                         .map(org.keycloak.representations.account.UserRepresentation::getId)
                         .map(UUID::fromString)
-                        .findFirst();
+                        .toList();
+                return uuidStream.stream().findFirst();
             }
         }
         log.error("Error during creating user");
         throw new UnavailableException("Authorization service is unavailable");
     }
 
-    private UserRepresentation mapToUserRepresentation(Oauth2User oauth2User) {
+    private UserRepresentation mapToUserRepresentation(OAuth2User oauth2User) {
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setUsername(oauth2User.getUsername());
         userRepresentation.setEmail(oauth2User.getEmail());

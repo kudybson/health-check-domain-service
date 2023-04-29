@@ -7,7 +7,6 @@ public class ScheduleMapper {
     public static ScheduleRS mapToDto(Schedule schedule) {
         if (schedule == null) return null;
         return ScheduleRS.builder()
-                .id(schedule.getId())
                 .startDateTime(schedule.getStartDateTime().toLocalDateTime())
                 .endDateTime(schedule.getEndDateTime().toLocalDateTime())
                 .build();

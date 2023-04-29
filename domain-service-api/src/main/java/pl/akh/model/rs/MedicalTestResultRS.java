@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class TestResultRS {
+public class MedicalTestResultRS {
     private Long id;
     private String description;
 

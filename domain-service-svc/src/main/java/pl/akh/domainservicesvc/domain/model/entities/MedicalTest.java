@@ -1,6 +1,8 @@
 package pl.akh.domainservicesvc.domain.model.entities;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,27 +30,29 @@ public class MedicalTest implements Serializable {
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "DEPARTMENT_ID")
     @LazyGroup("department")
+    @NotNull
     private Department department;
 
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "PATIENT_ID")
     @LazyGroup("patient")
+    @NotNull
     private Patient patient;
 
     @Column(name = "TYPE")
     @Enumerated(value = EnumType.STRING)
+    @NotNull
     private TestType type;
 
-    @Column(name = "DESCRIPTION")
-    private String description;
-
     @Column(name = "TEST_DATE")
+    @NotNull
     private Timestamp testDate;
 
-    @OneToOne(mappedBy = "medicalTest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "medicalTest", cascade = CascadeType.ALL)
     @JoinColumn(name = "TEST_ID", referencedColumnName = "TEST_ID")
     @LazyGroup("testResult")
-    private TestResult testResult;
+    @Nullable
+    private MedicalTestResult medicalTestResult;
 
     @Override
     public boolean equals(Object o) {

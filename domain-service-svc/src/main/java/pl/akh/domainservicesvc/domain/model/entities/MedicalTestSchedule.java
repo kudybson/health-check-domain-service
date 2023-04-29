@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TestSchedule implements Serializable {
+public class MedicalTestSchedule implements Serializable {
 
     private static final long serialVersionUID = 15L;
 

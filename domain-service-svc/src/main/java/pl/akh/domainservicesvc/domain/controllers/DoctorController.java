@@ -11,7 +11,7 @@ import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.DoctorNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.PasswordConfirmationException;
 import pl.akh.domainservicesvc.domain.exceptions.UsernameOrEmailAlreadyExistsException;
-import pl.akh.domainservicesvc.domain.services.AccessService;
+import pl.akh.domainservicesvc.domain.services.AccessGuard;
 import pl.akh.domainservicesvc.domain.utils.auth.AuthDataExtractor;
 import pl.akh.domainservicesvc.domain.utils.roles.HasRoleAdmin;
 import pl.akh.domainservicesvc.domain.utils.roles.Public;
@@ -34,8 +34,8 @@ public class DoctorController extends DomainServiceController {
     private final DoctorService doctorService;
 
     @Autowired
-    public DoctorController(AuthDataExtractor authDataExtractor, AccessService accessService, DoctorService doctorService) {
-        super(authDataExtractor, accessService);
+    public DoctorController(AuthDataExtractor authDataExtractor, AccessGuard accessGuard, DoctorService doctorService) {
+        super(authDataExtractor, accessGuard);
         this.doctorService = doctorService;
     }
 
@@ -60,7 +60,7 @@ public class DoctorController extends DomainServiceController {
     @HasRoleAdmin
     @PostMapping
     public ResponseEntity<DoctorRS> createDoctor(@RequestBody @Valid DoctorRQ doctorRQ) throws Exception {
-        if (!hasAccessAdministrationAccessToDepartment(doctorRQ.getDepartmentId())) {
+        if (!hasAdministrativeAccessToDepartment(doctorRQ.getDepartmentId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         try {
@@ -82,7 +82,7 @@ public class DoctorController extends DomainServiceController {
         if (doctorById.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        if (!hasAccessAdministrationAccessToDepartment(doctorById.get().getDepartmentId())) {
+        if (!hasAdministrativeAccessToDepartment(doctorById.get().getDepartmentId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         doctorService.deleteDoctor(uuid);

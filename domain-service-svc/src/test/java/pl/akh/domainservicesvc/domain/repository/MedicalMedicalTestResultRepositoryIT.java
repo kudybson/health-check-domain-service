@@ -14,7 +14,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertThrows;
 import static pl.akh.domainservicesvc.domain.model.entities.TestType.BLOOD_ALLERGY_TESTS;
 
-public class TestResultRepositoryIT extends DomainServiceIntegrationTest {
+public class MedicalMedicalTestResultRepositoryIT extends DomainServiceIntegrationTest {
 
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -23,62 +23,61 @@ public class TestResultRepositoryIT extends DomainServiceIntegrationTest {
     @Autowired
     private MedicalTestRepository medicalTestRepository;
     @Autowired
-    private TestResultRepository testResultRepository;
+    private MedicalTestResultRepository medicalTestResultRepository;
 
     @Test
     public void shouldCreateTestResult() {
         //given
         MedicalTest medicalTest = createMedicalTest();
-        TestResult testResult = createTestResult(medicalTest, "podwyższone krwinki czerwone");
+        MedicalTestResult medicalTestResult = createTestResult(medicalTest, "podwyższone krwinki czerwone");
 
         //when
-        testResultRepository.saveAndFlush(testResult);
+        medicalTestResultRepository.saveAndFlush(medicalTestResult);
 
         //then
-        Assertions.assertEquals(1, testResultRepository.findAll().size());
+        Assertions.assertEquals(1, medicalTestResultRepository.findAll().size());
     }
 
     @Test
     public void shouldDeleteTestResult() {
         //given
         MedicalTest medicalTest = createMedicalTest();
-        TestResult testResult = createTestResult(medicalTest, "podwyższone krwinki czerwone");
+        MedicalTestResult medicalTestResult = createTestResult(medicalTest, "podwyższone krwinki czerwone");
 
         //when
-        TestResult save = testResultRepository.saveAndFlush(testResult);
-        testResultRepository.delete(save);
+        MedicalTestResult save = medicalTestResultRepository.saveAndFlush(medicalTestResult);
+        medicalTestResultRepository.delete(save);
 
         //then
-        Assertions.assertEquals(0, testResultRepository.findAll().size());
+        Assertions.assertEquals(0, medicalTestResultRepository.findAll().size());
     }
 
     @Test
     public void shouldNotCreateTestResultWhenMedicalTestIsNull() {
         //given
-        TestResult testResult = createTestResult(null, "podwyższone krwinki czerwone");
+        MedicalTestResult medicalTestResult = createTestResult(null, "podwyższone krwinki czerwone");
 
         //when
         //then
         assertThrows(ConstraintViolationException.class, () -> {
-            testResultRepository.saveAndFlush(testResult);
+            medicalTestResultRepository.saveAndFlush(medicalTestResult);
         });
     }
 
-    private TestResult createTestResult(MedicalTest medicalTest, String description) {
-        TestResult testResult = new TestResult();
-        testResult.setMedicalTest(medicalTest);
-        testResult.setDescription(description);
-        return testResult;
+    private MedicalTestResult createTestResult(MedicalTest medicalTest, String description) {
+        MedicalTestResult medicalTestResult = new MedicalTestResult();
+        medicalTestResult.setMedicalTest(medicalTest);
+        medicalTestResult.setDescription(description);
+        return medicalTestResult;
     }
 
     private MedicalTest createMedicalTest() {
         MedicalTest medicalTest = new MedicalTest();
         medicalTest.setDepartment(prepareDepartment());
-        medicalTest.setTestResult(null);
+        medicalTest.setMedicalTestResult(null);
         medicalTest.setPatient(createPatient());
         medicalTest.setType(BLOOD_ALLERGY_TESTS);
         medicalTest.setTestDate(Timestamp.from(Instant.now()));
-        medicalTest.setDescription("test alergiczny krwi");
         return medicalTestRepository.saveAndFlush(medicalTest);
     }
 
