@@ -2,6 +2,7 @@ package pl.akh.domainservicesvc.domain.mappers;
 
 import pl.akh.domainservicesvc.domain.model.entities.Appointment;
 import pl.akh.domainservicesvc.domain.repository.AppointmentRepository;
+import pl.akh.model.common.Status;
 import pl.akh.model.rs.AppointmentRS;
 import pl.akh.model.rs.schedules.AppointmentDateRS;
 
@@ -22,7 +23,7 @@ public class AppointmentMapper {
                 .patientRS(PatientMapper.mapToDto(appointment.getPatient()))
                 .appointmentDate(appointment.getAppointmentDate())
                 .comments(appointment.getComments())
-                .status(appointment.getStatus().toDto())
+                .status(Status.valueOf(appointment.getStatus().name()))
                 .departmentId(appointment.getDepartment().getId())
                 .treatmentRS(TreatmentMapper.mapToDto(appointment.getTreatment()))
                 .build();

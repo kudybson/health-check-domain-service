@@ -83,7 +83,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
         appointment.setAppointmentDate(appointmentDateTimestamp);
-        appointment.setStatus(Status.SCHEDULED);
+        appointment.setStatus(pl.akh.domainservicesvc.domain.model.entities.enums.Status.SCHEDULED);
         appointment.setDepartment(doctor.getDepartment());
         Appointment save = appointmentRepository.save(appointment);
         return AppointmentMapper.mapToDto(save);
@@ -95,7 +95,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (appointment.getAppointmentDate().before(Timestamp.valueOf(LocalDateTime.now()))) {
             throw new IllegalArgumentException();
         }
-        appointment.setStatus(Status.CANCELED);
+        appointment.setStatus(pl.akh.domainservicesvc.domain.model.entities.enums.Status.CANCELED);
         Notification notification = new Notification();
         notification.setUserId(appointment.getPatient().getId());
         notification.setPayload("Your appointment in " + appointment.getDepartment().getName() + " of " + appointment.getAppointmentDate() +

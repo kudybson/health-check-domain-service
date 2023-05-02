@@ -10,6 +10,8 @@ import pl.akh.domainservicesvc.domain.exceptions.AppointmentConflictException;
 import pl.akh.domainservicesvc.domain.exceptions.DoctorNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.PatientNotFoundException;
 import pl.akh.domainservicesvc.domain.model.entities.*;
+import pl.akh.domainservicesvc.domain.model.entities.enums.Gender;
+import pl.akh.domainservicesvc.domain.model.entities.enums.Specialization;
 import pl.akh.domainservicesvc.domain.repository.AppointmentRepository;
 import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
