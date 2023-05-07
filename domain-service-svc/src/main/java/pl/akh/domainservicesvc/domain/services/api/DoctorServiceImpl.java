@@ -14,6 +14,7 @@ import pl.akh.domainservicesvc.domain.model.entities.Department;
 import pl.akh.domainservicesvc.domain.model.entities.Doctor;
 import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
+import pl.akh.domainservicesvc.domain.repository.RatingRepository;
 import pl.akh.domainservicesvc.domain.services.StuffServiceImpl;
 import pl.akh.model.common.Specialization;
 import pl.akh.model.rq.DoctorRQ;
@@ -35,11 +36,13 @@ public class DoctorServiceImpl implements DoctorService {
     private final StuffServiceImpl stuffService;
     private final DepartmentRepository departmentRepository;
     private final DoctorRepository doctorRepository;
+    private final RatingRepository ratingRepository;
 
-    public DoctorServiceImpl(StuffServiceImpl stuffService, DepartmentRepository departmentRepository, DoctorRepository doctorRepository) {
+    public DoctorServiceImpl(StuffServiceImpl stuffService, DepartmentRepository departmentRepository, DoctorRepository doctorRepository, RatingRepository ratingRepository) {
         this.stuffService = stuffService;
         this.departmentRepository = departmentRepository;
         this.doctorRepository = doctorRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     @Override
@@ -78,8 +81,8 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Collection<RatingRS> getDoctorRates(UUID doctorUUID) throws DoctorNotFoundException {
-        Doctor doctor = doctorRepository.findById(doctorUUID).orElseThrow(DoctorNotFoundException::new);
-        return doctor.getRatings()
+        doctorRepository.findById(doctorUUID).orElseThrow(DoctorNotFoundException::new);
+        return ratingRepository.getRatingsByDoctorId(doctorUUID)
                 .stream()
                 .map(RatingMapper::mapToDto)
                 .collect(Collectors.toList());

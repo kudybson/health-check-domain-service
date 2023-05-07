@@ -16,13 +16,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RateRQ {
     @NotNull
-    @org.hibernate.validator.constraints.UUID
     private UUID doctorUUID;
     @NotNull
-    @org.hibernate.validator.constraints.UUID
     private UUID patientUUID;
     @Min(value = 0)
     @Max(value = 10)
     @NotNull
-    private Integer grade;
+    private Long grade;
+    private String description;
 }
