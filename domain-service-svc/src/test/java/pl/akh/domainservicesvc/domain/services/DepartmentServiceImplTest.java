@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
+import pl.akh.domainservicesvc.domain.repository.AdministratorRepository;
 import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 import pl.akh.domainservicesvc.domain.services.api.DepartmentServiceImpl;
 import pl.akh.model.rq.AddressRQ;
@@ -22,12 +23,13 @@ class DepartmentServiceImplTest {
 
     @Mock
     private DepartmentRepository departmentRepository;
+    private AdministratorRepository administratorRepository;
     private DepartmentServiceImpl departmentService;
 
     @BeforeEach
     public void setUp() {
         if (this.departmentService == null) {
-            this.departmentService = new DepartmentServiceImpl(departmentRepository, Validation.buildDefaultValidatorFactory().getValidator());
+            this.departmentService = new DepartmentServiceImpl(departmentRepository, administratorRepository, Validation.buildDefaultValidatorFactory().getValidator());
         }
     }
 

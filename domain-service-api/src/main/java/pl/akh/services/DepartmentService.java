@@ -5,6 +5,7 @@ import pl.akh.model.rq.DepartmentRQ;
 import pl.akh.model.rs.DepartmentRS;
 
 import java.util.Collection;
+import java.util.UUID;
 
 public interface DepartmentService {
     DepartmentRS createDepartment(DepartmentRQ departmentRQ);
@@ -20,4 +21,6 @@ public interface DepartmentService {
     DepartmentRS updateDepartment(DepartmentRQ departmentRQ, Long departmentId);
 
     void deleteDepartment(Long id);
+
+    DepartmentRS getDepartmentByAdministratorId(UUID administratorId) throws Exception;
 }

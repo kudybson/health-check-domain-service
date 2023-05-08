@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pl.akh.domainservicesvc.domain.exceptions.AdministratorNotFoundException;
+import pl.akh.domainservicesvc.domain.utils.roles.HasRoleAdmin;
 import pl.akh.domainservicesvc.domain.utils.roles.HasRoleSuperAdmin;
 import pl.akh.domainservicesvc.domain.utils.roles.Public;
 import pl.akh.model.rq.DepartmentRQ;
@@ -16,6 +18,7 @@ import pl.akh.model.rs.DepartmentRS;
 import pl.akh.services.DepartmentService;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/departments")
@@ -44,6 +47,16 @@ public class DepartmentController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<DepartmentRS> getDepartmentById(@PathVariable @NotNull Long id) {
         return ResponseEntity.ok(departmentService.getDepartmentById(id));
+    }
+
+    @GetMapping(path = "/administrator/{uuid}")
+    @HasRoleAdmin
+    public ResponseEntity<DepartmentRS> getDepartmentByAdministratorId(@PathVariable UUID uuid) throws Exception {
+        try {
+            return ResponseEntity.ok(departmentService.getDepartmentByAdministratorId(uuid));
+        } catch (AdministratorNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PostMapping

@@ -6,10 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.akh.domainservicesvc.domain.exceptions.AdministratorNotFoundException;
 import pl.akh.domainservicesvc.domain.mappers.AddressMapper;
 import pl.akh.domainservicesvc.domain.mappers.DepartmentMapper;
 import pl.akh.domainservicesvc.domain.model.entities.Address;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
+import pl.akh.domainservicesvc.domain.repository.AdministratorRepository;
 import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 import pl.akh.domainservicesvc.domain.utils.validation.ValidationUtils;
 import pl.akh.model.rq.DepartmentRQ;
@@ -18,6 +20,7 @@ import pl.akh.services.DepartmentService;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,11 +28,13 @@ import java.util.stream.Collectors;
 @Transactional
 public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepository departmentRepository;
+    private final AdministratorRepository administratorRepository;
     private final Validator validator;
 
     @Autowired
-    public DepartmentServiceImpl(DepartmentRepository departmentRepository, Validator validator) {
+    public DepartmentServiceImpl(DepartmentRepository departmentRepository, AdministratorRepository administratorRepository, Validator validator) {
         this.departmentRepository = departmentRepository;
+        this.administratorRepository = administratorRepository;
         this.validator = validator;
     }
 
@@ -80,5 +85,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public void deleteDepartment(Long id) {
         departmentRepository.deleteById(id);
+    }
+
+    @Override
+    public DepartmentRS getDepartmentByAdministratorId(UUID administratorId) throws AdministratorNotFoundException {
+        if(!administratorRepository.existsById(administratorId)) throw new AdministratorNotFoundException();
+        return DepartmentMapper.mapToDto(departmentRepository.findDepartmentByAdministratorId(administratorId));
     }
 }
