@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pl.akh.domainservicesvc.domain.exceptions.AdministratorNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.PasswordConfirmationException;
 import pl.akh.domainservicesvc.domain.exceptions.UsernameOrEmailAlreadyExistsException;
@@ -15,6 +16,7 @@ import pl.akh.domainservicesvc.domain.utils.auth.AuthDataExtractor;
 import pl.akh.domainservicesvc.domain.utils.roles.HasRoleAdmin;
 import pl.akh.model.rq.ReceptionistRQ;
 import pl.akh.model.rs.AdministratorRS;
+import pl.akh.model.rs.DepartmentRS;
 import pl.akh.model.rs.ReceptionistRS;
 import pl.akh.services.AdministratorService;
 import pl.akh.services.ReceptionistService;
@@ -106,6 +108,16 @@ public class ReceptionistController extends DomainServiceController {
             return ResponseEntity.ok(receptionists);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping(path = "/departments/{uuid}")
+    @HasRoleAdmin
+    public ResponseEntity<DepartmentRS> getDepartmentByAdministratorId(@PathVariable UUID uuid) throws Exception {
+        try {
+            return ResponseEntity.ok(receptionistService.getDepartmentByReceptionistId(uuid));
+        } catch (AdministratorNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.akh.domainservicesvc.domain.exceptions.DepartmentNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.PasswordConfirmationException;
+import pl.akh.domainservicesvc.domain.exceptions.ReceptionistNotFoundException;
+import pl.akh.domainservicesvc.domain.mappers.DepartmentMapper;
 import pl.akh.domainservicesvc.domain.mappers.ReceptionistMapper;
 import pl.akh.domainservicesvc.domain.model.entities.Department;
 import pl.akh.domainservicesvc.domain.model.entities.Receptionist;
@@ -13,6 +15,7 @@ import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 import pl.akh.domainservicesvc.domain.repository.ReceptionistRepository;
 import pl.akh.domainservicesvc.domain.services.StuffServiceImpl;
 import pl.akh.model.rq.ReceptionistRQ;
+import pl.akh.model.rs.DepartmentRS;
 import pl.akh.model.rs.ReceptionistRS;
 import pl.akh.services.ReceptionistService;
 
@@ -73,5 +76,11 @@ public class ReceptionistServiceImpl implements ReceptionistService {
                 .stream()
                 .map(ReceptionistMapper::mapToDto)
                 .toList();
+    }
+
+    @Override
+    public DepartmentRS getDepartmentByReceptionistId(UUID receptionistId) throws ReceptionistNotFoundException {
+        if (!receptionistRepository.existsById(receptionistId)) throw new ReceptionistNotFoundException();
+        return DepartmentMapper.mapToDto(receptionistRepository.findDepartmentByReceptionistId(receptionistId));
     }
 }

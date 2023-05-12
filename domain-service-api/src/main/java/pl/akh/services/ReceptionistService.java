@@ -1,6 +1,7 @@
 package pl.akh.services;
 
 import pl.akh.model.rq.ReceptionistRQ;
+import pl.akh.model.rs.DepartmentRS;
 import pl.akh.model.rs.ReceptionistRS;
 
 import java.util.Collection;
@@ -16,4 +17,5 @@ public interface ReceptionistService {
 
     Collection<ReceptionistRS> getReceptionistsByDepartmentId(Long departmentId);
 
+    DepartmentRS getDepartmentByReceptionistId(UUID receptionistId) throws Exception;
 }
