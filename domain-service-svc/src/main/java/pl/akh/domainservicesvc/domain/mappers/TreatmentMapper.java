@@ -10,9 +10,9 @@ public class TreatmentMapper {
         return TreatmentRS.builder()
                 .id(treatment.getId())
                 .appointmentId(treatment.getAppointment().getId())
-                .referralId(treatment.getReferral().getId())
+                .referralId(treatment.getReferral() != null ? treatment.getReferral().getId() : null)
                 .diagnosis(treatment.getDiagnosis())
-                .prescriptionId(treatment.getPrescription().getId())
+                .prescriptionId(treatment.getPrescription() != null ? treatment.getPrescription().getId() : null)
                 .recommendation(treatment.getRecommendation())
                 .build();
     }
