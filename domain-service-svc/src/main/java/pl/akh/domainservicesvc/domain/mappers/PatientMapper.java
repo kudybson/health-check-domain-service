@@ -5,7 +5,7 @@ import pl.akh.model.rs.PatientRS;
 
 public class PatientMapper {
 
-    public static PatientRS mapToDto(Patient entity){
+    public static PatientRS mapToDto(Patient entity) {
         if (entity == null) return null;
         return PatientRS.builder()
                 .addressRS(AddressMapper.mapToDto(entity.getAddress()))
@@ -15,4 +15,16 @@ public class PatientMapper {
                 .patientUUID(entity.getId())
                 .build();
     }
+
+    public static PatientRS mapToDtoWithoutSensitiveData(Patient entity) {
+        if (entity == null) return null;
+        return PatientRS.builder()
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
+                .phoneNumber(entity.getPhoneNumber())
+                .gender(entity.getGender().map())
+                .patientUUID(entity.getId())
+                .build();
+    }
+
 }

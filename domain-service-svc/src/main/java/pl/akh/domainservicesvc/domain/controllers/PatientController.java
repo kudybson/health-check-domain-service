@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import pl.akh.domainservicesvc.domain.utils.auth.oauth.OAuthDataExtractorFacade;
 import pl.akh.domainservicesvc.domain.utils.roles.HasAnyAdministrativeRole;
 import pl.akh.domainservicesvc.domain.utils.roles.HasRolePatient;
+import pl.akh.domainservicesvc.domain.utils.roles.HasRoleReceptionist;
 import pl.akh.model.rq.PatientDataRQ;
 import pl.akh.model.rs.PatientRS;
 import pl.akh.services.PatientService;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,6 +25,7 @@ import java.util.UUID;
 @Validated
 public class PatientController {
 
+    private static final Integer PAGE_SIZE = 10;
     private final PatientService patientService;
     private final OAuthDataExtractorFacade oAuthDataExtractorFacade;
 
@@ -84,5 +87,22 @@ public class PatientController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @HasRoleReceptionist
+    @GetMapping("/all")
+    public ResponseEntity<Collection<PatientRS>> getAllPatients(@RequestParam(name = "pageNumber", required = false) Integer pageNumber,
+                                                                @RequestParam(name = "pageSize", required = false) Integer pageSize,
+                                                                @RequestParam(name = "firstName", required = false) String firstName,
+                                                                @RequestParam(name = "lastName", required = false) String lastName,
+                                                                @RequestParam(name = "phoneNumber", required = false) String phoneNumber) {
+        if (pageNumber == null) {
+            pageNumber = 0;
+        }
+        if (pageSize == null || pageSize < 10) {
+            pageSize = PAGE_SIZE;
+        }
+        Collection<PatientRS> patients = patientService.getPatientsByCriteria(pageNumber, pageSize, firstName, lastName, phoneNumber);
+        return ResponseEntity.ok(patients);
     }
 }
