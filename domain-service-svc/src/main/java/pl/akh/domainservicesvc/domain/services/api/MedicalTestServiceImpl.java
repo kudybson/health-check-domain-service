@@ -61,7 +61,7 @@ public class MedicalTestServiceImpl implements MedicalTestService {
         pl.akh.domainservicesvc.domain.model.entities.enums.TestType testTypeDomain = pl.akh.domainservicesvc.domain.model.entities.enums.TestType.valueOf(testType.name());
         return medicalTestRepository.findAllByDepartmentIdAndType(departmentId, testTypeDomain, Timestamp.valueOf(start), Timestamp.valueOf(end))
                 .stream()
-                .map(MedicalTestMapper::toDTO)
+                .map(MedicalTestMapper::toDTOWithPatient)
                 .collect(Collectors.toList());
     }
 
@@ -72,7 +72,7 @@ public class MedicalTestServiceImpl implements MedicalTestService {
         Timestamp endTime = Timestamp.valueOf(end);
         return medicalTestRepository.findAllByDepartmentId(departmentId, startTime, endTime)
                 .stream()
-                .map(MedicalTestMapper::toDTO)
+                .map(MedicalTestMapper::toDTOWithPatient)
                 .toList();
     }
 

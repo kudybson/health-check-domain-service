@@ -22,10 +22,17 @@ public class MedicalTestMapper {
         return MedicalTestRS.builder()
                 .id(entity.getId())
                 .departmentId(entity.getDepartment().getId())
+                .departmentName(entity.getDepartment().getName())
                 .type(TestType.valueOf(entity.getType().name()))
                 .testStatus(status)
                 .patientUUID(entity.getPatient().getId())
                 .testDateTime(entity.getTestDate().toLocalDateTime())
                 .build();
+    }
+
+    public static MedicalTestRS toDTOWithPatient(MedicalTest entity) {
+        MedicalTestRS medicalTestRS = MedicalTestMapper.toDTO(entity);
+        medicalTestRS.setPatient(PatientMapper.mapToDto(entity.getPatient()));
+        return medicalTestRS;
     }
 }

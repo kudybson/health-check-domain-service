@@ -1,6 +1,8 @@
+#keycloak client
 keycloak-client:
   type: keycloak # [mock, keycloak]
   url: http://host.docker.internal:8443
+  context-path: ""
   admin:
     username: admin
     password: admin
@@ -8,18 +10,19 @@ keycloak-client:
   client-id: admin-cli
 
 spring:
+  kafka:
+    bootstrap-servers: host.docker.internal:9092
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${keycloak-client.url}/realms/health-check
+          issuer-uri: ${keycloak-client.context-path}${keycloak-client.url}/realms/health-check
+          jwk-set-uri:
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@149.156.138.232:1521:orcl
     username: akh
     password: akh2023
-  kafka:
-    bootstrap-servers: kafka:9092
 
 #notification service
 notification:
@@ -28,3 +31,5 @@ notification:
 #storage
 storage:
   type: inMemory #[inMemory, cloud, local]
+  path: D:\volumes\health-check\domain-service
+  encryption-key: key
