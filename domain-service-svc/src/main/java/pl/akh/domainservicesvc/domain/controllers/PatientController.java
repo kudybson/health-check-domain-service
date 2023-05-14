@@ -90,12 +90,12 @@ public class PatientController {
     }
 
     @HasRoleReceptionist
-    @GetMapping
-    public ResponseEntity<Collection<PatientRS>> getAllPatients(@RequestParam(name = "pageNumber") Integer pageNumber,
-                                                                @RequestParam(name = "pageSize") Integer pageSize,
-                                                                @RequestParam(name = "firstName") String firstName,
-                                                                @RequestParam(name = "lastname") String lastName,
-                                                                @RequestParam(name = "phoneNumber") String phoneNumber) {
+    @GetMapping("/all")
+    public ResponseEntity<Collection<PatientRS>> getAllPatients(@RequestParam(name = "pageNumber", required = false) Integer pageNumber,
+                                                                @RequestParam(name = "pageSize", required = false) Integer pageSize,
+                                                                @RequestParam(name = "firstName", required = false) String firstName,
+                                                                @RequestParam(name = "lastName", required = false) String lastName,
+                                                                @RequestParam(name = "phoneNumber", required = false) String phoneNumber) {
         if (pageNumber == null) {
             pageNumber = 0;
         }
