@@ -14,8 +14,10 @@ public class MedicalTestRS {
     private Long id;
     private TestStatus testStatus;
     private Long departmentId;
+    private String departmentName;
     private UUID patientUUID;
     private TestType type;
     private Long medicalTestResultId;
     private LocalDateTime testDateTime;
+    private PatientRS patient;
 }

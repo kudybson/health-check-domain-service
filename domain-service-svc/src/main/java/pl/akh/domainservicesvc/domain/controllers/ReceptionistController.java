@@ -22,6 +22,7 @@ import pl.akh.services.AdministratorService;
 import pl.akh.services.ReceptionistService;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,7 +42,6 @@ public class ReceptionistController extends DomainServiceController {
         this.administratorService = administratorService;
     }
 
-    @HasRoleAdmin
     @GetMapping(path = "/{uuid}")
     public ResponseEntity<ReceptionistRS> getReceptionistByUUID(@PathVariable @NotNull UUID uuid) {
         try {
@@ -49,7 +49,7 @@ public class ReceptionistController extends DomainServiceController {
             if (receptionist.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-            if (!hasAdministrativeAccessToDepartment(receptionist.get().getDepartmentId())) {
+            if (!hasAdministrativeAccessToDepartment(receptionist.get().getDepartmentId()) && !Objects.equals(authDataExtractor.getId(), uuid)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
