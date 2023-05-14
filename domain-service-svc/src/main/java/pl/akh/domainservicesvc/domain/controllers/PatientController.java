@@ -100,7 +100,7 @@ public class PatientController {
             pageNumber = 0;
         }
         if (pageSize == null || pageSize < 10) {
-            pageSize = PAGE_SIZE;
+            pageSize = Integer.MAX_VALUE;
         }
         Collection<PatientRS> patients = patientService.getPatientsByCriteria(pageNumber, pageSize, firstName, lastName, phoneNumber);
         return ResponseEntity.ok(patients);
