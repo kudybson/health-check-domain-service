@@ -68,10 +68,8 @@ public class TreatmentServiceImpl implements TreatmentService {
     }
 
     @Override
-    public void removeTreatmentByAppointmentId(long appointmentId) throws TreatmentNotFoundException {
-        Optional<Treatment> optionalTreatment = treatmentRepository.findTreatmentByAppointmentId(appointmentId);
-        if (optionalTreatment.isEmpty()) throw new TreatmentNotFoundException();
-        treatmentRepository.delete(optionalTreatment.get());
+    public void removeTreatmentByAppointmentId(long appointmentId) {
+        treatmentRepository.deleteByAppointmentId(appointmentId);
     }
 
     @Override
@@ -81,7 +79,7 @@ public class TreatmentServiceImpl implements TreatmentService {
 
     @Override
     public void addPrescription(PrescriptionRQ prescriptionRQ) throws TreatmentNotFoundException {
-        Optional<Treatment> optionalTreatment = treatmentRepository.findTreatmentByAppointmentId(prescriptionRQ.getTreatmentId());
+        Optional<Treatment> optionalTreatment = treatmentRepository.findById(prescriptionRQ.getTreatmentId());
         if (optionalTreatment.isEmpty()) throw new TreatmentNotFoundException();
         Treatment treatment = optionalTreatment.get();
         Prescription prescription = new Prescription();
@@ -96,7 +94,7 @@ public class TreatmentServiceImpl implements TreatmentService {
 
     @Override
     public void addReferral(ReferralRQ referralRQ) throws TreatmentNotFoundException {
-        Optional<Treatment> optionalTreatment = treatmentRepository.findTreatmentByAppointmentId(referralRQ.getTreatmentId());
+        Optional<Treatment> optionalTreatment = treatmentRepository.findById(referralRQ.getTreatmentId());
         if (optionalTreatment.isEmpty()) throw new TreatmentNotFoundException();
         Treatment treatment = optionalTreatment.get();
         Referral referral = new Referral();

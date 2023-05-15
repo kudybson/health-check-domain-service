@@ -11,7 +11,7 @@ public interface TreatmentService {
 
     TreatmentRS updateTreatment(long treatmentId, UpdateTreatmentRQ treatmentRQ) throws Exception;
 
-    void removeTreatmentByAppointmentId(long appointmentId) throws Exception;
+    void removeTreatmentByAppointmentId(long appointmentId);
 
     void deleteTreatment(long treatmentId);
 
