@@ -3,7 +3,7 @@ package pl.akh.domainservicesvc.domain.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import pl.akh.domainservicesvc.domain.model.entities.Appointment;
-import pl.akh.domainservicesvc.domain.model.entities.Status;
+import pl.akh.domainservicesvc.domain.model.entities.enums.Status;
 
 import java.sql.Timestamp;
 import java.time.Duration;

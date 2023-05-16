@@ -9,7 +9,6 @@ import pl.akh.domainservicesvc.domain.mappers.AppointmentMapper;
 import pl.akh.domainservicesvc.domain.model.entities.Appointment;
 import pl.akh.domainservicesvc.domain.model.entities.Doctor;
 import pl.akh.domainservicesvc.domain.model.entities.Patient;
-import pl.akh.domainservicesvc.domain.model.entities.Status;
 import pl.akh.domainservicesvc.domain.repository.AppointmentRepository;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
 import pl.akh.domainservicesvc.domain.repository.PatientRepository;
@@ -71,7 +70,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if ((appointmentRQ.getAppointmentDateTime().getMinute() % APPOINTMENT_TIME.toMinutes()) != 0) {
             throw new IllegalArgumentException();
         }
-        if (appointmentRepository.findAppointmentByDoctorIdAndAppointmentDate(doctor.getId(), appointmentDateTimestamp, Status.SCHEDULED).isPresent()) {
+        if (appointmentRepository.findAppointmentByDoctorIdAndAppointmentDate(doctor.getId(), appointmentDateTimestamp, pl.akh.domainservicesvc.domain.model.entities.enums.Status.SCHEDULED).isPresent()) {
             throw new AppointmentConflictException();
         }
         if (scheduleRepository.getScheduleByDoctorIdAndStartDateTimeAndEndDateTime(doctor.getId(), appointmentDateTimestamp,
@@ -105,7 +104,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Collection<AppointmentRS> getAppointmentsByDoctorId(UUID doctorUUID, LocalDateTime start, LocalDateTime end) {
-        return appointmentRepository.getAppointmentsByDoctorId(doctorUUID, Timestamp.valueOf(start), Timestamp.valueOf(end), Status.SCHEDULED)
+        return appointmentRepository.getAppointmentsByDoctorId(doctorUUID, Timestamp.valueOf(start), Timestamp.valueOf(end), pl.akh.domainservicesvc.domain.model.entities.enums.Status.SCHEDULED)
                 .stream()
                 .map(AppointmentMapper::mapToDto)
                 .collect(Collectors.toList());
@@ -113,7 +112,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Collection<AppointmentRS> getAppointmentsByPatientId(UUID patientUUID, LocalDateTime start, LocalDateTime end) {
-        return appointmentRepository.getAppointmentsByPatientId(patientUUID, Timestamp.valueOf(start), Timestamp.valueOf(end), Status.SCHEDULED)
+        return appointmentRepository.getAppointmentsByPatientId(patientUUID, Timestamp.valueOf(start), Timestamp.valueOf(end), pl.akh.domainservicesvc.domain.model.entities.enums.Status.SCHEDULED)
                 .stream()
                 .map(AppointmentMapper::mapToDto)
                 .collect(Collectors.toList());
@@ -121,7 +120,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Collection<AppointmentRS> getAppointmentsByDepartmentId(Long id, LocalDateTime start, LocalDateTime end) {
-        return appointmentRepository.getAppointmentsByDepartmentId(id, Timestamp.valueOf(start), Timestamp.valueOf(end), Status.SCHEDULED)
+        return appointmentRepository.getAppointmentsByDepartmentId(id, Timestamp.valueOf(start), Timestamp.valueOf(end), pl.akh.domainservicesvc.domain.model.entities.enums.Status.SCHEDULED)
                 .stream()
                 .map(AppointmentMapper::mapToDto)
                 .collect(Collectors.toList());
