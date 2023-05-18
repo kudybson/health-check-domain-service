@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2User;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.Groups;
 import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Service;
+import pl.akh.notificationserviceapi.model.Notification;
+import pl.akh.notificationserviceapi.services.NotificationService;
 
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 /***
  * Test controller user to verify connection between services inside cluster
@@ -18,28 +21,18 @@ import java.util.Random;
 @RestController
 @RequestMapping("/public")
 public class PublicController {
-    OAuth2Service oAuth2Service;
+    private NotificationService notificationService;
 
-    @Autowired
-    public PublicController(OAuth2Service oAuth2Service) {
-        this.oAuth2Service = oAuth2Service;
+    public PublicController(NotificationService notificationService) {
+        this.notificationService = notificationService;
     }
 
     @GetMapping("ping")
-    public String ping() throws UnavailableException {
-        Random random = new Random();
-        OAuth2User build = OAuth2User.builder()
-                .username("useeeee" + random.nextInt())
-                .groups(List.of(Groups.DOCTOR_GROUP))
-                .firstName("first")
-                .lastName("last")
-                .email("jakis.email" + random.nextInt() + "@wp.pl")
-                .enabled(true)
-                .password("password")
-                .passwordConfirmation("password")
-                .build();
-
-        //oAuth2Service.createUser(build);
+    public String ping() throws Exception {
+        Notification notification = new Notification();
+        notification.setUserId(UUID.randomUUID());
+        notification.setPayload("kafka works in kubernetes");
+        notificationService.sendNotification(notification);
         return "pong";
     }
 }

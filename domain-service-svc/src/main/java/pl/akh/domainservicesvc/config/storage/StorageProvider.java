@@ -14,7 +14,7 @@ public class StorageProvider {
     @Value("${storage.type}")
     private String type;
 
-    @Value("${storage.path}")
+    @Value("${storage.path:disabled}")
     private String storagePath;
 
     @Bean
