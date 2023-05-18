@@ -13,18 +13,18 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${keycloak-client.context-path}${keycloak-client.url}/realms/health-check
+          issuer-uri: ${keycloak-client.url}${keycloak-client.context-path}/realms/health-check
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@149.156.138.232:1521:orcl
     username: akh
     password: akh2023
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: my-release-kafka.default.svc.cluster.local:9092
 
 #notification service
 notification:
-  service: mock # [mock, sync, async]
+  service: async # [mock, sync, async]
 
 #storage
 storage:
