@@ -112,8 +112,7 @@ public class ReceptionistController extends DomainServiceController {
     }
 
     @GetMapping(path = "/departments/{uuid}")
-    @HasRoleAdmin
-    public ResponseEntity<DepartmentRS> getDepartmentByAdministratorId(@PathVariable UUID uuid) throws Exception {
+    public ResponseEntity<DepartmentRS> getDepartmentByReceptionistId(@PathVariable UUID uuid) throws Exception {
         try {
             return ResponseEntity.ok(receptionistService.getDepartmentByReceptionistId(uuid));
         } catch (AdministratorNotFoundException e) {

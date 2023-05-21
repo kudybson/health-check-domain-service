@@ -115,10 +115,10 @@ public class AppointmentController extends DomainServiceController {
 
     @GetMapping("/all-patient-appointments/{uuid}")
     public ResponseEntity<Collection<AppointmentRS>> getAppointmentsByPatientId(@PathVariable UUID uuid) throws AuthException {
-        if (!isPatient()) {
+        if (!isPatient() && !isDoctor()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        if (!isRequesterOwnerOfAppointment(uuid)) {
+        if (!isRequesterOwnerOfAppointment(uuid) && !isDoctor()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(appointmentService.getAppointmentsByPatientId(uuid));
@@ -165,7 +165,7 @@ public class AppointmentController extends DomainServiceController {
 
     @HasRoleDoctor
     @PutMapping("/{id}")
-    public ResponseEntity<AppointmentRS> addCommentToAppointment(@PathVariable Long id, @RequestParam String comment) throws AuthException {
+    public ResponseEntity<AppointmentRS> addCommentToAppointment(@PathVariable Long id, @RequestBody String comment) throws AuthException {
 
         Optional<AppointmentRS> appointment = appointmentService.getAppointmentById(id);
         if (appointment.isPresent()) {

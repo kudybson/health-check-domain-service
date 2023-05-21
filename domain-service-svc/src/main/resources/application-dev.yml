@@ -1,6 +1,6 @@
 keycloak-client:
   type: keycloak # [mock, keycloak]
-  url: http://keycloak:80
+  url: http://keycloak
   context-path: "/auth"
   admin:
     username: admin
