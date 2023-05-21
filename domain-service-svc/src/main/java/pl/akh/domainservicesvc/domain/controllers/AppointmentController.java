@@ -44,8 +44,8 @@ public class AppointmentController extends DomainServiceController {
     public ResponseEntity<AppointmentRS> getAppointmentById(@PathVariable Long id) throws AuthException {
         Optional<AppointmentRS> appointment = appointmentService.getAppointmentById(id);
         if (appointment.isPresent()) {
-            if ((isDoctor() && !isThisAppointmentToThisDoctor(appointment.get().getDoctorRS().getDoctorUUID())) ||
-                    (isPatient() && !isThisAppointmentIsForThisPatient(appointment.get().getPatientRS().getPatientUUID())) ||
+            if ((isDoctor() && !isRequesterDoctorAssignedToAppointment(appointment.get().getDoctorRS().getDoctorUUID())) ||
+                    (isPatient() && !isRequesterOwnerOfAppointment(appointment.get().getPatientRS().getPatientUUID())) ||
                     (isReceptionist() && !hasReceptionistAccessToDepartment(appointment.get().getDepartmentId()))
                     || isAdmin() || isSuperAdmin()) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -59,7 +59,7 @@ public class AppointmentController extends DomainServiceController {
     @PostMapping
     public ResponseEntity<AppointmentRS> createAppointment(@RequestBody @Valid AppointmentRQ appointmentRQ) throws Exception {
         try {
-            if ((isPatient() && !isThisAppointmentIsForThisPatient(appointmentRQ.getPatientUUID())) ||
+            if ((isPatient() && !isRequesterOwnerOfAppointment(appointmentRQ.getPatientUUID())) ||
                     (isReceptionist() && !hasReceptionistAccessToDepartment(doctorRepository.getDepartmentIdByDoctorId(appointmentRQ.getDoctorUUID())))
                     || isDoctor() || isAdmin() || isSuperAdmin()) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -85,7 +85,7 @@ public class AppointmentController extends DomainServiceController {
             startDateTime = getStartDateTime();
             endDateTime = getEndDateTime();
         }
-        if ((isDoctor() && !isThisAppointmentToThisDoctor(doctorUUID)) ||
+        if ((isDoctor() && !isRequesterDoctorAssignedToAppointment(doctorUUID)) ||
                 (isReceptionist() && !hasReceptionistAccessToDepartment(doctorRepository.getDepartmentIdByDoctorId(doctorUUID)))
                 || isPatient() || isAdmin() || isSuperAdmin()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -107,10 +107,21 @@ public class AppointmentController extends DomainServiceController {
             startDateTime = getStartDateTime();
             endDateTime = getEndDateTime();
         }
-        if (!isThisAppointmentIsForThisPatient(patientUUID)) {
+        if (!isRequesterOwnerOfAppointment(patientUUID)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok(appointmentService.getAppointmentsByPatientId(patientUUID, startDateTime, endDateTime));
+        return ResponseEntity.ok(appointmentService.getAppointmentsByPatientIdAndDates(patientUUID, startDateTime, endDateTime));
+    }
+
+    @GetMapping("/all-patient-appointments/{uuid}")
+    public ResponseEntity<Collection<AppointmentRS>> getAppointmentsByPatientId(@PathVariable UUID uuid) throws AuthException {
+        if (!isPatient()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        if (!isRequesterOwnerOfAppointment(uuid)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(appointmentService.getAppointmentsByPatientId(uuid));
     }
 
     @HasRoleReceptionist
@@ -135,8 +146,8 @@ public class AppointmentController extends DomainServiceController {
     public ResponseEntity<String> removeAppointmentById(@PathVariable Long id) throws Exception {
         Optional<AppointmentRS> appointment = appointmentService.getAppointmentById(id);
         if (appointment.isPresent()) {
-            if ((isDoctor() && !isThisAppointmentToThisDoctor(appointment.get().getDoctorRS().getDoctorUUID())) ||
-                    (isPatient() && !isThisAppointmentIsForThisPatient(appointment.get().getPatientRS().getPatientUUID())) ||
+            if ((isDoctor() && !isRequesterDoctorAssignedToAppointment(appointment.get().getDoctorRS().getDoctorUUID())) ||
+                    (isPatient() && !isRequesterOwnerOfAppointment(appointment.get().getPatientRS().getPatientUUID())) ||
                     (isReceptionist() && !hasReceptionistAccessToDepartment(appointment.get().getDepartmentId()))
                     || isAdmin() || isSuperAdmin()) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -158,7 +169,7 @@ public class AppointmentController extends DomainServiceController {
 
         Optional<AppointmentRS> appointment = appointmentService.getAppointmentById(id);
         if (appointment.isPresent()) {
-            if (!isThisAppointmentToThisDoctor(appointment.get().getDoctorRS().getDoctorUUID())) {
+            if (!isRequesterDoctorAssignedToAppointment(appointment.get().getDoctorRS().getDoctorUUID())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
         } else {
@@ -171,11 +182,11 @@ public class AppointmentController extends DomainServiceController {
         }
     }
 
-    private boolean isThisAppointmentToThisDoctor(UUID doctorUUID) throws AuthException {
+    private boolean isRequesterDoctorAssignedToAppointment(UUID doctorUUID) throws AuthException {
         return doctorUUID.equals(authDataExtractor.getId());
     }
 
-    private boolean isThisAppointmentIsForThisPatient(UUID patientUUID) throws AuthException {
+    private boolean isRequesterOwnerOfAppointment(UUID patientUUID) throws AuthException {
         return patientUUID.equals(authDataExtractor.getId());
     }
 
