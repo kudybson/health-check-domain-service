@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import pl.akh.domainservicesvc.domain.exceptions.AppointmentNotFoundException;
 import pl.akh.domainservicesvc.domain.exceptions.TreatmentNotFoundException;
+import pl.akh.domainservicesvc.domain.mappers.PrescriptionMapper;
+import pl.akh.domainservicesvc.domain.mappers.ReferralMapper;
 import pl.akh.domainservicesvc.domain.mappers.TestTypeMapper;
 import pl.akh.domainservicesvc.domain.mappers.TreatmentMapper;
 import pl.akh.domainservicesvc.domain.model.entities.Appointment;
@@ -18,6 +20,8 @@ import pl.akh.model.rq.PrescriptionRQ;
 import pl.akh.model.rq.ReferralRQ;
 import pl.akh.model.rq.TreatmentRQ;
 import pl.akh.model.rq.UpdateTreatmentRQ;
+import pl.akh.model.rs.PrescriptionRS;
+import pl.akh.model.rs.ReferralRS;
 import pl.akh.model.rs.TreatmentRS;
 import pl.akh.services.TreatmentService;
 
@@ -104,5 +108,17 @@ public class TreatmentServiceImpl implements TreatmentService {
         referralRepository.save(referral);
         treatment.setReferral(referral);
         treatmentRepository.save(treatment);
+    }
+
+    @Override
+    public Optional<PrescriptionRS> getPrescriptionById(Long id) {
+        return prescriptionRepository.findById(id)
+                .map(PrescriptionMapper::mapToDto);
+    }
+
+    @Override
+    public Optional<ReferralRS> getReferralById(Long id) {
+        return referralRepository.findById(id)
+                .map(ReferralMapper::mapToDto);
     }
 }

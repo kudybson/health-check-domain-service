@@ -18,7 +18,9 @@ public interface AppointmentService {
 
     Collection<AppointmentRS> getAppointmentsByDoctorId(UUID doctorUUID, LocalDateTime start, LocalDateTime end);
 
-    Collection<AppointmentRS> getAppointmentsByPatientId(UUID patientUUID, LocalDateTime start, LocalDateTime end);
+    Collection<AppointmentRS> getAppointmentsByPatientIdAndDates(UUID patientUUID, LocalDateTime start, LocalDateTime end);
+
+    Collection<AppointmentRS> getAppointmentsByPatientId(UUID patientUUID);
 
     Collection<AppointmentRS> getAppointmentsByDepartmentId(Long id, LocalDateTime start, LocalDateTime end);
 

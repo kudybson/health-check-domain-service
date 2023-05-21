@@ -8,4 +8,9 @@ public class TestTypeMapper {
         if (testType == null) return null;
         return TestType.valueOf(testType.toString());
     }
+
+    public static pl.akh.model.common.TestType toDto(TestType testType) {
+        if (testType == null) return null;
+        return pl.akh.model.common.TestType.valueOf(testType.toString());
+    }
 }

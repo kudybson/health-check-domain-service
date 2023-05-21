@@ -9,6 +9,7 @@ import pl.akh.domainservicesvc.domain.mappers.AppointmentMapper;
 import pl.akh.domainservicesvc.domain.model.entities.Appointment;
 import pl.akh.domainservicesvc.domain.model.entities.Doctor;
 import pl.akh.domainservicesvc.domain.model.entities.Patient;
+import pl.akh.domainservicesvc.domain.model.entities.enums.Status;
 import pl.akh.domainservicesvc.domain.repository.AppointmentRepository;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
 import pl.akh.domainservicesvc.domain.repository.PatientRepository;
@@ -23,6 +24,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -111,8 +113,16 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public Collection<AppointmentRS> getAppointmentsByPatientId(UUID patientUUID, LocalDateTime start, LocalDateTime end) {
-        return appointmentRepository.getAppointmentsByPatientId(patientUUID, Timestamp.valueOf(start), Timestamp.valueOf(end), pl.akh.domainservicesvc.domain.model.entities.enums.Status.SCHEDULED)
+    public Collection<AppointmentRS> getAppointmentsByPatientIdAndDates(UUID patientUUID, LocalDateTime start, LocalDateTime end) {
+        return appointmentRepository.getAppointmentsByPatientIdAndDates(patientUUID, Timestamp.valueOf(start), Timestamp.valueOf(end), pl.akh.domainservicesvc.domain.model.entities.enums.Status.SCHEDULED)
+                .stream()
+                .map(AppointmentMapper::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<AppointmentRS> getAppointmentsByPatientId(UUID patientUUID) {
+        return appointmentRepository.getAppointmentsByPatientId(patientUUID, List.of(pl.akh.domainservicesvc.domain.model.entities.enums.Status.SCHEDULED, Status.FINISHED))
                 .stream()
                 .map(AppointmentMapper::mapToDto)
                 .collect(Collectors.toList());

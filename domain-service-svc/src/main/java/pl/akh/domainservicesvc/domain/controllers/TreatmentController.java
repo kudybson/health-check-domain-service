@@ -20,6 +20,8 @@ import pl.akh.model.rq.PrescriptionRQ;
 import pl.akh.model.rq.ReferralRQ;
 import pl.akh.model.rq.TreatmentRQ;
 import pl.akh.model.rq.UpdateTreatmentRQ;
+import pl.akh.model.rs.PrescriptionRS;
+import pl.akh.model.rs.ReferralRS;
 import pl.akh.model.rs.TreatmentRS;
 import pl.akh.services.TreatmentService;
 
@@ -93,7 +95,7 @@ public class TreatmentController extends DomainServiceController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("prescription")
+    @PostMapping("/prescription")
     @HasRoleDoctor
     public ResponseEntity<String> addPrescription(@RequestBody @Valid PrescriptionRQ prescriptionRQ) throws Exception {
         if (!checkIfAppointmentIsWithThisDoctorByTreatmentId(prescriptionRQ.getTreatmentId())) {
@@ -107,7 +109,7 @@ public class TreatmentController extends DomainServiceController {
         }
     }
 
-    @PostMapping("referral")
+    @PostMapping("/referral")
     @HasRoleDoctor
     public ResponseEntity<String> addReferral(@RequestBody @Valid ReferralRQ referralRQ) throws Exception {
         if (!checkIfAppointmentIsWithThisDoctorByTreatmentId(referralRQ.getTreatmentId())) {
@@ -118,6 +120,28 @@ public class TreatmentController extends DomainServiceController {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (TreatmentNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @GetMapping(path = "/prescription/{id}")
+    public ResponseEntity<PrescriptionRS> getPrescriptionById(@PathVariable Long id) {
+        try {
+            return treatmentService.getPrescriptionById(id)
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping(path = "/referral/{id}")
+    public ResponseEntity<ReferralRS> getReferralById(@PathVariable Long id) {
+        try {
+            return treatmentService.getReferralById(id)
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

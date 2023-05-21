@@ -23,7 +23,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> getAppointmentsByDoctorId(UUID id, Timestamp start, Timestamp end, Status status);
 
     @Query("select a from Appointment a where a.patient.id = :id and a.appointmentDate >= :start and a.appointmentDate <= :end and a.status = :status")
-    List<Appointment> getAppointmentsByPatientId(UUID id, Timestamp start, Timestamp end, Status status);
+    List<Appointment> getAppointmentsByPatientIdAndDates(UUID id, Timestamp start, Timestamp end, Status status);
+
+    @Query("select a from Appointment a where a.patient.id = :id and a.status in (:statuses)")
+    List<Appointment> getAppointmentsByPatientId(UUID id, List<Status> statuses);
 
     @Query("select a from Appointment a where a.department.id = :id and a.appointmentDate >= :start and a.appointmentDate <= :end and a.status = :status")
     List<Appointment> getAppointmentsByDepartmentId(Long id, Timestamp start, Timestamp end, Status status);
