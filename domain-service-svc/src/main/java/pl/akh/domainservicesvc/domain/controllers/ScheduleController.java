@@ -10,6 +10,7 @@ import pl.akh.domainservicesvc.domain.exceptions.DoctorNotFoundException;
 import pl.akh.domainservicesvc.domain.services.AccessGuard;
 import pl.akh.domainservicesvc.domain.utils.auth.AuthDataExtractor;
 import pl.akh.domainservicesvc.domain.utils.roles.HasRoleDoctor;
+import pl.akh.domainservicesvc.domain.utils.roles.HasRoleReceptionist;
 import pl.akh.domainservicesvc.domain.utils.roles.Public;
 import pl.akh.model.rq.ScheduleRQ;
 import pl.akh.model.rs.schedules.ScheduleRS;
@@ -86,6 +87,21 @@ public class ScheduleController extends DomainServiceController {
         try {
             UUID id = authDataExtractor.getId();
             Collection<ScheduleRS> scheduleRS = scheduleService.insertSchedules(id, schedules);
+            return ResponseEntity.ok(scheduleRS);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (AuthException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+    }
+
+    @HasRoleReceptionist
+    @PostMapping("doctor/{doctorUUID}")
+    ResponseEntity<Collection<ScheduleRS>> addSchedulesByDoctorId(@PathVariable UUID doctorUUID, @RequestBody Collection<ScheduleRQ> schedules) {
+        try {
+            UUID id = authDataExtractor.getId();
+            Collection<ScheduleRS> scheduleRS = scheduleService.insertSchedules(doctorUUID, schedules);
             return ResponseEntity.ok(scheduleRS);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

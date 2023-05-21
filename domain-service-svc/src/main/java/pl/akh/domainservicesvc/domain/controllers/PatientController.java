@@ -89,7 +89,7 @@ public class PatientController {
         }
     }
 
-    @HasRoleReceptionist
+    @HasAnyAdministrativeRole
     @GetMapping("/all")
     public ResponseEntity<Collection<PatientRS>> getAllPatients(@RequestParam(name = "pageNumber", required = false) Integer pageNumber,
                                                                 @RequestParam(name = "pageSize", required = false) Integer pageSize,
