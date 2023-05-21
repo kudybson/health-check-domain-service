@@ -10,4 +10,5 @@ public interface OAuth2Service {
     boolean createUser(OAuth2User oauth2User) throws UnavailableException, UsernameOrEmailAlreadyExistsException;
 
     Optional<UUID> getUUIDByUsername(String username) throws UnavailableException;
+    Optional<String> getEmailById(String username) throws UnavailableException;
 }

@@ -24,4 +24,9 @@ public class MockOAuth2Client implements OAuth2Service {
     public Optional<UUID> getUUIDByUsername(String username) {
         return Optional.of(UUID.randomUUID());
     }
+
+    @Override
+    public Optional<String> getEmailById(String username) throws UnavailableException {
+        return Optional.empty();
+    }
 }

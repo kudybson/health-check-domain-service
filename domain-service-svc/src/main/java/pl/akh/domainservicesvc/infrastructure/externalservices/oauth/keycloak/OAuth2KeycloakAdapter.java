@@ -111,6 +111,30 @@ public class OAuth2KeycloakAdapter implements OAuth2Service {
         throw new UnavailableException("Authorization service is unavailable");
     }
 
+    @Override
+    public Optional<String> getEmailById(String id) throws UnavailableException {
+        if (id == null) throw new IllegalArgumentException();
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        final String keycloakURL = keycloakConfigProvider.getKeycloakUrl() + createUserPath + "/" +id;
+        headers.set("Authorization", "Bearer " + getAccessToken());
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<org.keycloak.representations.account.UserRepresentation> exchange = restTemplate.exchange(keycloakURL,
+                HttpMethod.GET,
+                httpEntity,
+                org.keycloak.representations.account.UserRepresentation.class);
+
+        if (exchange.getStatusCode().is2xxSuccessful()) {
+            if (exchange.getBody() != null) {
+                return Optional.ofNullable(exchange.getBody())
+                        .map(org.keycloak.representations.account.UserRepresentation::getEmail);
+            }
+        }
+        log.error("Error during creating user");
+        throw new UnavailableException("Authorization service is unavailable");
+    }
+
     private UserRepresentation mapToUserRepresentation(OAuth2User oauth2User) {
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setUsername(oauth2User.getUsername());

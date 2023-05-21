@@ -13,6 +13,7 @@ import pl.akh.domainservicesvc.domain.repository.AppointmentRepository;
 import pl.akh.domainservicesvc.domain.repository.DoctorRepository;
 import pl.akh.domainservicesvc.domain.repository.PatientRepository;
 import pl.akh.domainservicesvc.domain.repository.ScheduleRepository;
+import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Service;
 import pl.akh.model.rq.AppointmentRQ;
 import pl.akh.model.rs.AppointmentRS;
 import pl.akh.notificationserviceapi.model.Notification;
@@ -23,6 +24,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -39,12 +41,15 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final ScheduleRepository scheduleRepository;
     private final NotificationService notificationService;
 
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, ScheduleRepository scheduleRepository, NotificationService notificationService) {
+    private final OAuth2Service oAuth2Service;
+
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, DoctorRepository doctorRepository, PatientRepository patientRepository, ScheduleRepository scheduleRepository, NotificationService notificationService, OAuth2Service oAuth2Service) {
         this.appointmentRepository = appointmentRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.scheduleRepository = scheduleRepository;
         this.notificationService = notificationService;
+        this.oAuth2Service = oAuth2Service;
     }
 
     @Override
@@ -99,6 +104,9 @@ public class AppointmentServiceImpl implements AppointmentService {
         notification.setUserId(appointment.getPatient().getId());
         notification.setPayload("Your appointment in " + appointment.getDepartment().getName() + " of " + appointment.getAppointmentDate() +
                 " with doctor " + appointment.getDoctor().getLastName() + " has been cancelled");
+        String emailById = oAuth2Service.getEmailById(appointment.getPatient().getId().toString()).get();
+        Map<String, String> metaData = Map.of("SUBJECT", "Appointment cancelation", "EMAIL", emailById);
+        notification.setMetadata(metaData);
         notificationService.sendNotification(notification);
     }
 

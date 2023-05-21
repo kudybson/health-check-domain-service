@@ -122,7 +122,7 @@ public class MedicalTestController extends DomainServiceController {
      * MedicalTest can be deleted only by Patient and Receptionist which belongs to given department.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteMedicalTest(@PathVariable Long id) {
+    public ResponseEntity<String> deleteMedicalTest(@PathVariable Long id) throws Exception {
         Optional<MedicalTestRS> medicalTestById =
                 medicalTestService.getMedicalTestById(id);
         if (medicalTestById.isEmpty()) {

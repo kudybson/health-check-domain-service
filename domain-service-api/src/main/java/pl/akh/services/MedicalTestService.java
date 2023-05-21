@@ -24,7 +24,7 @@ public interface MedicalTestService {
 
     Collection<MedicalTestRS> getAllMedicalByPatientId(UUID id);
 
-    void cancelMedicalTest(Long testId);
+    void cancelMedicalTest(Long testId) throws Exception;
 
     void addMedicalResult(MultipartFile result, Long medicalTestId) throws IOException;
 

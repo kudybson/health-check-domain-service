@@ -1,5 +1,6 @@
 package pl.akh.domainservicesvc.domain.services.api;
 
+import jakarta.servlet.UnavailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -17,10 +18,13 @@ import pl.akh.domainservicesvc.domain.repository.DepartmentRepository;
 import pl.akh.domainservicesvc.domain.repository.MedicalTestRepository;
 import pl.akh.domainservicesvc.domain.repository.MedicalTestScheduleRepository;
 import pl.akh.domainservicesvc.domain.repository.PatientRepository;
+import pl.akh.domainservicesvc.infrastructure.externalservices.oauth.OAuth2Service;
 import pl.akh.domainservicesvc.infrastructure.storage.StorageService;
 import pl.akh.model.common.TestType;
 import pl.akh.model.rq.MedicalTestRQ;
 import pl.akh.model.rs.MedicalTestRS;
+import pl.akh.notificationserviceapi.model.Notification;
+import pl.akh.notificationserviceapi.services.NotificationService;
 import pl.akh.services.MedicalTestService;
 
 import java.io.ByteArrayInputStream;
@@ -30,6 +34,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -44,15 +49,19 @@ public class MedicalTestServiceImpl implements MedicalTestService {
     private final DepartmentRepository departmentRepository;
     private final PatientRepository patientRepository;
     private final StorageService storageService;
+    private final OAuth2Service oAuth2Service;
+    private final NotificationService notificationService;
     private final Path resultPath = Path.of("medical-tests-results");
 
     @Autowired
-    public MedicalTestServiceImpl(MedicalTestScheduleRepository medicalTestScheduleRepository, MedicalTestRepository medicalTestRepository, DepartmentRepository departmentRepository, PatientRepository patientRepository, StorageService storageService) {
+    public MedicalTestServiceImpl(MedicalTestScheduleRepository medicalTestScheduleRepository, NotificationService notificationService, OAuth2Service oAuth2Service, MedicalTestRepository medicalTestRepository, DepartmentRepository departmentRepository, PatientRepository patientRepository, StorageService storageService) {
         this.medicalTestScheduleRepository = medicalTestScheduleRepository;
         this.medicalTestRepository = medicalTestRepository;
         this.departmentRepository = departmentRepository;
         this.patientRepository = patientRepository;
         this.storageService = storageService;
+        this.oAuth2Service = oAuth2Service;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -130,12 +139,20 @@ public class MedicalTestServiceImpl implements MedicalTestService {
 
     @Override
     @Transactional
-    public void cancelMedicalTest(Long testId) {
+    public void cancelMedicalTest(Long testId) throws Exception {
         MedicalTest medicalTest = medicalTestRepository.findById(testId).orElseThrow();
         if (medicalTest.getTestDate().toLocalDateTime().isBefore(LocalDateTime.now())) {
             return;
         }
         medicalTestRepository.delete(medicalTest);
+        Notification notification = new Notification();
+        notification.setUserId(medicalTest.getPatient().getId());
+        notification.setPayload("Your appointment in " + medicalTest.getDepartment().getName() + " of " + medicalTest.getTestDate() +
+                " has been cancelled");
+        String emailById = oAuth2Service.getEmailById(medicalTest.getPatient().getId().toString()).get();
+        Map<String, String> metaData = Map.of("SUBJECT", "Test cancelation", "EMAIL", emailById);
+        notification.setMetadata(metaData);
+        notificationService.sendNotification(notification);
     }
 
     @Override
